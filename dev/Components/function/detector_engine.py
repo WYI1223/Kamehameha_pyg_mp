@@ -85,7 +85,7 @@ class attack_detector:
         # z轴小拇指与大拇指的坐标差值
         diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
 
-        # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在前)
+        # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
         if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
             return True
 
@@ -146,7 +146,7 @@ class attack_detector:
         diff = self.model.results.right_hand_landmarks.landmark[17].z - self.model.results.right_hand_landmarks.landmark[
             3].z
 
-        # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在前)
+        # 判断小拇指是否到达指定斜率(动作二右手在上大拇指在后)
         if R_model.coef_ > -0.25 and R_model.coef_ < 0 and diff > 0:
             return True
 
