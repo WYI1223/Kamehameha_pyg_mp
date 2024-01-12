@@ -1,7 +1,7 @@
 import cv2
 
 
-class cv2_engine:
+class CV2_Engine:
 
     def __init__(self):
         self.cap = cv2.VideoCapture(1) # open camer

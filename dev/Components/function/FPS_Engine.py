@@ -2,7 +2,7 @@ import time
 import cv2
 
 
-class FPS_engine:
+class FPS_Engine:
     """
     计算帧率
     """
