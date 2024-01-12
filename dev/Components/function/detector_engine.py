@@ -1,6 +1,17 @@
 import queue
 from loguru import logger
 from mediapipe import *
+import math
+
+
+class tpose_detector:
+    def __init__(self):
+        pass
+
+    def detect(self):
+        pass
+
+
 
 class attack_detector:
     _logger = None
@@ -11,6 +22,7 @@ class attack_detector:
         self.queue = queue.Queue()
         self.intialize()
         self.model = model
+        self.push_counter = 0
         pass
 
     def intialize(self):
@@ -31,31 +43,74 @@ class attack_detector:
         """
         动作3：前推检测
         Input: 双手关键点, hand : 0-Wrist,4-Thumb,8-Index,12-Middle,16-Ring,20-Pinky
-                         body: 11-left_shoulder, 12-right_shoulder,15-left_wrist,16-right_wrist
+                         body: 11-left_shoulder, 12-right_shoulder, 13-left_elbow, 14-right_elbow, 15-left_wrist, 16-right_wrist
         Output: 1-前推, 0-其他
 
         logic: 计算手腕和肩膀的深度差，如果手腕在肩膀前面的一定数值，则认为是前推动作
         """
 
-        # 1. 获得手腕与肩膀的z轴数据
+        # 1. 获得手腕,手肘,肩膀的坐标
         try:
-            left_shoulder = self.model.results.pose_landmarks.landmark[11].z
-            right_shoulder = self.model.results.pose_landmarks.landmark[12].z
-            left_wrist = self.model.results.pose_landmarks.landmark[15].z
-            right_wrist = self.model.results.pose_landmarks.landmark[16].z
+            left_shoulder = self.model.results.pose_landmarks.landmark[11]
+            right_shoulder = self.model.results.pose_landmarks.landmark[12]
+            left_elbow = self.model.results.pose_landmarks.landmark[13]
+            right_elbow = self.model.results.pose_landmarks.landmark[14]
+            left_wrist = self.model.results.pose_landmarks.landmark[15]
+            right_wrist = self.model.results.pose_landmarks.landmark[16]
         except:
-            print("no pose_landmarks")
-            return
+            return False
 
-        # 2. 计算手腕与肩膀的深度差
-        left_diff = left_wrist - left_shoulder
-        right_diff = right_wrist - right_shoulder
 
-        print("left_diff: ", left_diff)
-        print("right_diff: ", right_diff)
+
+        # 2. 计算手肘的角度
+        left_angle = self.calculate_angle(left_shoulder, left_elbow, left_wrist)
+        right_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
+
+        # 3. 判断是否前推
+        if left_angle > 135 and right_angle > 135:
+            self.push_counter += 1
+            if self.push_counter > 10:
+                print("前推")
+                self.push_counter = 0
+                print("left_angle:{}, right_angle:{}".format(left_angle, right_angle))
+                return True
+        else:
+            self.push_counter = 0
+            return False
+        return False
+
 
 
         # logger.info("execute action3")
+    def calculate_angle(self,landmark1, landmark2, landmark3):
+            # 获取坐标
+        x1, y1, z1 = landmark1.x, landmark1.y, landmark1.z
+        x2, y2, z2 = landmark2.x, landmark2.y, landmark2.z
+        x3, y3, z3 = landmark3.x, landmark3.y, landmark3.z
+
+            # 计算向量
+        vector1 = [x2 - x1, y2 - y1, z2 - z1]
+        vector2 = [x2 - x3, y2 - y3, z2 - z3]
+
+            # 计算向量的点积
+        dot_product = sum(a * b for a, b in zip(vector1, vector2))
+
+            # 计算向量的模长
+        magnitude1 = math.sqrt(sum(a * a for a in vector1))
+        magnitude2 = math.sqrt(sum(a * a for a in vector2))
+
+            # 计算角度
+        angle = math.acos(dot_product / (magnitude1 * magnitude2))
+
+            # 将角度从弧度转换为度
+        angle = math.degrees(angle)
+
+        return angle
+
+        # 示例：计算肩膀、肘部和手腕之间的角度
+        # 你需要从MediaPipe的输出中提供这些关键点的坐标
+        # angle = calculate_angle(shoulder_landmark, elbow_landmark, wrist_landmark)
+
 
 class jump_detector:
 

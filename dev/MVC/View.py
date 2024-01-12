@@ -47,6 +47,9 @@ class UI_View(object):
         self.model.FPS_class.display_FPS(self.model.img)
         self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
 
+        # 如果push,save the image
+        if self.model.detector.action3():
+            self.model.CV2_class.save_camera()
 
         """
         Draw things on pygame

@@ -1,5 +1,5 @@
 import cv2
-
+import time
 
 class CV2_Engine:
 
@@ -15,6 +15,8 @@ class CV2_Engine:
         success, self.img = self.cap.read()
         return success,self.img
 
+    def save_camera(self):
+        cv2.imwrite("photos/{}.jpg".format(time.time()),self.img)
 
     def display_camera(self):
         cv2.imshow("Image", self.img)
