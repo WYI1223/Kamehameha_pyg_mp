@@ -75,7 +75,6 @@ class control(object):
                 self.model.FPS_class.get_fps()
 
                 self.model.Mediapipe_Holistic_class.process_image(self.model.img)
-                self.model.detector.action3()
 
 
                 """
