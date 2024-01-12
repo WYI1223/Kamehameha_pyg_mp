@@ -1,5 +1,5 @@
 import time
-
+import cv2
 
 
 class FPS_engine:
@@ -17,3 +17,8 @@ class FPS_engine:
             print("FPS计算错误")
         self.ptime = ctime
         return self.fps
+
+    def display(self,img):
+        cv2.putText(img, str(int(self.fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
+                    (255, 0, 255), 3)
+        return img
