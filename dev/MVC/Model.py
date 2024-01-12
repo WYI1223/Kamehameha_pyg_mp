@@ -8,8 +8,9 @@ STATE_FACEMESH = 4
 STATE_HOLISTIC = 5
 
 
-class Model_Engine(object):
+class ModelEngine(object):
     def __init__(self, evManager):
+        self.img = None # current image
         self.evManager = evManager
         evManager.RegisterListener(self)
         self.state = StateMachine_level_1()
@@ -19,16 +20,7 @@ class Model_Engine(object):
         self.load_settings_and_data()
 
     def load_settings_and_data(self):
-        import pygame
-        icon_path = "Resources/Images/icon.png"
-        pygame_icon = pygame.image.load(icon_path)
-        pygame.display.set_icon(pygame_icon)
-
-        self.add_button_path = "Resources/Images/Buttons_add.png"
-        self.minus_button_path = "Resources/Images/Buttons_minus.png"
-        self.bun_sprite_path = "Resources/Images/Bun/"
-        self.bun_sprite_time = 0.6
-
+        pass
     def notify(self, event):
         """
         Called by an event in the message queue.

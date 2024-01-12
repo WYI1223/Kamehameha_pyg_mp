@@ -24,43 +24,14 @@ class control(object):
         self.graphics.initialize()
 
     def input_event(self):
-        if self.model.add_button.CheckisClicked() == 'clicked':
-            self.model.currentstate += 1
-            self.evManager.Post(StateChangeEvent(self.model.currentstate))
-        elif self.model.minus_button.CheckisClicked() == 'clicked':
-            self.model.currentstate -= 1
-            self.evManager.Post(StateChangeEvent(self.model.currentstate))
-
         self.model.input_event = pygame.event.get()
-        # Called for each game tick. We check our keyboard presses here.
-
+        # pass
         for event in self.model.input_event:
 
             # handle window manager closing our window
             if event.type == pygame.QUIT:
                 self.graphics.quit_pygame()
                 self.evManager.Post(QuitEvent())
-
-            # handle key down events
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.evManager.Post(StateChangeEvent(None))
-
-                # check key press for 1, 2, 3, 4, 5; if not same as current state, change state
-                elif event.key == pygame.K_1:
-                    self.evManager.Post(StateChangeEvent(1))
-
-                elif event.key == pygame.K_2:
-                    self.evManager.Post(StateChangeEvent(2))
-
-                elif event.key == pygame.K_3:
-                    self.evManager.Post(StateChangeEvent(3))
-
-                elif event.key == pygame.K_4:
-                    self.evManager.Post(StateChangeEvent(4))
-
-                elif event.key == pygame.K_5:
-                    self.evManager.Post(StateChangeEvent(5))
 
     def notify(self, event):
         """
@@ -81,12 +52,10 @@ class control(object):
                 """
                 Initialize new page
                 """
-                self.graphics.init_page()
-
                 if self.model.CV2_class == None:
                     self.model.CV2_class = CV2_Engine()
                 self.model.FPS_class = FPS_Engine()
-                self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
+                # self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
                 print("New page initialized")
                 # self.model.segmentation_class = segmentation_engine()
 
@@ -101,33 +70,12 @@ class control(object):
 
             if self.model.success:
                 # Calculate FPS
-                self.model.FPS_class.calculate_FPS()
+                self.model.FPS_class.get_fps()
+                # self.model.Mediapipe_Holistic_class.process_image(self.model.img)
 
-                try:
-                    # Mediapipe Pose
-                    if self.model.currentstate == 2:
-                        self.model.Mediapipe_pose_class.process_image(self.model.img)
-                        # self.model.Mediapipe_pose_class.expand_landmark()
-
-                    # Mediapipe Hand
-                    elif self.model.currentstate == 3:
-                        self.model.Mediapipe_hand_class.process_image(self.model.img)
-
-                    # Mediapipe FaceMesh
-                    elif self.model.currentstate == 4:
-                        self.model.Mediapipe_FaceMesh_class.process_image(self.model.img)
-
-                    # Mediapipe Holistic
-                    elif self.model.currentstate == 5:
-                        self.model.Mediapipe_Holistic_class.process_image(self.model.img)
-                except Exception as e:
-                    print(e)
-                    import traceback
-                    traceback.print_exc()
                 """
                 Tell view to render after all Business Logic
                 """
                 self.graphics.render()
-
             self.input_event()
 

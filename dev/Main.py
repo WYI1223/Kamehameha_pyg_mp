@@ -1,8 +1,3 @@
-from dev.Components.function.CV2_Engine import CV2_Engine
-from dev.Components.function.FPS_Engine import FPS_Engine
-from dev.Components.mediapipe.mediapipe_engine import *
-
-
 def run():
     CV2_engine = CV2_Engine()
     fps_engine = FPS_Engine()
@@ -14,6 +9,21 @@ def run():
         CV2_engine.display_camera()
         if CV2_engine.check_exit():
             break
+def run_MVC():
+    evManager = EventManager()
+    gamemodel = ModelEngine(evManager)
+    controller = control(evManager, gamemodel)
+    gamemodel.run()
+
+
+# if __name__ == "__main__":
+#     from dev.Components.function.CV2_Engine import CV2_Engine
+#     from dev.Components.function.FPS_Engine import FPS_Engine
+#     from dev.Components.mediapipe.mediapipe_engine import *
+#     run()
 
 if __name__ == "__main__":
-    run()
+    from dev.MVC.Model import *
+    from dev.MVC.Controller import *
+    from dev.MVC.EventManager import *
+    run_MVC()

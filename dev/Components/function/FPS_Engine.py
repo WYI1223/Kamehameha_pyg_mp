@@ -18,7 +18,7 @@ class FPS_Engine:
         self.ptime = ctime
         return self.fps
 
-    def display(self,img):
+    def display_FPS(self,img):
         cv2.putText(img, str(int(self.fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
                     (255, 0, 255), 3)
         return img
