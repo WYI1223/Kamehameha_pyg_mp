@@ -3,17 +3,91 @@ from loguru import logger
 from mediapipe import *
 from sklearn.linear_model import LinearRegression
 import math
+import mediapipe as mp
+import cv2
 
+class TposeDetector:
+    def __init__(self,model):
+        self.model = model
+        self.initilize()
 
-class tpose_detector:
-    def __init__(self):
+    def initilize(self):
+        try:
+            self.pose_landmarks = self.model.results.pose_landmarks
+        except:
+            self.pose_landmarks = None
+            pass
         pass
+    def calculate_angle(self, point1, point2, point3):
+        # Calculate the angle formed by three points
+        a = math.sqrt((point2.x - point3.x)**2 + (point2.y - point3.y)**2)
+        b = math.sqrt((point1.x - point3.x)**2 + (point1.y - point3.y)**2)
+        c = math.sqrt((point1.x - point2.x)**2 + (point1.y - point2.y)**2)
+        angle = math.acos((b**2 + c**2 - a**2) / (2 * b * c))
+        return math.degrees(angle)
 
-    def detect(self):
-        pass
+    def is_t_pose(self, landmarks):
+        # Using the provided landmarks diagram to identify the correct indices
+        left_shoulder = landmarks[11]
+        right_shoulder = landmarks[12]
+        left_elbow = landmarks[13]
+        right_elbow = landmarks[14]
+        left_wrist = landmarks[15]
+        right_wrist = landmarks[16]
+        left_hip = landmarks[23]
+        right_hip = landmarks[24]
+        left_ankle = landmarks[27]
+        right_ankle = landmarks[28]
+
+        # Check if arms are parallel to the ground
+        left_arm_angle = self.calculate_angle(left_shoulder, left_elbow, left_wrist)
+        right_arm_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
+        arms_parallel = abs(left_arm_angle - 180) < 10 and abs(right_arm_angle - 180) < 10
+
+        # Check if feet are together by measuring the distance between the ankles
+        feet_distance = math.sqrt((left_ankle.x - right_ankle.x)**2 + (left_ankle.y - right_ankle.y)**2)
+        # The threshold for feet_distance can be adjusted based on the model's scale
+        feet_together = feet_distance < 0.1
+
+        return arms_parallel and feet_together
 
 
 
+
+    def draw_box(self, image):
+        # 获取图像的宽度和高度
+        image_height, image_width, _ = image.shape
+
+        # 计算矩形的左上角和右下角坐标，使其位于图像中央并更长而窄
+        center_x = image_width // 2
+        center_y = image_height // 2
+        half_width = 200  # 矩形的一半宽度
+        half_height = 320  # 矩形的一半高度
+
+        # 计算矩形的坐标
+        top_left = (center_x - half_width, center_y - half_height)
+        bottom_right = (center_x + half_width, center_y + half_height)
+
+        # 初始化所有关键点是否在矩形内的标志
+        all_landmarks_inside = True
+        try:
+            self.pose_landmarks = self.model.results.pose_landmarks
+        except:
+            print("no pose detected")
+            return False
+        # 检查所有关键点是否在矩形内
+        for landmark in self.pose_landmarks.landmark:
+            x, y = int(landmark.x * image_width), int(landmark.y * image_height)
+            # 如果关键点在矩形外
+            if not (top_left[0] <= x <= bottom_right[0] and top_left[1] <= y <= bottom_right[1]):
+                all_landmarks_inside = False
+                break  # 一旦找到不在矩形内的关键点，退出循环
+
+        # 根据所有关键点是否在矩形内来决定矩形的颜色
+        if all_landmarks_inside:
+            cv2.rectangle(image, top_left, bottom_right, (0, 255, 0), 2)  # 绿色矩形
+        else:
+            cv2.rectangle(image, top_left, bottom_right, (0, 0, 255), 2)  # 红色矩形
 
 
 
