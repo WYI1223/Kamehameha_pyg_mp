@@ -21,8 +21,9 @@ class attack_detector:
 
     def action1(self):
         logger.info("execute action1")
-        self.isSuccess = False
+        self.isSuccess1 = False
         try:
+            #详见handlandmark.jpg
             left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
                               self.model.results.left_hand_landmarks.landmark[17].y]
             left_pinky_pip = [self.model.results.left_hand_landmarks.landmark[18].x,
@@ -54,13 +55,23 @@ class attack_detector:
         L_model.fit(left_X, left_y)
         R_model.fit(right_X,right_y)
 
+        # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_)
 
+        # z轴小拇指与大拇指的坐标差值
+        diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
+
+        """
+        暂定动作一逻辑由拟合直线斜率和z轴坐标来定，斜率需要测试，z轴坐标主要体现在大拇指与小拇指距离差上
+            若右手是负值则是小拇指在前，则是动作一
+            反之则到了动作二
+        """
 
 
     def action2(self):
         logger.info("execute action2")
+        self.isSuccess2 = False
         pass
 
     def action3(self):
