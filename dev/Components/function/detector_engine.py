@@ -57,8 +57,7 @@ class attack_detector:
             right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
                               self.model.results.right_hand_landmarks.landmark[20].y]
         except:
-            print("no hand detected")
-            return
+            return False
 
 
         left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
@@ -86,8 +85,8 @@ class attack_detector:
         # z轴小拇指与大拇指的坐标差值
         diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
 
-        # 判断小拇指是否到达指定斜率
-        if L_model.coef_ > -0.1 and L_model.coef_ < 0:
+        # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
+        if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
             return True
 
         """
@@ -100,7 +99,56 @@ class attack_detector:
     def action2(self):
         logger.info("execute action2")
         self.isSuccess2 = False
-        pass
+        try:
+            # 详见handlandmark.jpg
+            left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
+                              self.model.results.left_hand_landmarks.landmark[17].y]
+            left_pinky_pip = [self.model.results.left_hand_landmarks.landmark[18].x,
+                              self.model.results.left_hand_landmarks.landmark[18].y]
+            left_pinky_dip = [self.model.results.left_hand_landmarks.landmark[19].x,
+                              self.model.results.left_hand_landmarks.landmark[19].y]
+            left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
+                              self.model.results.left_hand_landmarks.landmark[20].y]
+            right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
+                               self.model.results.right_hand_landmarks.landmark[17].y]
+            right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
+                               self.model.results.right_hand_landmarks.landmark[18].y]
+            right_pinky_dip = [self.model.results.right_hand_landmarks.landmark[19].x,
+                               self.model.results.right_hand_landmarks.landmark[19].y]
+            right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
+                               self.model.results.right_hand_landmarks.landmark[20].y]
+        except:
+            return False
+
+        left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
+        right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
+        left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
+        right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
+
+        Left_X = np.array(left_X).reshape(-1, 1)
+        Right_X = np.array(right_X).reshape(-1, 1)
+        Left_y = np.array(left_y).reshape(-1, 1)
+        Right_y = np.array(right_y).reshape(-1, 1)
+
+        L_model = LinearRegression()
+        R_model = LinearRegression()
+
+        L_model.fit(Left_X, Left_y)
+        R_model.fit(Right_X, Right_y)
+
+        """
+        # 左右手小拇指点拟合直线斜率
+        print("the slope of L:", L_model.coef_)
+        print("the slope of R:", R_model.coef_)
+        """
+
+        # z轴小拇指与大拇指的坐标差值
+        diff = self.model.results.right_hand_landmarks.landmark[17].z - self.model.results.right_hand_landmarks.landmark[
+            3].z
+
+        # 判断小拇指是否到达指定斜率(动作二右手在上大拇指在后)
+        if R_model.coef_ > -0.25 and R_model.coef_ < 0 and diff > 0:
+            return True
 
 
 
