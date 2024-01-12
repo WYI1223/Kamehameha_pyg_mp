@@ -3,6 +3,7 @@ from loguru import logger
 from mediapipe import *
 from sklearn.linear_model import LinearRegression
 import math
+import numpy as np
 
 
 class tpose_detector:
@@ -59,23 +60,35 @@ class attack_detector:
             print("no hand detected")
             return
 
+
         left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
         right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
         left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
         right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
 
+        Left_X = np.array(left_X).reshape(-1, 1)
+        Right_X = np.array(right_X).reshape(-1, 1)
+        Left_y = np.array(left_y).reshape(-1, 1)
+        Right_y = np.array(right_y).reshape(-1, 1)
+
         L_model = LinearRegression()
         R_model = LinearRegression()
 
-        L_model.fit(left_X, left_y)
-        R_model.fit(right_X,right_y)
+        L_model.fit(Left_X, Left_y)
+        R_model.fit(Right_X,Right_y)
 
+        """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_)
+        """
 
         # z轴小拇指与大拇指的坐标差值
         diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
+
+        # 判断小拇指是否到达指定斜率
+        if L_model.coef_ > -0.1 and L_model.coef_ < 0:
+            return True
 
         """
         暂定动作一逻辑由拟合直线斜率和z轴坐标来定，斜率需要测试，z轴坐标主要体现在大拇指与小拇指距离差上
