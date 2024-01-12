@@ -1,6 +1,7 @@
 import queue
 from loguru import logger
 from mediapipe import *
+from sklearn.linear_model import LinearRegression
 import math
 
 
@@ -10,6 +11,9 @@ class tpose_detector:
 
     def detect(self):
         pass
+
+
+
 
 
 
@@ -33,7 +37,42 @@ class attack_detector:
     def action1(self):
         logger.info("execute action1")
         self.isSuccess = False
-        pass
+        try:
+            left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
+                              self.model.results.left_hand_landmarks.landmark[17].y]
+            left_pinky_pip = [self.model.results.left_hand_landmarks.landmark[18].x,
+                              self.model.results.left_hand_landmarks.landmark[18].y]
+            left_pinky_dip = [self.model.results.left_hand_landmarks.landmark[19].x,
+                              self.model.results.left_hand_landmarks.landmark[19].y]
+            left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
+                              self.model.results.left_hand_landmarks.landmark[20].y]
+            right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
+                              self.model.results.right_hand_landmarks.landmark[17].y]
+            right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
+                              self.model.results.right_hand_landmarks.landmark[18].y]
+            right_pinky_dip = [self.model.results.right_hand_landmarks.landmark[19].x,
+                              self.model.results.right_hand_landmarks.landmark[19].y]
+            right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
+                              self.model.results.right_hand_landmarks.landmark[20].y]
+        except:
+            print("no hand detected")
+            return
+
+        left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
+        right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
+        left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
+        right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
+
+        L_model = LinearRegression()
+        R_model = LinearRegression()
+
+        L_model.fit(left_X, left_y)
+        R_model.fit(right_X,right_y)
+
+        print("the slope of L:", L_model.coef_)
+        print("the slope of R:", R_model.coef_)
+
+
 
     def action2(self):
         logger.info("execute action2")
