@@ -45,7 +45,8 @@ class UI_View(object):
         # Display FPS
 
         self.model.FPS_class.display_FPS(self.model.img)
-        # self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
+        self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
+
 
         """
         Draw things on pygame

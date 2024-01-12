@@ -55,7 +55,7 @@ class control(object):
                 if self.model.CV2_class == None:
                     self.model.CV2_class = CV2_Engine()
                 self.model.FPS_class = FPS_Engine()
-                # self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
+                self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
                 print("New page initialized")
                 # self.model.segmentation_class = segmentation_engine()
 
@@ -71,7 +71,10 @@ class control(object):
             if self.model.success:
                 # Calculate FPS
                 self.model.FPS_class.get_fps()
-                # self.model.Mediapipe_Holistic_class.process_image(self.model.img)
+
+                self.model.Mediapipe_Holistic_class.process_image(self.model.img)
+                
+
 
                 """
                 Tell view to render after all Business Logic
