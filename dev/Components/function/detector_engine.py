@@ -133,6 +133,7 @@ class attack_detector:
         # 3. 判断是否前推
         if left_angle > 135 and right_angle > 135:
             hand_push = True
+        # ------------------------------------------------------------------这里需要加入log，这里判断的是手臂伸直，所以应该有个info，手臂伸直的log
         else:
             self.push_counter = 0
             return False
@@ -196,7 +197,8 @@ class attack_detector:
                     print("right_hand_Thump_angle:{}, right_hand_Middle_angle:{}, right_hand_Ring_angle:{}".format(
                         right_hand_Thump_angle, right_hand_Middle_angle, right_hand_Ring_angle))
 
-                    print("前推")
+                    print("action3 done")
+                    # ---------------------------这里是判断是否手掌张开并伸直，所以这里要加log，info，手臂伸直并手掌打开，action3动作完成。
                     self.push_counter = 0
                     return (True and hand_push)
             return False
@@ -206,6 +208,14 @@ class attack_detector:
 
 
         # logger.info("execute action3")
+
+    """
+    计算三点之间的角度
+    Input: x,y,z of landmark1, landmark2, landmark3
+    output: 三点之间夹角度数
+    
+    logic: 余弦函数
+    """
     def calculate_angle(self,landmark1, landmark2, landmark3):
             # 获取坐标
         x1, y1, z1 = landmark1.x, landmark1.y, landmark1.z

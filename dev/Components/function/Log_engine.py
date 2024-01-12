@@ -6,7 +6,7 @@ def set_logger(logger_):
 """
 
 import os.path
-from loguru import loggerp
+from loguru import logger
 from multiprocessing import Pool, Process
 
 class Worker:
