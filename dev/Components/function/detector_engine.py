@@ -1,4 +1,6 @@
 import queue
+import time
+
 from loguru import logger
 from mediapipe import *
 from sklearn.linear_model import LinearRegression
@@ -24,8 +26,15 @@ class attack_detector:
         attack_detector._logger = logger_
 
     def __init__(self,model):
-        self.queue = queue.Queue()
-        self.intialize()
+        # self.queue = queue.Queue()
+
+        # 目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
+        self.state_machine = 0
+        # 当state_machine不为0时，开始计时，超过10s则将state_machine归0
+        self.last_time = time.time()
+
+
+        # self.intialize()
         self.model = model
         self.push_counter = 0
         pass
@@ -33,10 +42,42 @@ class attack_detector:
     def intialize(self):
         pass
 
+    """
+    统筹整个class，作为class判断的入口
+    Input: None
+    Output: True, or False
+    
+    Logic: 
+    """
+    def detect(self):
+        if self.state_machine == 0:
+            if self.action1():
+                self.state_machine += 1
+                self.last_time = time.time()
+                print("Action1 done -- {}".format(time.time()))
+            pass
 
+        if self.state_machine == 1:
+            if self.action2():
+                self.state_machine += 1
+                self.last_time = time.time()
+                print("Action2 done -- {}".format(time.time()))
+            pass
+
+        if self.state_machine == 2:
+            if self.action3():
+                self.state_machine = 0
+                print("Action3 done -- {}".format(time.time()))
+                return True
+            pass
+
+        # 5s 后状态机归0
+        if self.state_machine !=0 and time.time() - self.last_time > 10:
+            print("Action reset")
+            self.state_machine = 0
+        return False
 
     def action1(self):
-        logger.info("execute action1")
         self.isSuccess1 = False
         try:
             #详见handlandmark.jpg
@@ -87,6 +128,7 @@ class attack_detector:
 
         # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
         if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
+            logger.info("Action1 done")
             return True
 
         """
@@ -97,7 +139,6 @@ class attack_detector:
 
 
     def action2(self):
-        logger.info("execute action2")
         self.isSuccess2 = False
         try:
             # 详见handlandmark.jpg
@@ -148,6 +189,7 @@ class attack_detector:
 
         # 判断小拇指是否到达指定斜率(动作二右手在上大拇指在后)
         if R_model.coef_ > -0.25 and R_model.coef_ < 0 and diff > 0:
+            logger.info("Action2 done")
             return True
 
 
@@ -179,7 +221,7 @@ class attack_detector:
         right_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
 
         # 3. 判断是否前推
-        if left_angle > 135 and right_angle > 135:
+        if left_angle > 125 and right_angle > 125:
             hand_push = True
         # ------------------------------------------------------------------这里需要加入log，这里判断的是手臂伸直，所以应该有个info，手臂伸直的log
         else:
@@ -237,18 +279,11 @@ class attack_detector:
         hand_open = False
         if left_hand_Thump_angle > 135 and left_hand_Middle_angle > 135 and left_hand_Ring_angle > 135:
             if right_hand_Thump_angle > 135 and right_hand_Middle_angle > 135 and right_hand_Ring_angle > 135:
-                self.push_counter += 1
-                if self.push_counter > 10:
-                    print("left_hand_Thump_angle:{}, left_hand_Middle_angle:{}, left_hand_Ring_angle:{}".format(
-                        left_hand_Thump_angle, left_hand_Middle_angle, left_hand_Ring_angle))
 
-                    print("right_hand_Thump_angle:{}, right_hand_Middle_angle:{}, right_hand_Ring_angle:{}".format(
-                        right_hand_Thump_angle, right_hand_Middle_angle, right_hand_Ring_angle))
-
-                    print("action3 done")
+                logger.info("Action3 done")
                     # ---------------------------这里是判断是否手掌张开并伸直，所以这里要加log，info，手臂伸直并手掌打开，action3动作完成。
-                    self.push_counter = 0
-                    return (True and hand_push)
+                self.push_counter = 0
+                return (True and hand_push)
             return False
         else:
             self.push_counter = 0
