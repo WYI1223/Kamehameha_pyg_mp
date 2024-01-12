@@ -150,17 +150,20 @@ class attack_detector:
         if R_model.coef_ > -0.25 and R_model.coef_ < 0 and diff > 0:
             return True
 
-    def action3(self):
-        """
+
+
+    """
         动作3：前推检测
         Input: 双手关键点, hand : 0-Wrist,4-Thumb,8-Index,12-Middle,16-Ring,20-Pinky
                          body: 11-left_shoulder, 12-right_shoulder, 13-left_elbow, 14-right_elbow, 15-left_wrist, 16-right_wrist
         Output: 1-前推, 0-其他
 
         logic: 计算手腕和肩膀的深度差，如果手腕在肩膀前面的一定数值，则认为是前推动作
-        """
+    """
+    def action3(self):
 
         # 1. 获得手腕,手肘,肩膀的坐标
+        hand_push = False
         try:
             left_shoulder = self.model.results.pose_landmarks.landmark[11]
             right_shoulder = self.model.results.pose_landmarks.landmark[12]
@@ -171,25 +174,83 @@ class attack_detector:
         except:
             return False
 
-
-
         # 2. 计算手肘的角度
         left_angle = self.calculate_angle(left_shoulder, left_elbow, left_wrist)
         right_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
 
         # 3. 判断是否前推
         if left_angle > 135 and right_angle > 135:
-            self.push_counter += 1
-            if self.push_counter > 10:
-                print("前推")
-                self.push_counter = 0
-                print("left_angle:{}, right_angle:{}".format(left_angle, right_angle))
-                return True
+            hand_push = True
         else:
             self.push_counter = 0
             return False
-        return False
+        """
+        动作3-2：手掌张开检测
+        Input: 双手关键点, hand : 0 - Wrist
+                                2,3,4 - Thump_MCP, Thump_IP, Thump_TIP
+                                6,7,8 - Index
+                                10,11,12 - Middle
+                                14,15,16 - Ring
+                                18,19,20 - Pinky
+        Output: 1-张开,0-其他
+        
+        logic: 计算手指三个关键点的角度是否在180左右，全部满足则返回True
+        """
+        # 1. 获得手掌关键点
+        try:
+            # 左手关键点
+            left_hand_Wrist = self.model.results.left_hand_landmarks.landmark[0]
+            left_hand_Thump = [left_hand_Wrist,
+                               self.model.results.left_hand_landmarks.landmark[2],
+                               self.model.results.left_hand_landmarks.landmark[4]]
+            left_hand_Middle = [left_hand_Wrist,
+                                self.model.results.left_hand_landmarks.landmark[10],
+                                self.model.results.left_hand_landmarks.landmark[12]]
+            left_hand_Ring = [left_hand_Wrist,
+                              self.model.results.left_hand_landmarks.landmark[14],
+                              self.model.results.left_hand_landmarks.landmark[16]]
+            # 右手关键点
+            right_hand_Wrist = self.model.results.right_hand_landmarks.landmark[0]
+            right_hand_Thump = [right_hand_Wrist,
+                               self.model.results.right_hand_landmarks.landmark[2],
+                               self.model.results.right_hand_landmarks.landmark[4]]
+            right_hand_Middle = [right_hand_Wrist,
+                                self.model.results.right_hand_landmarks.landmark[10],
+                                self.model.results.right_hand_landmarks.landmark[12]]
+            right_hand_Ring = [right_hand_Wrist,
+                              self.model.results.right_hand_landmarks.landmark[14],
+                              self.model.results.right_hand_landmarks.landmark[16]]
+        except:
+            return False
+        # 2. 计算手指角度
+        #  左手
+        left_hand_Thump_angle = self.calculate_angle(left_hand_Thump[0],left_hand_Thump[1],left_hand_Thump[2])
+        left_hand_Middle_angle = self.calculate_angle(left_hand_Middle[0], left_hand_Middle[1], left_hand_Middle[2])
+        left_hand_Ring_angle = self.calculate_angle(left_hand_Ring[0], left_hand_Ring[1], left_hand_Ring[2])
+        #  右手
+        right_hand_Thump_angle = self.calculate_angle(right_hand_Thump[0],right_hand_Thump[1],right_hand_Thump[2])
+        right_hand_Middle_angle = self.calculate_angle(right_hand_Middle[0], right_hand_Middle[1], right_hand_Middle[2])
+        right_hand_Ring_angle = self.calculate_angle(right_hand_Ring[0], right_hand_Ring[1], right_hand_Ring[2])
 
+        # 3. 判断是否张开手指
+        hand_open = False
+        if left_hand_Thump_angle > 135 and left_hand_Middle_angle > 135 and left_hand_Ring_angle > 135:
+            if right_hand_Thump_angle > 135 and right_hand_Middle_angle > 135 and right_hand_Ring_angle > 135:
+                self.push_counter += 1
+                if self.push_counter > 10:
+                    print("left_hand_Thump_angle:{}, left_hand_Middle_angle:{}, left_hand_Ring_angle:{}".format(
+                        left_hand_Thump_angle, left_hand_Middle_angle, left_hand_Ring_angle))
+
+                    print("right_hand_Thump_angle:{}, right_hand_Middle_angle:{}, right_hand_Ring_angle:{}".format(
+                        right_hand_Thump_angle, right_hand_Middle_angle, right_hand_Ring_angle))
+
+                    print("前推")
+                    self.push_counter = 0
+                    return (True and hand_push)
+            return False
+        else:
+            self.push_counter = 0
+            return False
 
 
         # logger.info("execute action3")
