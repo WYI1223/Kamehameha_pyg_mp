@@ -1,7 +1,6 @@
 import queue
 from loguru import logger
 from mediapipe import *
-import math
 
 class attack_detector:
     _logger = None
@@ -16,14 +15,11 @@ class attack_detector:
     def intialize(self):
         pass
 
-    def calculate_angle(self,first_point,second_point,third_point):
-        pass
 
 
     def action1(self):
         logger.info("execute action1")
         self.isSuccess = False
-
         pass
 
     def action2(self):
@@ -33,8 +29,6 @@ class attack_detector:
     def action3(self):
         logger.info("execute action3")
         pass
-
-
 
 class jump_detector:
 
