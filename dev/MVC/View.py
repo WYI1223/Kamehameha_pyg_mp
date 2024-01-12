@@ -50,9 +50,8 @@ class UI_View(object):
         # 绘制人物所在框
         self.model.tpose_detector.draw_box(self.model.img)
 
-        # 如果push,save the image
-        if self.model.detector.action3():
-            self.model.CV2_class.save_camera()
+        # 动作检测模组
+        self.model.detector.detect()
 
 
         """

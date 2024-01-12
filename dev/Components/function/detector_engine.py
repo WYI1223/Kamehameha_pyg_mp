@@ -1,11 +1,9 @@
-import queue
+import time
 from loguru import logger
-from mediapipe import *
 from sklearn.linear_model import LinearRegression
 import math
-import mediapipe as mp
 import cv2
-
+import numpy as np
 class TposeDetector:
     def __init__(self,model):
         self.model = model
@@ -97,8 +95,15 @@ class attack_detector:
         attack_detector._logger = logger_
 
     def __init__(self,model):
-        self.queue = queue.Queue()
-        self.intialize()
+        # self.queue = queue.Queue()
+
+        # 目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
+        self.state_machine = 0
+        # 当state_machine不为0时，开始计时，超过10s则将state_machine归0
+        self.last_time = time.time()
+
+
+        # self.intialize()
         self.model = model
         self.push_counter = 0
         pass
@@ -106,10 +111,42 @@ class attack_detector:
     def intialize(self):
         pass
 
+    """
+    统筹整个class，作为class判断的入口
+    Input: None
+    Output: True, or False
+    
+    Logic: 
+    """
+    def detect(self):
+        if self.state_machine == 0:
+            if self.action1():
+                self.state_machine += 1
+                self.last_time = time.time()
+                print("Action1 done -- {}".format(time.time()))
+            pass
 
+        if self.state_machine == 1:
+            if self.action2():
+                self.state_machine += 1
+                self.last_time = time.time()
+                print("Action2 done -- {}".format(time.time()))
+            pass
+
+        if self.state_machine == 2:
+            if self.action3():
+                self.state_machine = 0
+                print("Action3 done -- {}".format(time.time()))
+                return True
+            pass
+
+        # 5s 后状态机归0
+        if self.state_machine !=0 and time.time() - self.last_time > 10:
+            print("Action reset")
+            self.state_machine = 0
+        return False
 
     def action1(self):
-        logger.info("execute action1")
         self.isSuccess1 = False
         try:
             #详见handlandmark.jpg
@@ -130,26 +167,38 @@ class attack_detector:
             right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
                               self.model.results.right_hand_landmarks.landmark[20].y]
         except:
-            print("no hand detected")
-            return
+            return False
+
 
         left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
         right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
         left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
         right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
 
+        Left_X = np.array(left_X).reshape(-1, 1)
+        Right_X = np.array(right_X).reshape(-1, 1)
+        Left_y = np.array(left_y).reshape(-1, 1)
+        Right_y = np.array(right_y).reshape(-1, 1)
+
         L_model = LinearRegression()
         R_model = LinearRegression()
 
-        L_model.fit(left_X, left_y)
-        R_model.fit(right_X,right_y)
+        L_model.fit(Left_X, Left_y)
+        R_model.fit(Right_X,Right_y)
 
+        """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_)
+        """
 
         # z轴小拇指与大拇指的坐标差值
         diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
+
+        # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
+        if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
+            logger.info("Action1 done")
+            return True
 
         """
         暂定动作一逻辑由拟合直线斜率和z轴坐标来定，斜率需要测试，z轴坐标主要体现在大拇指与小拇指距离差上
@@ -159,21 +208,73 @@ class attack_detector:
 
 
     def action2(self):
-        logger.info("execute action2")
         self.isSuccess2 = False
-        pass
+        try:
+            # 详见handlandmark.jpg
+            left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
+                              self.model.results.left_hand_landmarks.landmark[17].y]
+            left_pinky_pip = [self.model.results.left_hand_landmarks.landmark[18].x,
+                              self.model.results.left_hand_landmarks.landmark[18].y]
+            left_pinky_dip = [self.model.results.left_hand_landmarks.landmark[19].x,
+                              self.model.results.left_hand_landmarks.landmark[19].y]
+            left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
+                              self.model.results.left_hand_landmarks.landmark[20].y]
+            right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
+                               self.model.results.right_hand_landmarks.landmark[17].y]
+            right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
+                               self.model.results.right_hand_landmarks.landmark[18].y]
+            right_pinky_dip = [self.model.results.right_hand_landmarks.landmark[19].x,
+                               self.model.results.right_hand_landmarks.landmark[19].y]
+            right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
+                               self.model.results.right_hand_landmarks.landmark[20].y]
+        except:
+            return False
 
-    def action3(self):
+        left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
+        right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
+        left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
+        right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
+
+        Left_X = np.array(left_X).reshape(-1, 1)
+        Right_X = np.array(right_X).reshape(-1, 1)
+        Left_y = np.array(left_y).reshape(-1, 1)
+        Right_y = np.array(right_y).reshape(-1, 1)
+
+        L_model = LinearRegression()
+        R_model = LinearRegression()
+
+        L_model.fit(Left_X, Left_y)
+        R_model.fit(Right_X, Right_y)
+
         """
+        # 左右手小拇指点拟合直线斜率
+        print("the slope of L:", L_model.coef_)
+        print("the slope of R:", R_model.coef_)
+        """
+
+        # z轴小拇指与大拇指的坐标差值
+        diff = self.model.results.right_hand_landmarks.landmark[17].z - self.model.results.right_hand_landmarks.landmark[
+            3].z
+
+        # 判断小拇指是否到达指定斜率(动作二右手在上大拇指在后)
+        if R_model.coef_ > -0.25 and R_model.coef_ < 0 and diff > 0:
+            logger.info("Action2 done")
+            return True
+
+
+
+    """
         动作3：前推检测
         Input: 双手关键点, hand : 0-Wrist,4-Thumb,8-Index,12-Middle,16-Ring,20-Pinky
                          body: 11-left_shoulder, 12-right_shoulder, 13-left_elbow, 14-right_elbow, 15-left_wrist, 16-right_wrist
         Output: 1-前推, 0-其他
 
         logic: 计算手腕和肩膀的深度差，如果手腕在肩膀前面的一定数值，则认为是前推动作
-        """
+    """
+    def action3(self):
 
         # 1. 获得手腕,手肘,肩膀的坐标
+        hand_push = False
         try:
             left_shoulder = self.model.results.pose_landmarks.landmark[11]
             right_shoulder = self.model.results.pose_landmarks.landmark[12]
@@ -184,28 +285,89 @@ class attack_detector:
         except:
             return False
 
-
-
         # 2. 计算手肘的角度
         left_angle = self.calculate_angle(left_shoulder, left_elbow, left_wrist)
         right_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
 
         # 3. 判断是否前推
-        if left_angle > 135 and right_angle > 135:
-            self.push_counter += 1
-            if self.push_counter > 10:
-                print("前推")
-                self.push_counter = 0
-                print("left_angle:{}, right_angle:{}".format(left_angle, right_angle))
-                return True
+        if left_angle > 125 and right_angle > 125:
+            hand_push = True
+        # ------------------------------------------------------------------这里需要加入log，这里判断的是手臂伸直，所以应该有个info，手臂伸直的log
         else:
             self.push_counter = 0
             return False
-        return False
+        """
+        动作3-2：手掌张开检测
+        Input: 双手关键点, hand : 0 - Wrist
+                                2,3,4 - Thump_MCP, Thump_IP, Thump_TIP
+                                6,7,8 - Index
+                                10,11,12 - Middle
+                                14,15,16 - Ring
+                                18,19,20 - Pinky
+        Output: 1-张开,0-其他
+        
+        logic: 计算手指三个关键点的角度是否在180左右，全部满足则返回True
+        """
+        # 1. 获得手掌关键点
+        try:
+            # 左手关键点
+            left_hand_Wrist = self.model.results.left_hand_landmarks.landmark[0]
+            left_hand_Thump = [left_hand_Wrist,
+                               self.model.results.left_hand_landmarks.landmark[2],
+                               self.model.results.left_hand_landmarks.landmark[4]]
+            left_hand_Middle = [left_hand_Wrist,
+                                self.model.results.left_hand_landmarks.landmark[10],
+                                self.model.results.left_hand_landmarks.landmark[12]]
+            left_hand_Ring = [left_hand_Wrist,
+                              self.model.results.left_hand_landmarks.landmark[14],
+                              self.model.results.left_hand_landmarks.landmark[16]]
+            # 右手关键点
+            right_hand_Wrist = self.model.results.right_hand_landmarks.landmark[0]
+            right_hand_Thump = [right_hand_Wrist,
+                               self.model.results.right_hand_landmarks.landmark[2],
+                               self.model.results.right_hand_landmarks.landmark[4]]
+            right_hand_Middle = [right_hand_Wrist,
+                                self.model.results.right_hand_landmarks.landmark[10],
+                                self.model.results.right_hand_landmarks.landmark[12]]
+            right_hand_Ring = [right_hand_Wrist,
+                              self.model.results.right_hand_landmarks.landmark[14],
+                              self.model.results.right_hand_landmarks.landmark[16]]
+        except:
+            return False
+        # 2. 计算手指角度
+        #  左手
+        left_hand_Thump_angle = self.calculate_angle(left_hand_Thump[0],left_hand_Thump[1],left_hand_Thump[2])
+        left_hand_Middle_angle = self.calculate_angle(left_hand_Middle[0], left_hand_Middle[1], left_hand_Middle[2])
+        left_hand_Ring_angle = self.calculate_angle(left_hand_Ring[0], left_hand_Ring[1], left_hand_Ring[2])
+        #  右手
+        right_hand_Thump_angle = self.calculate_angle(right_hand_Thump[0],right_hand_Thump[1],right_hand_Thump[2])
+        right_hand_Middle_angle = self.calculate_angle(right_hand_Middle[0], right_hand_Middle[1], right_hand_Middle[2])
+        right_hand_Ring_angle = self.calculate_angle(right_hand_Ring[0], right_hand_Ring[1], right_hand_Ring[2])
 
+        # 3. 判断是否张开手指
+        hand_open = False
+        if left_hand_Thump_angle > 135 and left_hand_Middle_angle > 135 and left_hand_Ring_angle > 135:
+            if right_hand_Thump_angle > 135 and right_hand_Middle_angle > 135 and right_hand_Ring_angle > 135:
+
+                logger.info("Action3 done")
+                    # ---------------------------这里是判断是否手掌张开并伸直，所以这里要加log，info，手臂伸直并手掌打开，action3动作完成。
+                self.push_counter = 0
+                return (True and hand_push)
+            return False
+        else:
+            self.push_counter = 0
+            return False
 
 
         # logger.info("execute action3")
+
+    """
+    计算三点之间的角度
+    Input: x,y,z of landmark1, landmark2, landmark3
+    output: 三点之间夹角度数
+    
+    logic: 余弦函数
+    """
     def calculate_angle(self,landmark1, landmark2, landmark3):
             # 获取坐标
         x1, y1, z1 = landmark1.x, landmark1.y, landmark1.z
