@@ -48,7 +48,7 @@ class UI_View(object):
         self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
 
         if self.model.detector.action1():
-            print("1")
+            self.model.CV2_class.save_camera()
 
         # 如果push,save the image
         if self.model.detector.action3():
