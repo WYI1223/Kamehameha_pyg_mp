@@ -59,8 +59,8 @@ class TposeDetector:
         # 计算矩形的左上角和右下角坐标，使其位于图像中央并更长而窄
         center_x = image_width // 2
         center_y = image_height // 2
-        half_width = 200  # 矩形的一半宽度
-        half_height = 320  # 矩形的一半高度
+        half_width = 300  # 矩形的一半宽度
+        half_height = 520  # 矩形的一半高度
 
         # 计算矩形的坐标
         top_left = (center_x - half_width, center_y - half_height)
@@ -68,13 +68,15 @@ class TposeDetector:
 
         # 初始化所有关键点是否在矩形内的标志
         all_landmarks_inside = True
+        landmark = None
         try:
             self.pose_landmarks = self.model.results.pose_landmarks
+            landmark = self.pose_landmarks.landmark
         except:
-            print("no pose detected")
             return False
+
         # 检查所有关键点是否在矩形内
-        for landmark in self.pose_landmarks.landmark:
+        for landmark in landmark:
             x, y = int(landmark.x * image_width), int(landmark.y * image_height)
             # 如果关键点在矩形外
             if not (top_left[0] <= x <= bottom_right[0] and top_left[1] <= y <= bottom_right[1]):
