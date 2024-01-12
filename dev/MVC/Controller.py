@@ -3,6 +3,7 @@ import dev.MVC.View as view
 from dev.Components.function.FPS_Engine import FPS_Engine
 from dev.Components.function.CV2_Engine import CV2_Engine
 from dev.Components.mediapipe.mediapipe_engine import *
+from dev.Components.function.detector_engine import *
 import cv2
 import pygame
 
@@ -56,6 +57,7 @@ class control(object):
                     self.model.CV2_class = CV2_Engine()
                 self.model.FPS_class = FPS_Engine()
                 self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
+                self.model.detector = attack_detector(self.model.Mediapipe_Holistic_class)
                 print("New page initialized")
                 # self.model.segmentation_class = segmentation_engine()
 
@@ -73,7 +75,7 @@ class control(object):
                 self.model.FPS_class.get_fps()
 
                 self.model.Mediapipe_Holistic_class.process_image(self.model.img)
-                
+                self.model.detector.action3()
 
 
                 """
