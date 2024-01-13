@@ -1,3 +1,5 @@
+import time
+
 from dev.MVC.EventManager import *
 import pygame
 from pygame.locals import *
@@ -52,6 +54,13 @@ class UI_View(object):
 
         # 动作检测模组
         self.model.detector.detect()
+
+        # 跳跃检测模组
+        if self.model.jump_detector.jump():
+            cv2.imwrite("photos/Jump_{}.jpg".format(time.time()), self.model.img)
+
+        if self.model.detector.sit_detect():
+            cv2.imwrite("photos/Sitdown_{}.jpg".format(time.time()), self.model.img)
 
 
         """

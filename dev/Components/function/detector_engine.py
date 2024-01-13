@@ -118,7 +118,7 @@ class attack_detector:
         self.state_machine = 0
         self.model = None
         # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
-        self.data = []
+        self.data = {}
 
     def intialize_model(self,model):
         self.model = model
@@ -310,7 +310,6 @@ class attack_detector:
             hand_push = True
         # ------------------------------------------------------------------这里需要加入log，这里判断的是手臂伸直，所以应该有个info，手臂伸直的log
         else:
-            self.push_counter = 0
             return False
         """
         动作3-2：手掌张开检测
@@ -367,16 +366,31 @@ class attack_detector:
 
                 logger.info("Action3 done")
                     # ---------------------------这里是判断是否手掌张开并伸直，所以这里要加log，info，手臂伸直并手掌打开，action3动作完成。
-                self.push_counter = 0
                 return (True and hand_push)
             return False
         else:
-            self.push_counter = 0
+            return False
+
+    def sit_detect(self):
+
+        try:
+            left_lag_1 = self.model.results.pose_landmarks.landmark[24]
+            left_lag_middle = self.model.results.pose_landmarks.landmark[26]
+            left_lag_3 = self.model.results.pose_landmarks.landmark[28]
+            right_lag_1 = self.model.results.pose_landmarks.landmark[23]
+            right_lag_middle = self.model.results.pose_landmarks.landmark[25]
+            right_lag_3 = self.model.results.pose_landmarks.landmark[27]
+        except:
             return False
 
 
-        # logger.info("execute action3")
+        left_lag_angle = self.calculate_angle(left_lag_1, left_lag_middle, left_lag_3)
+        right_lag_angle = self.calculate_angle(right_lag_1, right_lag_middle, right_lag_3)
 
+        if left_lag_angle < 90 and right_lag_angle < 90:
+            return True
+
+        pass
     """
     计算三点之间的角度
     Input: x,y,z of landmark1, landmark2, landmark3
@@ -417,18 +431,56 @@ class attack_detector:
 class jump_detector:
 
     def __init__(self):
+        self.data = []*10
+        self.counter = 0
         pass
 
-    def intialize(self):
+    def intialize_model(self, model):
+        self.model = model
+
         pass
+    def jump(self):
+        try:
+            left_shoulder = self.model.results.pose_landmarks.landmark[11]
+            right_shoulder = self.model.results.pose_landmarks.landmark[12]
+            left_hip = self.model.results.pose_landmarks.landmark[23]
+            right_hip = self.model.results.pose_landmarks.landmark[24]
+        except:
+            return False
+
+        # 计算四个点的重心
+        center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y) / 4
+
+        if self.data == []:
+            self.data.append(center_y)
+            self.counter += 1
+            return False
+        print(self.data)
+        for i in self.data:
+            if (center_y - i)/center_y < -0.5:
+                self.data = [center_y]
+                return True
+            else:
+                self.data.append(center_y)
+                if len(self.data) > 10:
+                    self.data.pop(0)
+                return False
+
+
+
 
 logger.info("")
 logger.debug("")
 class sit_detector:
 
     def __init__(self):
+
+
         pass
 
     def intialize(self):
+
+
+
         pass
 
