@@ -96,7 +96,7 @@ class attack_detector:
     def set_logger(logger_):
         attack_detector._logger = logger_
 
-    def __init__(self,model):
+    def __init__(self):
         # self.queue = queue.Queue()
 
         # 目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
@@ -106,11 +106,12 @@ class attack_detector:
 
 
         # self.intialize()
-        self.model = model
+        self.model = None
         self.push_counter = 0
         pass
 
-    def intialize(self):
+    def intialize_model(self,model):
+        self.model = model
         pass
 
     """
@@ -119,6 +120,8 @@ class attack_detector:
     Output: True, or False
     
     Logic: 
+        目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
+        当state_machine不为0时，开始计时，超过10s则将state_machine归0
     """
     def detect(self):
         if self.state_machine == 0:

@@ -14,8 +14,9 @@ class control(object):
         evManager.RegisterListener(self)
         self.model = model
         self.pageinitilized = False
-
         self.model.CV2_class = None
+        self.model.FPS_class = None
+        self.model.detector = None
 
     def initialize(self):
         """
@@ -55,10 +56,17 @@ class control(object):
                 """
                 if self.model.CV2_class == None:
                     self.model.CV2_class = CV2_Engine()
-                self.model.FPS_class = FPS_Engine()
+                if self.model.FPS_class == None:
+                    self.model.FPS_class = FPS_Engine()
+                if self.model.detector == None:
+                    self.model.detector = attack_detector()
+
                 self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
                 self.model.tpose_detector = TposeDetector(self.model.Mediapipe_Holistic_class)
-                self.model.detector = attack_detector(self.model.Mediapipe_Holistic_class)
+
+                # 传入mediapipe_holistic_engine类，初始化模型
+                self.model.detector.intialize_model(self.model.Mediapipe_Holistic_class)
+
                 print("New page initialized")
                 # self.model.segmentation_class = segmentation_engine()
 
