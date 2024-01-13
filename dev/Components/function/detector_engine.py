@@ -119,7 +119,10 @@ class attack_detector:
         self.model = None
         # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
         self.Lslope = []*10
+        self.Lslope_b = []*10
         self.Rslope = []*10
+        self.Rslope_b = [] * 10
+
 
         self.sit_down = False
 
@@ -184,11 +187,20 @@ class attack_detector:
             Left_y = np.array(left_y).reshape(-1, 1)
             L_model = LinearRegression()
             L_model.fit(Left_X, Left_y)
+
+            diff = (self.model.results.left_hand_landmarks.landmark[17].z -
+                    self.model.results.left_hand_landmarks.landmark[3].z)
+            if len(self.Lslope_b) < 10:
+                self.Lslope_b.append(diff)
+            else:
+                self.Lslope_b.pop(0)
+
             if len(self.Lslope) < 10:
                 self.Lslope.append(np.abs(L_model.coef_))
             else:
-                self.Lslope.pop()
+                self.Lslope.pop(0)
         except:
+            if len(self.Lslope) == 0:
                 return False
 
 
@@ -211,26 +223,45 @@ class attack_detector:
             R_model = LinearRegression()
             R_model.fit(Right_X, Right_y)
 
+            diff = self.model.results.right_hand_landmarks.landmark[17].z - \
+                   self.model.results.right_hand_landmarks.landmark[3].z
+
+            if len(self.Rslope_b) < 10:
+                self.Rslope_b.append(diff)
+            else:
+                self.Rslope_b.pop(0)
+
             if len(self.Rslope) < 10:
                 self.Rslope.append(np.abs(R_model.coef_))
             else:
-                self.Rslope.pop()
+                self.Rslope.pop(0)
         except:
-            return False
+            if len(self.Rslope) == 0:
+                return False
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
-        print("the slope of R:", R_model.coef_)
+        print("the slope of R:", R_model.coef_) 
         """
-        diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
+        # diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
 
 
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
-                if self.Rslope[n]<0.25 and self.Lslope[i]<0.25 and diff>0:
+                diff1 = self.Rslope_b[n]
+                diff2 = self.Lslope_b[i]
+                if self.Rslope[n]<0.25 and self.Lslope[i]<0.25 and diff1>0 and diff2<0:
+                    print(time.time(), " ", self.Rslope[n], " ", self.Lslope[i], " ", diff1, " ", diff2, "action1")
+                    self.Rslope.clear()
+                    self.Lslope.clear()
+                    self.Rslope_b.clear()
+                    self.Lslope_b.clear()
                     return True
+        self.Rslope.pop(0)
+        self.Lslope.pop(0)
 
-
+        self.Rslope_b.pop(0)
+        self.Lslope_b.pop(0)
         # # z轴小拇指与大拇指的坐标差值
         # diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
         #
@@ -263,12 +294,21 @@ class attack_detector:
             Left_y = np.array(left_y).reshape(-1, 1)
             L_model = LinearRegression()
             L_model.fit(Left_X, Left_y)
+
+            diff = (self.model.results.left_hand_landmarks.landmark[17].z -
+                    self.model.results.left_hand_landmarks.landmark[3].z)
+            if len(self.Lslope_b) < 10:
+                self.Lslope_b.append(diff)
+            else:
+                self.Lslope_b.pop(0)
+
             if len(self.Lslope) < 10:
                 self.Lslope.append(np.abs(L_model.coef_))
             else:
-                self.Lslope.pop()
+                self.Lslope.pop(0)
         except:
-            return False
+            if len(self.Lslope) == 0:
+                return False
 
         try:
             right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
@@ -289,25 +329,42 @@ class attack_detector:
             R_model = LinearRegression()
             R_model.fit(Right_X, Right_y)
 
+            diff = self.model.results.right_hand_landmarks.landmark[17].z - \
+                   self.model.results.right_hand_landmarks.landmark[3].z
+
+            if len(self.Rslope_b) < 10:
+                self.Rslope_b.append(diff)
+            else:
+                self.Rslope_b.pop(0)
+
             if len(self.Rslope) < 10:
                 self.Rslope.append(np.abs(R_model.coef_))
             else:
-                self.Rslope.pop()
+                self.Rslope.pop(0)
         except:
-            return False
+            if len(self.Rslope) == 0:
+                return False
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_)
         """
-        diff = self.model.results.right_hand_landmarks.landmark[17].z - self.model.results.right_hand_landmarks.landmark[3].z
 
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
-                if self.Rslope[n] < 0.25 and self.Lslope[i] < 0.25 and diff > 0:
+                diff1 = self.Rslope_b[n]
+                diff2 = self.Lslope_b[i]
+                if self.Rslope[n] < 0.25 and self.Lslope[i] < 0.25 and diff1<0 and diff2>0:
+                    print(time.time()," ",self.Rslope[n]," ",self.Lslope[i]," ",diff1," ",diff2, "action2")
+                    self.Rslope.clear()
+                    self.Lslope.clear()
+                    self.Rslope_b.clear()
+                    self.Lslope_b.clear()
                     return True
-
-
+        self.Lslope.pop(0)
+        self.Rslope.pop(0)
+        self.Rslope_b.pop(0)
+        self.Lslope_b.pop(0)
 
     """
         动作3：前推检测

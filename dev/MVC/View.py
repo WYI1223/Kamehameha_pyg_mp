@@ -56,15 +56,15 @@ class UI_View(object):
 
         action = self.model.detector.detect()
         if action == 1:
-            cv2.imwrite("photos/action1_{}.jpg".format(time.time()),self.model.img)
+            cv2.imwrite("photos/{}_action1.jpg".format(time.time()),self.model.img)
         elif action == 2:
-            cv2.imwrite("photos/action2_{}.jpg".format(time.time()),self.model.img)
+            cv2.imwrite("photos/{}_action2.jpg".format(time.time()),self.model.img)
         elif action ==3:
-            cv2.imwrite("photos/action3_{}.jpg".format(time.time()),self.model.img)
+            cv2.imwrite("photos/{}_action3.jpg".format(time.time()),self.model.img)
 
         # 跳跃检测模组
-        if self.model.jump_detector.jump():
-            cv2.imwrite("photos/Jump_{}.jpg".format(time.time()), self.model.img)
+        # if self.model.jump_detector.jump():
+        #     cv2.imwrite("photos/Jump_{}.jpg".format(time.time()), self.model.img)
 
         # 蹲下检测模组
         # if self.model.detector.sit_detect():
