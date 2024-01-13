@@ -59,8 +59,9 @@ class UI_View(object):
         if self.model.jump_detector.jump():
             cv2.imwrite("photos/Jump_{}.jpg".format(time.time()), self.model.img)
 
-        if self.model.detector.sit_detect():
-            cv2.imwrite("photos/Sitdown_{}.jpg".format(time.time()), self.model.img)
+        # 蹲下检测模组
+        # if self.model.detector.sit_detect():
+        #     cv2.imwrite("photos/Sitdown_{}.jpg".format(time.time()), self.model.img)
 
 
         """

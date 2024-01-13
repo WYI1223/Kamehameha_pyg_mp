@@ -119,6 +119,7 @@ class attack_detector:
         self.model = None
         # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
         self.data = {}
+        self.sit_down = False
 
     def intialize_model(self,model):
         self.model = model
@@ -381,16 +382,25 @@ class attack_detector:
             right_lag_middle = self.model.results.pose_landmarks.landmark[25]
             right_lag_3 = self.model.results.pose_landmarks.landmark[27]
         except:
+            if self.sit_down:
+                logger.info("Stand up")
+            self.sit_down = False
             return False
 
 
         left_lag_angle = self.calculate_angle(left_lag_1, left_lag_middle, left_lag_3)
         right_lag_angle = self.calculate_angle(right_lag_1, right_lag_middle, right_lag_3)
 
-        if left_lag_angle < 90 and right_lag_angle < 90:
+        if left_lag_angle < 70 and right_lag_angle < 70:
+            if not self.sit_down:
+                self.sit_down = True
+                logger.info("Sit down")
             return True
-
-        pass
+        else:
+            if self.sit_down:
+                logger.info("Stand up")
+            self.sit_down = False
+            return False
     """
     计算三点之间的角度
     Input: x,y,z of landmark1, landmark2, landmark3
@@ -441,24 +451,28 @@ class jump_detector:
         pass
     def jump(self):
         try:
-            left_shoulder = self.model.results.pose_landmarks.landmark[11]
-            right_shoulder = self.model.results.pose_landmarks.landmark[12]
-            left_hip = self.model.results.pose_landmarks.landmark[23]
-            right_hip = self.model.results.pose_landmarks.landmark[24]
+            # left_shoulder = self.model.results.pose_landmarks.landmark[11]
+            # right_shoulder = self.model.results.pose_landmarks.landmark[12]
+            # left_hip = self.model.results.pose_landmarks.landmark[23]
+            # right_hip = self.model.results.pose_landmarks.landmark[24]
+            left_ankle = self.model.results.pose_landmarks.landmark[27]
+            right_ankle = self.model.results.pose_landmarks.landmark[28]
         except:
             return False
 
-        # 计算四个点的重心
-        center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y) / 4
+        # 计算6个点的重心
+        # center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y + left_ankle.y + right_ankle.y) / 6
+        center_y = (left_ankle.y + right_ankle.y) / 2
 
         if self.data == []:
             self.data.append(center_y)
             self.counter += 1
             return False
-        print(self.data)
         for i in self.data:
             if (center_y - i)/center_y < -0.5:
+                print(self.data)
                 self.data = [center_y]
+                logger.info("Jumping")
                 return True
             else:
                 self.data.append(center_y)
@@ -471,16 +485,3 @@ class jump_detector:
 
 logger.info("")
 logger.debug("")
-class sit_detector:
-
-    def __init__(self):
-
-
-        pass
-
-    def intialize(self):
-
-
-
-        pass
-
