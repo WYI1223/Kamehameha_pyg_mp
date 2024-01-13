@@ -64,6 +64,23 @@ class mediapipe_holistic_engine():
                 landmark_drawing_spec=self.mp_drawing_styles
                 .get_default_hand_landmarks_style())
 
+            # 在图片上绘制特定手部标记的坐标
+        def draw_hand_point(img, hand_landmarks, point_idx):
+            if hand_landmarks:
+                hand_point = hand_landmarks.landmark[point_idx]
+                x, y, z = int(hand_point.x * img.shape[1]), int(hand_point.y * img.shape[0]), hand_point.z
+                cv2.putText(img, f"Point {point_idx}: ({x}, {y}, {z:.2f})", (10, y), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
+
+            # 绘制左手的17号和3号点的坐标
+        if self.left_hand_detected:
+            draw_hand_point(img, self.results.left_hand_landmarks, 17)
+            draw_hand_point(img, self.results.left_hand_landmarks, 3)
+
+            # 绘制右手的17号和3号点的坐标
+        if self.right_hand_detected:
+            draw_hand_point(img, self.results.right_hand_landmarks, 17)
+            draw_hand_point(img, self.results.right_hand_landmarks, 3)
+
 
 class mediapipe_hand_engine():
     def __init__(self):
