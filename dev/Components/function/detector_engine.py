@@ -118,7 +118,9 @@ class attack_detector:
         self.state_machine = 0
         self.model = None
         # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
-        self.data = {}
+        self.Lslope = []*10
+        self.Rslope = []*10
+
         self.sit_down = False
 
     def intialize_model(self,model):
@@ -141,6 +143,7 @@ class attack_detector:
                 self.state_machine += 1
                 self.last_time = time.time()
                 print("Action1 done -- {}".format(time.time()))
+                return 1
             pass
 
         if self.state_machine == 1:
@@ -148,13 +151,14 @@ class attack_detector:
                 self.state_machine += 1
                 self.last_time = time.time()
                 print("Action2 done -- {}".format(time.time()))
+                return 2
             pass
 
         if self.state_machine == 2:
             if self.action3():
                 self.state_machine = 0
                 print("Action3 done -- {}".format(time.time()))
-                return True
+                return 3
             pass
 
         # 5s 后状态机归0
@@ -164,7 +168,6 @@ class attack_detector:
         return False
 
     def action1(self):
-        self.isSuccess1 = False
         try:
             #详见handlandmark.jpg
             left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
@@ -175,6 +178,21 @@ class attack_detector:
                               self.model.results.left_hand_landmarks.landmark[19].y]
             left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
                               self.model.results.left_hand_landmarks.landmark[20].y]
+            left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
+            left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
+            Left_X = np.array(left_X).reshape(-1, 1)
+            Left_y = np.array(left_y).reshape(-1, 1)
+            L_model = LinearRegression()
+            L_model.fit(Left_X, Left_y)
+            if len(self.Lslope) < 10:
+                self.Lslope.append(np.abs(L_model.coef_))
+            else:
+                self.Lslope.pop()
+        except:
+                return False
+
+
+        try:
             right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
                               self.model.results.right_hand_landmarks.landmark[17].y]
             right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
@@ -183,39 +201,43 @@ class attack_detector:
                               self.model.results.right_hand_landmarks.landmark[19].y]
             right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
                               self.model.results.right_hand_landmarks.landmark[20].y]
+
+            right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
+            right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
+
+            Right_X = np.array(right_X).reshape(-1, 1)
+            Right_y = np.array(right_y).reshape(-1, 1)
+
+            R_model = LinearRegression()
+            R_model.fit(Right_X, Right_y)
+
+            if len(self.Rslope) < 10:
+                self.Rslope.append(np.abs(R_model.coef_))
+            else:
+                self.Rslope.pop()
         except:
             return False
-
-
-        left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
-        right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
-        left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
-        right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
-
-        Left_X = np.array(left_X).reshape(-1, 1)
-        Right_X = np.array(right_X).reshape(-1, 1)
-        Left_y = np.array(left_y).reshape(-1, 1)
-        Right_y = np.array(right_y).reshape(-1, 1)
-
-        L_model = LinearRegression()
-        R_model = LinearRegression()
-
-        L_model.fit(Left_X, Left_y)
-        R_model.fit(Right_X,Right_y)
-
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_)
         """
-
-        # z轴小拇指与大拇指的坐标差值
         diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
 
-        # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
-        if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
-            logger.info("Action1 done")
-            return True
+
+        for i in range(len(self.Lslope)):
+            for n in range(len(self.Rslope)):
+                if self.Rslope[n]<0.25 and self.Lslope[i]<0.25 and diff>0:
+                    return True
+
+
+        # # z轴小拇指与大拇指的坐标差值
+        # diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
+        #
+        # # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
+        # if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
+        #     logger.info("Action1 done")
+        #     return True
 
         """
         暂定动作一逻辑由拟合直线斜率和z轴坐标来定，斜率需要测试，z轴坐标主要体现在大拇指与小拇指距离差上
@@ -225,7 +247,6 @@ class attack_detector:
 
 
     def action2(self):
-        self.isSuccess2 = False
         try:
             # 详见handlandmark.jpg
             left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
@@ -236,6 +257,20 @@ class attack_detector:
                               self.model.results.left_hand_landmarks.landmark[19].y]
             left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
                               self.model.results.left_hand_landmarks.landmark[20].y]
+            left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
+            left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
+            Left_X = np.array(left_X).reshape(-1, 1)
+            Left_y = np.array(left_y).reshape(-1, 1)
+            L_model = LinearRegression()
+            L_model.fit(Left_X, Left_y)
+            if len(self.Lslope) < 10:
+                self.Lslope.append(np.abs(L_model.coef_))
+            else:
+                self.Lslope.pop()
+        except:
+            return False
+
+        try:
             right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
                                self.model.results.right_hand_landmarks.landmark[17].y]
             right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
@@ -244,39 +279,33 @@ class attack_detector:
                                self.model.results.right_hand_landmarks.landmark[19].y]
             right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
                                self.model.results.right_hand_landmarks.landmark[20].y]
+
+            right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
+            right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
+
+            Right_X = np.array(right_X).reshape(-1, 1)
+            Right_y = np.array(right_y).reshape(-1, 1)
+
+            R_model = LinearRegression()
+            R_model.fit(Right_X, Right_y)
+
+            if len(self.Rslope) < 10:
+                self.Rslope.append(np.abs(R_model.coef_))
+            else:
+                self.Rslope.pop()
         except:
             return False
-
-        left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
-        right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
-        left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
-        right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
-
-        Left_X = np.array(left_X).reshape(-1, 1)
-        Right_X = np.array(right_X).reshape(-1, 1)
-        Left_y = np.array(left_y).reshape(-1, 1)
-        Right_y = np.array(right_y).reshape(-1, 1)
-
-        L_model = LinearRegression()
-        R_model = LinearRegression()
-
-        L_model.fit(Left_X, Left_y)
-        R_model.fit(Right_X, Right_y)
-
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_)
         """
+        diff = self.model.results.right_hand_landmarks.landmark[17].z - self.model.results.right_hand_landmarks.landmark[3].z
 
-        # z轴小拇指与大拇指的坐标差值
-        diff = self.model.results.right_hand_landmarks.landmark[17].z - self.model.results.right_hand_landmarks.landmark[
-            3].z
-
-        # 判断小拇指是否到达指定斜率(动作二右手在上大拇指在后)
-        if R_model.coef_ > -0.25 and R_model.coef_ < 0 and diff > 0:
-            logger.info("Action2 done")
-            return True
+        for i in range(len(self.Lslope)):
+            for n in range(len(self.Rslope)):
+                if self.Rslope[n] < 0.25 and self.Lslope[i] < 0.25 and diff > 0:
+                    return True
 
 
 
@@ -479,9 +508,3 @@ class jump_detector:
                 if len(self.data) > 10:
                     self.data.pop(0)
                 return False
-
-
-
-
-logger.info("")
-logger.debug("")

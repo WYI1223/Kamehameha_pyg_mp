@@ -53,7 +53,14 @@ class UI_View(object):
         self.model.tpose_detector.draw_box(self.model.img)
 
         # 动作检测模组
-        self.model.detector.detect()
+
+        action = self.model.detector.detect()
+        if action == 1:
+            cv2.imwrite("photos/action1_{}.jpg".format(time.time()),self.model.img)
+        elif action == 2:
+            cv2.imwrite("photos/action2_{}.jpg".format(time.time()),self.model.img)
+        elif action ==3:
+            cv2.imwrite("photos/action3_{}.jpg".format(time.time()),self.model.img)
 
         # 跳跃检测模组
         if self.model.jump_detector.jump():
