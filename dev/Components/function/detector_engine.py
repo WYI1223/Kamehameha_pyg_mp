@@ -393,9 +393,9 @@ class attack_detector:
         right_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
 
         # 3. 判断是否前推
-        if left_angle > 125 and right_angle > 125:
+        if left_angle > 130 and right_angle > 130:
             hand_push = True
-        # ------------------------------------------------------------------这里需要加入log，这里判断的是手臂伸直，所以应该有个info，手臂伸直的log
+            logger.info("Action3-half: straight arm")
         else:
             return False
         """
@@ -446,14 +446,32 @@ class attack_detector:
         right_hand_Middle_angle = self.calculate_angle(right_hand_Middle[0], right_hand_Middle[1], right_hand_Middle[2])
         right_hand_Ring_angle = self.calculate_angle(right_hand_Ring[0], right_hand_Ring[1], right_hand_Ring[2])
 
+        # 两只中指向上
+        left_hand_Middle_direction = left_hand_Middle[2].y - left_hand_Middle[0].y
+        right_hand_Middle_direction = right_hand_Middle[2].y - right_hand_Middle[0].y
+
+        # 两只大拇指向内
+        left_hand_Thump_direction = left_hand_Thump[2].x - left_hand_Thump[0].x
+        right_hand_Thump_direction = right_hand_Thump[2].x - right_hand_Thump[0].x
+
         # 3. 判断是否张开手指
+        # a. 手指向上
         hand_open = False
+        if left_hand_Middle_direction < 0 and right_hand_Middle_direction < 0:
+            hand_open = True
+            logger.info("Action3-half: hand open")
+        else:
+            hand_open = False
+
+        # b. 手指是否伸直
         if left_hand_Thump_angle > 135 and left_hand_Middle_angle > 135 and left_hand_Ring_angle > 135:
             if right_hand_Thump_angle > 135 and right_hand_Middle_angle > 135 and right_hand_Ring_angle > 135:
-
-                logger.info("Action3 done")
-                    # ---------------------------这里是判断是否手掌张开并伸直，所以这里要加log，info，手臂伸直并手掌打开，action3动作完成。
-                return (True and hand_push)
+                # c. 大拇指是否在内侧
+                if left_hand_Thump_direction < 0 and right_hand_Thump_direction > 0:
+                    logger.info("Action3 done")
+                    return hand_push and hand_open
+                else:
+                    logger.info("Action3-half: thumb not in")
             return False
         else:
             return False
