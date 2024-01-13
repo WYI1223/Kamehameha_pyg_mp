@@ -93,6 +93,21 @@ class TposeDetector:
 
 class attack_detector:
     _logger = None
+    """
+        该类用于检测游戏所需动作是否完成
+            a. 动作一：左手在上大拇指在后
+            b. 动作二：右手在上大拇指在后
+            c. 动作三：前推以及手掌张开
+        Input : mediapipe_holistic_engine类的数据 (使用到pose_landmarks, left_hand_landmarks, right_hand_landmarks)
+        Output : True or False (成功或者失败)        
+        
+        Function:   initialize_model(self,model), 
+                    detect(self), 
+                    action1(self), 
+                    action2(self), 
+                    action3(self), 
+                    calculate_angle(self) 
+    """
     def set_logger(logger_):
         attack_detector._logger = logger_
 
@@ -101,18 +116,14 @@ class attack_detector:
 
         # 目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
         self.state_machine = 0
-        # 当state_machine不为0时，开始计时，超过10s则将state_machine归0
-        self.last_time = time.time()
-
-
-        # self.intialize()
         self.model = None
-        self.push_counter = 0
-        pass
+        # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
+        self.data = []
 
     def intialize_model(self,model):
         self.model = model
-        pass
+        # 当state_machine不为0时，开始计时，超过10s则将state_machine归0
+        self.last_time = time.time()
 
     """
     统筹整个class，作为class判断的入口
