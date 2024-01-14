@@ -30,9 +30,12 @@ class CameraCapture(threading.Thread):
         self.cap.release()
 
 def main():
+    print(1)
     # 使用示例
     camera = CameraCapture()
+    print(2)
     camera.start()
+    print(3)
     fps_engine = FPS_Engine()
 
     try:
