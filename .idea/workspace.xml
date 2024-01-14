@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="744e759d-f226-4b11-ab60-d50df0fe88b2" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/pygame/game.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pygame/scripts/Tilemap.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pygame/scripts/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pygame/scripts/entities.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pygame/scripts/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/Tilemap.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/scripts/Tilemap.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/entities.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/scripts/entities.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/scripts/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +80,8 @@
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$View.coverage" NAME="View 覆盖结果" MODIFIED="1705153632179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/MVC" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$utils.coverage" NAME="utils 覆盖结果" MODIFIED="1705228572561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main 覆盖结果" MODIFIED="1705218976808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705232444245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$entities.coverage" NAME="entities 覆盖结果" MODIFIED="1705235908958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Tilemap.coverage" NAME="Tilemap 覆盖结果" MODIFIED="1705241257180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705251494953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
   </component>
 </project>
