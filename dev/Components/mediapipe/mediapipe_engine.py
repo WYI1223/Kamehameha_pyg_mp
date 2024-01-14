@@ -1,5 +1,31 @@
 import mediapipe
 import cv2
+import multiprocessing
+import mediapipe as mp
+
+
+# 第一段代码：多进程帧处理
+
+def process_frame(frame_queue, output_queue):
+
+    mp_holistic = mp.solutions.holistic.Holistic()
+
+    while True:
+        frame = frame_queue.get()
+        if frame is None:
+            break
+
+        results = mp_holistic.process(frame)
+        output_queue.put((frame, results))
+
+    mp_holistic.close()
+
+
+def start_processing(frame_queue, max_queue_size=10):
+    output_queue = multiprocessing.Queue(maxsize=max_queue_size)
+    process = multiprocessing.Process(target=process_frame, args=(frame_queue, output_queue))
+    process.start()
+    return output_queue, process
 
 
 class mediapipe_holistic_engine():

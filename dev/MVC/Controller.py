@@ -18,7 +18,6 @@ class control(object):
         self.model.FPS_class = None
         self.model.detector = None
         self.model.jump_detector = None
-        self.model.half = True
 
     def initialize(self):
         """
@@ -87,8 +86,7 @@ class control(object):
             if self.model.success:
                 # Calculate FPS
                 self.model.FPS_class.get_fps()
-                if self.model.half:
-                    self.model.Mediapipe_Holistic_class.process_image(self.model.img)
+                self.model.Mediapipe_Holistic_class.process_image(self.model.img)
 
 
                 """

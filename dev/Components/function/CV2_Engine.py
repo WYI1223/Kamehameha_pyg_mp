@@ -1,32 +1,66 @@
 import cv2
 import time
+import threading
+import queue
 
 class CV2_Engine:
 
     def __init__(self):
-        self.cap = cv2.VideoCapture(1) # open camer
-        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G')) # set codec
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920) # set width
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080) # set height
-        self.cap.set(cv2.CAP_PROP_FPS, 60) # set fps
-
+        # 使用 FrameCapture 类处理视频捕获
+        self.frame_capture = FrameCapture()
+        self.frame_capture.start()
 
     def read_camera(self):
-        success, self.img = self.cap.read()
-        return success,self.img
+        # 从 FrameCapture 队列中获取图像
+        frame = self.frame_capture.read()
+        return frame is not None, frame
 
     def save_camera(self):
-        cv2.imwrite("photos/{}.jpg".format(time.time()),self.img)
+        # 保存当前帧到文件
+        success, img = self.read_camera()
+        if success:
+            cv2.imwrite("photos/{}.jpg".format(time.time()), img)
 
     def display_camera(self):
-        cv2.imshow("Image", self.img)
+        # 显示当前帧
+        success, img = self.read_camera()
+        if success:
+            cv2.imshow("Image", img)
 
     def check_exit(self):
-        if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty('Image', cv2.WND_PROP_VISIBLE) < 1:  # if press q
+        # 检查是否退出
+        if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty('Image', cv2.WND_PROP_VISIBLE) < 1:
             return True
         else:
             return False
 
     def release_camera(self):
-        self.cap.release()
+        # 释放资源
+        self.frame_capture.stop()
         cv2.destroyAllWindows()
+
+class FrameCapture:
+    def __init__(self, max_queue_size=10):
+        self.capture = cv2.VideoCapture(0)  # 0 表示默认摄像头
+        self.queue = queue.Queue(maxsize=max_queue_size)
+        self.stopped = False
+
+    def start(self):
+        threading.Thread(target=self.update, args=()).start()
+        return self
+
+    def update(self):
+        while True:
+            if self.stopped:
+                return
+            ret, frame = self.capture.read()
+            if not ret:
+                continue
+            self.queue.put(frame)
+
+    def read(self):
+        return self.queue.get()
+
+    def stop(self):
+        self.stopped = True
+        self.capture.release()

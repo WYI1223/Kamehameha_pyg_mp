@@ -4,6 +4,31 @@ from sklearn.linear_model import LinearRegression
 import math
 import cv2
 import numpy as np
+import queue
+import threading
+
+
+class ActionDetector:
+    def __init__(self, max_queue_size=10):
+        self.input_queue = self.input_queue
+        self.output_queue = queue.Queue(maxsize=max_queue_size)
+        self.stopped = False
+
+    def start(self):
+        threading.Thread(target=self.update, args=()).start()
+        return self
+
+    def update(self):
+        while not self.stopped:
+            frame, results = self.input_queue.get()
+            action = detect_action(frame, results)
+            self.output_queue.put((frame, action))
+
+    def read(self):
+        return self.output_queue.get()
+
+    def stop(self):
+        self.stopped = True
 class TposeDetector:
     def __init__(self,model):
         self.model = model
