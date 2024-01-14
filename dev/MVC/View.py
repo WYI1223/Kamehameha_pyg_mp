@@ -47,20 +47,21 @@ class UI_View(object):
         # Display FPS
 
         self.model.FPS_class.display_FPS(self.model.img)
-        self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
+        if self.model.half:
+            self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
 
-        # 绘制人物所在框
-        self.model.tpose_detector.draw_box(self.model.img)
+            # 绘制人物所在框
+            self.model.tpose_detector.draw_box(self.model.img)
 
-        # 动作检测模组
+            # 动作检测模组
 
-        action = self.model.detector.detect()
-        if action == 1:
-            cv2.imwrite("photos/{}_action1.jpg".format(time.time()),self.model.img)
-        elif action == 2:
-            cv2.imwrite("photos/{}_action2.jpg".format(time.time()),self.model.img)
-        elif action ==3:
-            cv2.imwrite("photos/{}_action3.jpg".format(time.time()),self.model.img)
+            action = self.model.detector.detect()
+            if action == 1:
+                cv2.imwrite("photos/{}_action1.jpg".format(time.time()),self.model.img)
+            elif action == 2:
+                cv2.imwrite("photos/{}_action2.jpg".format(time.time()),self.model.img)
+            elif action ==3:
+                cv2.imwrite("photos/{}_action3.jpg".format(time.time()),self.model.img)
 
         # 跳跃检测模组
         # if self.model.jump_detector.jump():
@@ -93,3 +94,5 @@ class UI_View(object):
 
         # limit the redraw speed to 30 frames per second
         self.clock.tick(60)
+
+        self.model.half = not self.model.half
