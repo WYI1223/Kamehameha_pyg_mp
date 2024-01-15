@@ -15,7 +15,7 @@ class control(object):
         self.model = model
         self.pageinitilized = False
         self.model.CV2_class = None
-        self.model.FPS_class = None
+        self.model.fps_engine = None
         self.model.detector = None
         self.model.jump_detector = None
         self.model.half = True
@@ -60,19 +60,13 @@ class control(object):
                 """
                 if self.model.CV2_class == None:
                     self.model.CV2_class = CV2_Engine()
-                if self.model.FPS_class == None:
-                    self.model.FPS_class = FPS_Engine()
+                if self.model.fps_engine == None:
+                    self.model.fps_engine = FPS_Engine()
                 if self.model.detector == None:
                     self.model.detector = attack_detector()
                 if self.model.jump_detector == None:
                     self.model.jump_detector = jump_detector()
 
-                self.model.Mediapipe_Holistic_class = mediapipe_holistic_engine()
-                self.model.tpose_detector = TposeDetector(self.model.Mediapipe_Holistic_class)
-
-                # 传入mediapipe_holistic_engine类，初始化模型
-                self.model.detector.intialize_model(self.model.Mediapipe_Holistic_class)
-                self.model.jump_detector.intialize_model(self.model.Mediapipe_Holistic_class)
 
                 print("New page initialized")
                 # self.model.segmentation_class = segmentation_engine()
@@ -87,12 +81,7 @@ class control(object):
             self.model.success, self.model.img = self.model.CV2_class.read_camera()  # read camera
 
             if self.model.success:
-                # Calculate FPS
-                self.model.FPS_class.get_fps()
-                if self.model.half:
-                    self.model.Mediapipe_Holistic_class.process_image(self.model.img)
-
-
+                self.model.handle_image()
                 """
                 Tell view to render after all Business Logic
                 """

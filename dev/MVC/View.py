@@ -5,12 +5,17 @@ import pygame
 from pygame.locals import *
 import pygame.freetype
 import cv2
+from loguru import logger
 
 
 class UI_View(object):
     def __init__(self, evManager, model):
         self.evManager = evManager
         self.model = model
+
+        self.expected_frame = 0
+        self.image_out = None
+        self.image_out_buffer = {}
 
     def initialize(self):
         """
@@ -44,33 +49,50 @@ class UI_View(object):
 
 
     def render(self):
-        # Display FPS
 
-        self.model.FPS_class.display_FPS(self.model.img)
-        if self.model.half:
-            self.model.Mediapipe_Holistic_class.draw_all_landmark_drawing_utils(self.model.img)
 
-            # 绘制人物所在框
-            self.model.tpose_detector.draw_box(self.model.img)
+        pose_landmarks = None
+        Left_Hand_Landmarks = None
+        Right_Hnad_Landmarks = None
+        if self.expected_frame not in self.image_out_buffer:
+            # 如果缓冲区中没有图像，从队列中获取图像
+            if not self.model.result_images.empty():
+                frame_count, image, pose_landmarks, Left_Hand_Landmarks, Right_Hnad_Landmarks = self.model.result_images.get()
+                # print(f"Received frame self.expected_frame{frame_count}")
+                if frame_count == self.expected_frame:
+                    self.image_out = image
+                    self.expected_frame += 1
+                else:
+                    self.image_out_buffer[frame_count] = (image, pose_landmarks, Left_Hand_Landmarks, Right_Hnad_Landmarks)
+            else:
+                # 将缓冲区最小的self.expected_frame显示出来
+                if len(self.image_out_buffer) > 0:
+                    self.expected_frame = min(self.image_out_buffer.keys())
+                    logger.warning("Losing frame!")
+                else:
+                    time.sleep(1.0 / 60.0)
+                    # logger.warning("No frame in queue!")
+        else:
+            # 如果缓冲区中有图像，显示图像
+            self.image_out, pose_landmarks, Left_Hand_Landmarks, Right_Hnad_Landmarks = self.image_out_buffer.pop(self.expected_frame)
+            self.expected_frame += 1
+        if self.image_out is not None:
+            self.model.fps_engine.get_fps()
+            fps_averge = self.model.fps_engine.get_average_fps()
+            fps_low10 = self.model.fps_engine.get_low10_fps()
+            fps_low50 = self.model.fps_engine.get_low50_fps()
+            cv2.putText(self.image_out, f'FPS_averge: {fps_averge}, FPS_low10: {fps_low10}, FPS_low50: {fps_low50}',
+                        (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
 
-            # 动作检测模组
+            self.model.detector.datainput(pose_landmarks, left_hand_landmark=Left_Hand_Landmarks,
+                               right_hand_landmark=Right_Hnad_Landmarks)
 
-            action = self.model.detector.detect()
-            if action == 1:
-                cv2.imwrite("photos/{}_action1.jpg".format(time.time()),self.model.img)
-            elif action == 2:
-                cv2.imwrite("photos/{}_action2.jpg".format(time.time()),self.model.img)
-            elif action ==3:
-                cv2.imwrite("photos/{}_action3.jpg".format(time.time()),self.model.img)
-
-        # 跳跃检测模组
-        # if self.model.jump_detector.jump():
-        #     cv2.imwrite("photos/Jump_{}.jpg".format(time.time()), self.model.img)
-
-        # 蹲下检测模组
-        # if self.model.detector.sit_detect():
-        #     cv2.imwrite("photos/Sitdown_{}.jpg".format(time.time()), self.model.img)
-
+            self.model.detector.detect()
+            self.model.detector.sit_detect()
+            self.model.jump_detector.datainput(pose_landmarks)
+            self.model.jump_detector.jump()
+        else:
+            self.render()
 
         """
         Draw things on pygame
@@ -79,14 +101,14 @@ class UI_View(object):
         self.model.screen.fill(empty_color)
 
         # Convert into RGB
-        self.model.img = cv2.cvtColor(self.model.img, cv2.COLOR_BGR2RGB)
+        self.image_out = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
 
         # Convert the image into a format pygame can display
 
-        self.model.img = pygame.image.frombuffer(self.model.img.tostring(), self.model.img.shape[1::-1], "RGB")
+        self.image_out = pygame.image.frombuffer(self.image_out.tostring(), self.image_out.shape[1::-1], "RGB")
 
         # blit the image onto the screen
-        self.model.screen.blit(self.model.img, (0, 0))
+        self.model.screen.blit(self.image_out, (0, 0))
 
 
         # Update the screen
@@ -95,4 +117,3 @@ class UI_View(object):
         # limit the redraw speed to 30 frames per second
         self.clock.tick(60)
 
-        self.model.half = not self.model.half

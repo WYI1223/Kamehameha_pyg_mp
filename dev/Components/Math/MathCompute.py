@@ -3,6 +3,7 @@ from dev.Components.mediapipe.mediapipe_engine import *
 holistic_detection = mediapipe_holistic_engine()
 
 def process_image(count, image):
+
     holistic_detection.process_image(image)
     holistic_detection.draw_all_landmark_drawing_utils(image)
 
