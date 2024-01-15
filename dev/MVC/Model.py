@@ -1,4 +1,10 @@
+import multiprocessing
+import queue
+import time
+
+from loguru import logger
 from dev.MVC.EventManager import *
+from dev.Components.Math import MathCompute
 
 # State machine constants for the StateMachine class below
 STATE_CV = 1
@@ -19,8 +25,15 @@ class ModelEngine(object):
 
         self.load_settings_and_data()
 
+        self.input_order = multiprocessing.Value('i', 0)
+        self.image_queue = multiprocessing.Queue()
+
+        self.GameProcess = None
+        self.ImageProcess = None
+
     def load_settings_and_data(self):
         pass
+
     def notify(self, event):
         """
         Called by an event in the message queue.
