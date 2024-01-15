@@ -51,20 +51,16 @@ class Game:
                         self.movement[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = True
+                    if event.key == pygame.K_UP:
+                        self.player.velocity[1] = -3
+                    if event.key == pygame.K_DOWN:
+                        self.movement[2] = True
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        self.movement[3] = True
-                    if event.key == pygame.K_DOWN:
-                        self.movement[2] = True
-
-                if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
                         self.movement[3] = False
                     if event.key == pygame.K_DOWN:
