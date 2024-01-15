@@ -25,34 +25,14 @@ class ModelEngine(object):
 
         self.load_settings_and_data()
 
-        self.result_images = queue.Queue()
-
         self.input_order = multiprocessing.Value('i', 0)
+        self.image_queue = multiprocessing.Queue()
 
-        self.pool = multiprocessing.Pool(multiprocessing.cpu_count() // 2)
+        self.GameProcess = None
+        self.ImageProcess = None
+
     def load_settings_and_data(self):
         pass
-
-    def result_callback(self, result):
-        # 将结果添加到队列
-        self.result_images.put(result)
-        if self.input_order.value % 50 == 0:
-            logger.info("result_images size:{}", self.result_images.qsize())
-
-    def handle_image(self):
-        image = self.img
-        if self.result_images.qsize() > 10:
-            logger.debug("result_images is full")
-            time.sleep(0.01)
-            return
-        with self.input_order.get_lock():
-            order = self.input_order.value + 1
-            self.input_order.value = order
-        self.pool.apply_async(MathCompute.process_image, args=(order, image), callback=self.result_callback)
-
-    def close_pool(self):
-        self.pool.close()
-        self.pool.join()
 
     def notify(self, event):
         """

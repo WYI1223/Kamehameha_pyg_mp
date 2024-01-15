@@ -1,10 +1,6 @@
 from dev.MVC.EventManager import *
 import dev.MVC.View as view
-from dev.Components.function.FPS_Engine import FPS_Engine
-from dev.Components.function.CV2_Engine import CV2_Engine
-from dev.Components.mediapipe.mediapipe_engine import *
-from dev.Components.function.detector_engine import *
-import multiprocessing
+from dev.multiprocessing.processing.mediapipe_sub import *
 import pygame
 
 
@@ -12,15 +8,9 @@ class control(object):
     def __init__(self, evManager, model):
         self.evManager = evManager
         evManager.RegisterListener(self)
+
         self.model = model
         self.pageinitilized = False
-        self.model.CV2_class = None
-        self.model.fps_engine = None
-        self.model.detector = None
-        self.model.jump_detector = None
-        self.model.half = True
-
-        self.pool = multiprocessing.Pool(multiprocessing.cpu_count() // 2)
 
     def initialize(self):
         """
@@ -30,15 +20,7 @@ class control(object):
         self.graphics.initialize()
 
     def input_event(self):
-        self.model.input_event = pygame.event.get()
-        # pass
-        for event in self.model.input_event:
-
-            # handle window manager closing our window
-            if event.type == pygame.QUIT:
-                self.graphics.quit_pygame()
-                self.evManager.Post(QuitEvent())
-
+        pass
     def notify(self, event):
         """
         Receive events posted to the message queue.
@@ -58,33 +40,24 @@ class control(object):
                 """
                 Initialize new page
                 """
-                if self.model.CV2_class == None:
-                    self.model.CV2_class = CV2_Engine()
-                if self.model.fps_engine == None:
-                    self.model.fps_engine = FPS_Engine()
-                if self.model.detector == None:
-                    self.model.detector = attack_detector()
-                if self.model.jump_detector == None:
-                    self.model.jump_detector = jump_detector()
-
+                self.model.ImageProcess = ImageProcessor(self.model.image_queue)
+                self.model.ImageProcess.start()
 
                 print("New page initialized")
-                # self.model.segmentation_class = segmentation_engine()
 
                 self.pageinitilized = True
 
             """
             Handle all Business Logic
             """
-
             # Get camera image from CV2
-            self.model.success, self.model.img = self.model.CV2_class.read_camera()  # read camera
+            # self.model.success, self.model.img = self.model.CV2_class.read_camera()  # read camera
 
-            if self.model.success:
-                self.model.handle_image()
-                """
-                Tell view to render after all Business Logic
-                """
-                self.graphics.render()
+            # if self.model.success:
+            #     self.model.handle_image()
+            #     """
+            #     Tell view to render after all Business Logic
+            #     """
+            #     self.graphics.render()
             self.input_event()
 

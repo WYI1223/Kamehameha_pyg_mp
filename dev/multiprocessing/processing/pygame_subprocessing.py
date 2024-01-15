@@ -1,16 +1,34 @@
 import cv2
 import pygame
+from pygame.locals import *
+import pygame.freetype
+
 import multiprocessing
 from loguru import logger
 import time
 
 def run_game(image_queue):
+
     pygame.init()
-    screen = pygame.display.set_mode((1920, 1080))
+    pygame.font.init()
+    pygame.freetype.init()
+
     pygame.display.set_caption("Pygame Display Image")
+
+    flags = DOUBLEBUF
+
+    if(pygame.display.get_num_displays() >= 2):
+        screen_no = 1
+    else:
+        screen_no = 0
+
+    screen = pygame.display.set_mode((1920,1080), flags, 16, display = screen_no, vsync=1)
 
     # 创建 Clock 对象
     clock = pygame.time.Clock()
+
+    # speedup a little bit
+    pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP])
 
     running = True
     while running:

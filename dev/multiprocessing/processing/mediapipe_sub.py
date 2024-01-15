@@ -11,9 +11,10 @@ from dev.Components.function.FPS_Engine import FPS_Engine
 from dev.Components.mediapipe.mediapipe_engine import *
 from dev.Components.function.detector_engine import *
 from dev.Components.Math import MathCompute
-import pygame_subprocessing
+from dev.multiprocessing.processing.pygame_engine import GameProcess
 
-class Multitest(multiprocessing.Process):
+
+class ImageProcessor(multiprocessing.Process):
     def __init__(self,image_queue:multiprocessing.Queue):
         super().__init__()
         self.cameraCapture = None
@@ -127,8 +128,9 @@ class Multitest(multiprocessing.Process):
 if __name__ == '__main__':
     image_queue = multiprocessing.Queue()
 
-    multitest_process = Multitest(image_queue)
-    game_process = multiprocessing.Process(target=pygame_subprocessing.run_game, args=(image_queue,), daemon=True)
+    multitest_process = ImageProcessor(image_queue)
+    game_process = GameProcess(image_queue)
+
     game_process.start()
     multitest_process.start()
 
