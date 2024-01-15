@@ -76,9 +76,6 @@ class Editor:
                     if tile_r.collidepoint(mpos):
                         self.tilemap.offgrid_tiles.remove(tile)
 
-
-
-
             self.display.blit(current_tile_img,(5,5))
 
             for event in pygame.event.get():
@@ -111,9 +108,9 @@ class Editor:
                     if event.button == 3:
                         self.right_clicking =False
 
-
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_a:
+
+                    if event.key == pygame.K_w:
                         self.movement[0] = True
                     if event.key == pygame.K_d:
                         self.movement[1] = True
@@ -125,6 +122,8 @@ class Editor:
                         self.ongrid = not self.ongrid
                     if event.key == pygame.K_o:
                         self.tilemap.save('map.json')
+                    if event.key == pygame.K_t:
+                        self.tilemap.autotile()
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:
