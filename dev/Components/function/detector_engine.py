@@ -124,6 +124,8 @@ class attack_detector:
         self.left_hand_landmark = None
         self.right_hand_landmark = None
         self.last_time = time.time()
+        self.sit_down = False
+        self.previous_sit_down = False
 
     def datainput(self, pose_landmark, left_hand_landmark, right_hand_landmark):
 
@@ -487,21 +489,18 @@ class attack_detector:
 
         left_lag_angle = self.calculate_angle(left_lag_1, left_lag_middle, left_lag_3)
         right_lag_angle = self.calculate_angle(right_lag_1, right_lag_middle, right_lag_3)
-
-        if left_lag_angle is None or right_lag_angle is None:
-            return self.sit_down
-
+        self.previous_sit_down = self.sit_down
         if left_lag_angle < 70 and right_lag_angle < 70:
-            if not self.sit_down:
                 self.sit_down = True
-                logger.info("Sit down")
-            return True
         else:
-            if self.sit_down:
-                logger.info("Stand up")
             self.sit_down = False
+        if self.sit_down and not self.previous_sit_down:
+            logger.info("Sit down")
+            return True
+        elif not self.sit_down and self.previous_sit_down:
+            logger.info("Stand up")
             return False
-
+        return False
     """
     计算三点之间的角度
     Input: x,y,z of landmark1, landmark2, landmark3
