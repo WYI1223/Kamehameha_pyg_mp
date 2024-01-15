@@ -32,11 +32,22 @@ class Tilemap:
             if tile['type'] in PHYSICS_TILES:
                 rects.append(pygame.Rect(tile['pos'][0]*self.tile_size,tile['pos'][1]*self.tile_size,self.tile_size,self.tile_size))
         return rects
-    def render(self, surf):
-        for loc in self.tilemap:
-            tile = self.tilemap[loc]
-            surf.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0]*self.tile_size,tile['pos'][1]*self.tile_size))
+    def render(self, surf,offset):
+
+        # for x in range(offset // self.tile_size,(offset + surf.get_width())//self.tile_size +1):
+        #     for y in  range(self.tile_size,(surf.get_height())//self.tile_size +1):
+        #         loc = str(x) + ';'+str(y)
+        #         for loc in self.tilemap:
+        #             if loc in self.tilemap:
+        #                 tile = self.tilemap[loc]
+        #                 surf.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0] * self.tile_size - offset, tile['pos'][1] * self.tile_size))
 
 
         for tile in self.offgrid_tiles:
-            surf.blit(self.game.assets[tile['tile']][tile['variant']],tile['pos'])
+            surf.blit(self.game.assets[tile['tile']][tile['variant']],(tile['pos'][0]-offset,tile['pos'][1]))
+
+        for loc in self.tilemap:
+            tile = self.tilemap[loc]
+            surf.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0]*self.tile_size-offset,tile['pos'][1]*self.tile_size))
+
+
