@@ -9,7 +9,7 @@ import time
 from dev.multiprocessing.cameraIO.CV2_Engine import CameraCapture
 from dev.Components.function.FPS_Engine import FPS_Engine
 from dev.Components.mediapipe.mediapipe_engine import *
-from dev.multiprocessing.detector.detector import *
+from dev.Components.function.detector_engine import *
 from dev.Components.Math import MathCompute
 import pygame_subprocessing
 
@@ -83,7 +83,8 @@ class Multitest(multiprocessing.Process):
                 detector.sit_detect()
                 jumpdetector.datainput(pose_landmarks)
                 jumpdetector.jump()
-                self.image_queue.put(image_out)
+
+                image_queue.put(image_out)
 
                 if cv2.waitKey(5) == ord('q'):
                     break

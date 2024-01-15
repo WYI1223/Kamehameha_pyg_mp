@@ -9,7 +9,7 @@ import time
 from dev.multiprocessing.cameraIO.CV2_Engine import CameraCapture
 from dev.Components.function.FPS_Engine import FPS_Engine
 from dev.Components.mediapipe.mediapipe_engine import *
-from dev.multiprocessing.detector.detector import *
+from dev.Components.function.detector_engine import *
 from dev.Components.Math import MathCompute
 import pygame_subprocessing
 

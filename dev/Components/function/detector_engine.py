@@ -1,11 +1,15 @@
 import time
+from collections import deque
+
 from loguru import logger
 from sklearn.linear_model import LinearRegression
 import math
 import cv2
 import numpy as np
+
+
 class TposeDetector:
-    def __init__(self,model):
+    def __init__(self, model):
         self.model = model
         self.initilize()
 
@@ -16,12 +20,13 @@ class TposeDetector:
             self.pose_landmarks = None
             pass
         pass
+
     def calculate_angle(self, point1, point2, point3):
         # Calculate the angle formed by three points
-        a = math.sqrt((point2.x - point3.x)**2 + (point2.y - point3.y)**2)
-        b = math.sqrt((point1.x - point3.x)**2 + (point1.y - point3.y)**2)
-        c = math.sqrt((point1.x - point2.x)**2 + (point1.y - point2.y)**2)
-        angle = math.acos((b**2 + c**2 - a**2) / (2 * b * c))
+        a = math.sqrt((point2.x - point3.x) ** 2 + (point2.y - point3.y) ** 2)
+        b = math.sqrt((point1.x - point3.x) ** 2 + (point1.y - point3.y) ** 2)
+        c = math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2)
+        angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
         return math.degrees(angle)
 
     def is_t_pose(self, landmarks):
@@ -43,14 +48,11 @@ class TposeDetector:
         arms_parallel = abs(left_arm_angle - 180) < 10 and abs(right_arm_angle - 180) < 10
 
         # Check if feet are together by measuring the distance between the ankles
-        feet_distance = math.sqrt((left_ankle.x - right_ankle.x)**2 + (left_ankle.y - right_ankle.y)**2)
+        feet_distance = math.sqrt((left_ankle.x - right_ankle.x) ** 2 + (left_ankle.y - right_ankle.y) ** 2)
         # The threshold for feet_distance can be adjusted based on the model's scale
         feet_together = feet_distance < 0.1
 
         return arms_parallel and feet_together
-
-
-
 
     def draw_box(self, image):
         # 获取图像的宽度和高度
@@ -113,10 +115,10 @@ class attack_detector:
         # 目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
         self.state_machine = 0
         # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
-        self.Lslope = [] * 10
-        self.Lslope_b = [] * 10
-        self.Rslope = [] * 10
-        self.Rslope_b = [] * 10
+        self.Lslope = deque(maxlen=10)
+        self.Lslope_b = deque(maxlen=10)
+        self.Rslope = deque(maxlen=10)
+        self.Rslope_b = deque(maxlen=10)
 
         self.sit_down = False
 
@@ -124,6 +126,7 @@ class attack_detector:
         self.left_hand_landmark = None
         self.right_hand_landmark = None
         self.last_time = time.time()
+
         self.sit_down = False
         self.previous_sit_down = False
 
@@ -143,38 +146,52 @@ class attack_detector:
         当state_machine不为0时，开始计时，超过10s则将state_machine归0
     """
 
+    def perform_action(self, action, next_state, action_number):
+        if action():
+            self.state_machine = next_state
+            self.last_time = time.time()
+            logger.debug(f"Action{action_number} done -- {time.time()}")
+            return action_number
+        return False
+
     def detect(self):
-        if self.state_machine == 0:
-            if self.action1():
-                self.state_machine += 1
-                self.last_time = time.time()
-                logger.debug("Action1 done -- {}".format(time.time()))
-                return 1
-            pass
 
-        if self.state_machine == 1:
-            if self.action2():
-                self.state_machine += 1
-                self.last_time = time.time()
-                logger.debug("Action2 done -- {}".format(time.time()))
-                return 2
-            pass
-
-        if self.state_machine == 2:
-            if self.action3():
-                self.state_machine = 0
-                logger.debug("Action3 done -- {}".format(time.time()))
-                return 3
-            pass
-
-        # print(self.state_machine, " ", time.time() - self.last_time)
-        # 5s 后状态机归0
+        # 检查状态机超时并重置
         if self.state_machine != 0 and time.time() - self.last_time > 10:
             logger.debug("Action reset")
             self.state_machine = 0
+            return False
+
+        actions = {
+            0: (self.action1, 1, 1),
+            1: (self.action2, 2, 2),
+            2: (self.action3, 0, 3)
+        }
+
+        if self.state_machine in actions:
+            action, next_state, action_number = actions[self.state_machine]
+            return self.perform_action(action, next_state, action_number)
+
         return False
 
+    """
+        动作1：龟派气功动作1检测
+        
+        Input: 左右手的小拇指关键点, left_hand_landmark 和 right_hand_landmark
+               关键点包括：17-MCP, 18-PIP, 19-DIP, 20-Tip
+        Output: 返回True表示检测到特定动作，False表示未检测到或数据不足
+
+        logic: 对左右手的小拇指关键点进行线性回归，计算拟合直线的斜率。
+               如果左右手任一手的斜率超过0.25，或者左右手的Z轴深度差异满足特定条件（左手深度小于右手深度），
+               则认为检测到了特定动作。在数据不足（如未捕捉到手的关键点）时返回False。
+    """
     def action1(self):
+
+        L_exception = False
+        R_exception = False
+        left_pinky_mcp, left_pinky_pip, left_pinky_dip, left_pinky_tip = None, None, None, None
+        right_pinky_mcp, right_pinky_pip, right_pinky_dip, right_pinky_tip = None, None, None, None
+
         try:
             # 详见handlandmark.jpg
             left_pinky_mcp = [self.left_hand_landmark.landmark[17].x,
@@ -185,8 +202,15 @@ class attack_detector:
                               self.left_hand_landmark.landmark[19].y]
             left_pinky_tip = [self.left_hand_landmark.landmark[20].x,
                               self.left_hand_landmark.landmark[20].y]
+        except:
+            if len(self.Lslope) == 0:
+                return False
+            L_exception = True
+
+        if not L_exception:
             left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
             left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
+
             Left_X = np.array(left_X).reshape(-1, 1)
             Left_y = np.array(left_y).reshape(-1, 1)
             L_model = LinearRegression()
@@ -194,18 +218,9 @@ class attack_detector:
 
             diff = (self.left_hand_landmark.landmark[17].z -
                     self.left_hand_landmark.landmark[3].z)
-            if len(self.Lslope_b) < 10:
-                self.Lslope_b.append(diff)
-            else:
-                self.Lslope_b.pop(0)
 
-            if len(self.Lslope) < 10:
-                self.Lslope.append(np.abs(L_model.coef_))
-            else:
-                self.Lslope.pop(0)
-        except:
-            if len(self.Lslope) == 0:
-                return False
+            self.Lslope_b.append(diff)
+            self.Lslope.append(np.abs(L_model.coef_))
 
         try:
             right_pinky_mcp = [self.right_hand_landmark.landmark[17].x,
@@ -216,7 +231,12 @@ class attack_detector:
                                self.right_hand_landmark.landmark[19].y]
             right_pinky_tip = [self.right_hand_landmark.landmark[20].x,
                                self.right_hand_landmark.landmark[20].y]
+        except:
+            if len(self.Rslope) == 0:
+                return False
+            R_exception = True
 
+        if not R_exception:
             right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
             right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
 
@@ -229,41 +249,33 @@ class attack_detector:
             diff = (self.right_hand_landmark.landmark[17].z -
                     self.right_hand_landmark.landmark[3].z)
 
-            if len(self.Rslope_b) < 10:
-                self.Rslope_b.append(diff)
-            else:
-                self.Rslope_b.pop(0)
+            self.Rslope_b.append(diff)
+            self.Rslope.append(np.abs(R_model.coef_))
 
-            if len(self.Rslope) < 10:
-                self.Rslope.append(np.abs(R_model.coef_))
-            else:
-                self.Rslope.pop(0)
-        except:
-            if len(self.Rslope) == 0:
-                return False
+
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_) 
         """
-        # diff = self.left_hand_landmark.landmark[17].z - self.left_hand_landmark.landmark[3].z
-        # print(self.Rslope, " ", self.Lslope, " ", self.Rslope_b, " ", self.Lslope_b)
+
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
+                if self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25:
+                    continue
                 diff1 = self.Rslope_b[n]
                 diff2 = self.Lslope_b[i]
-                if self.Rslope[n] < 0.25 and self.Lslope[i] < 0.25 and diff1 > 0 and diff2 < 0:
-                    print(time.time(), " ", self.Rslope[n], " ", self.Lslope[i], " ", diff1, " ", diff2, "action1")
+                if diff1 > 0 and diff2 < 0:
                     self.Rslope.clear()
                     self.Lslope.clear()
                     self.Rslope_b.clear()
                     self.Lslope_b.clear()
                     return True
-        self.Rslope.pop(0)
-        self.Lslope.pop(0)
+        self.Rslope.popleft()
+        self.Lslope.popleft()
 
-        self.Rslope_b.pop(0)
-        self.Lslope_b.pop(0)
+        self.Rslope_b.popleft()
+        self.Lslope_b.popleft()
         # # z轴小拇指与大拇指的坐标差值
         # diff = self.left_hand_landmark.landmark[17].z - self.left_hand_landmark.landmark[3].z
         #
@@ -279,6 +291,12 @@ class attack_detector:
         """
 
     def action2(self):
+        
+        L_exception = False
+        R_exception = False
+        left_pinky_mcp, left_pinky_pip, left_pinky_dip, left_pinky_tip = None, None, None, None
+        right_pinky_mcp, right_pinky_pip, right_pinky_dip, right_pinky_tip = None, None, None, None
+        
         try:
             # 详见handlandmark.jpg
             left_pinky_mcp = [self.left_hand_landmark.landmark[17].x,
@@ -289,27 +307,25 @@ class attack_detector:
                               self.left_hand_landmark.landmark[19].y]
             left_pinky_tip = [self.left_hand_landmark.landmark[20].x,
                               self.left_hand_landmark.landmark[20].y]
+        except:
+            if len(self.Lslope) == 0:
+                return False
+            L_exception = True
+        
+        if not L_exception:    
             left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
             left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
             Left_X = np.array(left_X).reshape(-1, 1)
             Left_y = np.array(left_y).reshape(-1, 1)
             L_model = LinearRegression()
             L_model.fit(Left_X, Left_y)
-
+    
             diff = (self.left_hand_landmark.landmark[17].z -
                     self.left_hand_landmark.landmark[3].z)
-            if len(self.Lslope_b) < 10:
-                self.Lslope_b.append(diff)
-            else:
-                self.Lslope_b.pop(0)
+    
+            self.Lslope_b.append(diff)
+            self.Lslope.append(np.abs(L_model.coef_))
 
-            if len(self.Lslope) < 10:
-                self.Lslope.append(np.abs(L_model.coef_))
-            else:
-                self.Lslope.pop(0)
-        except:
-            if len(self.Lslope) == 0:
-                return False
 
         try:
             right_pinky_mcp = [self.right_hand_landmark.landmark[17].x,
@@ -321,30 +337,27 @@ class attack_detector:
             right_pinky_tip = [self.right_hand_landmark.landmark[20].x,
                                self.right_hand_landmark.landmark[20].y]
 
-            right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
-            right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
-
-            Right_X = np.array(right_X).reshape(-1, 1)
-            Right_y = np.array(right_y).reshape(-1, 1)
-
-            R_model = LinearRegression()
-            R_model.fit(Right_X, Right_y)
-
-            diff = self.right_hand_landmark.landmark[17].z - \
-                   self.right_hand_landmark.landmark[3].z
-
-            if len(self.Rslope_b) < 10:
-                self.Rslope_b.append(diff)
-            else:
-                self.Rslope_b.pop(0)
-
-            if len(self.Rslope) < 10:
-                self.Rslope.append(np.abs(R_model.coef_))
-            else:
-                self.Rslope.pop(0)
         except:
             if len(self.Rslope) == 0:
                 return False
+            R_exception = True
+            
+        if not R_exception:
+            right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
+            right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
+    
+            Right_X = np.array(right_X).reshape(-1, 1)
+            Right_y = np.array(right_y).reshape(-1, 1)
+    
+            R_model = LinearRegression()
+            R_model.fit(Right_X, Right_y)
+    
+            diff = self.right_hand_landmark.landmark[17].z - \
+                   self.right_hand_landmark.landmark[3].z
+    
+            self.Rslope_b.append(diff)
+            self.Rslope.append(np.abs(R_model.coef_))
+
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
@@ -353,19 +366,21 @@ class attack_detector:
 
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
+                if self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25:
+                    return False
                 diff1 = self.Rslope_b[n]
                 diff2 = self.Lslope_b[i]
-                if self.Rslope[n] < 0.25 and self.Lslope[i] < 0.25 and diff1 < 0 and diff2 > 0:
-                    print(time.time(), " ", self.Rslope[n], " ", self.Lslope[i], " ", diff1, " ", diff2, "action2")
+                if diff1 < 0 and diff2 > 0:
                     self.Rslope.clear()
                     self.Lslope.clear()
                     self.Rslope_b.clear()
                     self.Lslope_b.clear()
                     return True
-        self.Lslope.pop(0)
-        self.Rslope.pop(0)
-        self.Rslope_b.pop(0)
-        self.Lslope_b.pop(0)
+
+        self.Lslope.popleft()
+        self.Rslope.popleft()
+        self.Rslope_b.popleft()
+        self.Lslope_b.popleft()
 
     """
         动作3：前推检测
@@ -469,8 +484,8 @@ class attack_detector:
             return False
 
         if left_hand_Thump_direction < 0 and right_hand_Thump_direction > 0:
-            # logger.info("Action3 done")
             return True
+
 
     def sit_detect(self):
 
@@ -482,25 +497,38 @@ class attack_detector:
             right_lag_middle = self.pose_landmarks.landmark[25]
             right_lag_3 = self.pose_landmarks.landmark[27]
         except:
-            if self.sit_down:
-                logger.info("Stand up")
-            self.sit_down = False
-            return False
+            # logger.debug("No pose_landmarks---------------------------")
+            return self.previous_sit_down
 
         left_lag_angle = self.calculate_angle(left_lag_1, left_lag_middle, left_lag_3)
         right_lag_angle = self.calculate_angle(right_lag_1, right_lag_middle, right_lag_3)
-        self.previous_sit_down = self.sit_down
+
+        if left_lag_angle is None or right_lag_angle is None:
+            # logger.debug("--------------------------------point not exist")
+            return self.previous_sit_down
+
         if left_lag_angle < 70 and right_lag_angle < 70:
-                self.sit_down = True
-        else:
+            self.sit_down = True
+        elif left_lag_angle > 100 and right_lag_angle > 100:
+            # logger.debug("---------------sit down detect false------------------")
             self.sit_down = False
-        if self.sit_down and not self.previous_sit_down:
-            logger.info("Sit down")
-            return True
-        elif not self.sit_down and self.previous_sit_down:
-            logger.info("Stand up")
+        else:
+            return self.previous_sit_down
+
+        if self.sit_down:
+            if self.previous_sit_down:
+                return True
+            else:
+                self.previous_sit_down = True
+                logger.info("Sit down")
+                return True
+        else:
+            if self.previous_sit_down:
+                logger.info("Stand up")
+            self.previous_sit_down = False
             return False
-        return False
+
+
     """
     计算三点之间的角度
     Input: x,y,z of landmark1, landmark2, landmark3
@@ -545,7 +573,7 @@ class attack_detector:
 class jump_detector:
 
     def __init__(self):
-        self.data = [] * 10
+        self.data = deque(maxlen=10)
         self.counter = 0
         pass
 
@@ -556,10 +584,7 @@ class jump_detector:
 
     def jump(self):
         try:
-            # left_shoulder = self.pose_landmarks.landmark[11]
-            # right_shoulder = self.pose_landmarks.landmark[12]
-            # left_hip = self.pose_landmarks.landmark[23]
-            # right_hip = self.pose_landmarks.landmark[24]
+
             left_ankle = self.pose_landmarks.landmark[27]
             right_ankle = self.pose_landmarks.landmark[28]
         except:
@@ -578,7 +603,7 @@ class jump_detector:
             self.counter += 1
             return False
         for i in self.data:
-            if (center_y - i) / center_y < -0.4:
+            if (center_y - i) / center_y < -0.30:
                 # print(self.data)
                 self.data = [center_y]
                 logger.info("Jumping")
@@ -587,5 +612,5 @@ class jump_detector:
                 self.data.append(center_y)
                 # print(self.data)
                 if len(self.data) > 10:
-                    self.data.pop(0)
+                    self.data.popleft()
                 return False
