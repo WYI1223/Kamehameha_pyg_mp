@@ -1,3 +1,5 @@
+import queue
+from loguru import logger
 from dev.MVC.EventManager import *
 
 # State machine constants for the StateMachine class below
@@ -19,8 +21,18 @@ class ModelEngine(object):
 
         self.load_settings_and_data()
 
+        self.result_images = queue.Queue()
+
     def load_settings_and_data(self):
         pass
+
+    def result_callback(self, result):
+        # 将结果添加到队列
+        self.result_images.put(result)
+        if self.input_order.value % 50 == 0:
+            logger.info("result_images size:{}", self.result_images.qsize())
+
+
     def notify(self, event):
         """
         Called by an event in the message queue.

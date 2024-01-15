@@ -7,7 +7,6 @@ import numpy as np
 
 
 class attack_detector:
-    _logger = None
     """
         该类用于检测游戏所需动作是否完成
             a. 动作一：左手在上大拇指在后
@@ -24,15 +23,11 @@ class attack_detector:
                     calculate_angle(self) 
     """
 
-    def set_logger(logger_):
-        attack_detector._logger = logger_
-
     def __init__(self):
         # self.queue = queue.Queue()
 
         # 目前action状态机，如果为空，则判断action1，成功则+1，并判断下一个动作
         self.state_machine = 0
-        self.model = None
         # 需要一个数组来短暂的储存最近几次检测到的动作, 来避免一只手检测另一只手没有检测到后来又检测到的情况
         self.Lslope = [] * 10
         self.Lslope_b = [] * 10
@@ -40,11 +35,19 @@ class attack_detector:
         self.Rslope_b = [] * 10
 
         self.sit_down = False
-
-    def intialize_model(self, model):
-        self.model = model
-        # 当state_machine不为0时，开始计时，超过10s则将state_machine归0
+        
+        self.pose_landmarks = None
+        self.left_hand_landmark = None
+        self.right_hand_landmark = None
         self.last_time = time.time()
+
+    def datainput(self, pose_landmark, left_hand_landmark, right_hand_landmark):
+        
+        self.pose_landmarks = pose_landmark
+        self.left_hand_landmark = left_hand_landmark
+        self.right_hand_landmark = right_hand_landmark
+
+
 
     """
     统筹整个class，作为class判断的入口
@@ -61,7 +64,7 @@ class attack_detector:
             if self.action1():
                 self.state_machine += 1
                 self.last_time = time.time()
-                print("Action1 done -- {}".format(time.time()))
+                logger.debug("Action1 done -- {}".format(time.time()))
                 return 1
             pass
 
@@ -69,34 +72,35 @@ class attack_detector:
             if self.action2():
                 self.state_machine += 1
                 self.last_time = time.time()
-                print("Action2 done -- {}".format(time.time()))
+                logger.debug("Action2 done -- {}".format(time.time()))
                 return 2
             pass
 
         if self.state_machine == 2:
             if self.action3():
                 self.state_machine = 0
-                print("Action3 done -- {}".format(time.time()))
+                logger.debug("Action3 done -- {}".format(time.time()))
                 return 3
             pass
 
+        # print(self.state_machine, " ", time.time() - self.last_time)
         # 5s 后状态机归0
         if self.state_machine != 0 and time.time() - self.last_time > 10:
-            print("Action reset")
+            logger.debug("Action reset")
             self.state_machine = 0
         return False
 
     def action1(self):
         try:
             # 详见handlandmark.jpg
-            left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
-                              self.model.results.left_hand_landmarks.landmark[17].y]
-            left_pinky_pip = [self.model.results.left_hand_landmarks.landmark[18].x,
-                              self.model.results.left_hand_landmarks.landmark[18].y]
-            left_pinky_dip = [self.model.results.left_hand_landmarks.landmark[19].x,
-                              self.model.results.left_hand_landmarks.landmark[19].y]
-            left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
-                              self.model.results.left_hand_landmarks.landmark[20].y]
+            left_pinky_mcp = [self.left_hand_landmark.landmark[17].x,
+                              self.left_hand_landmark.landmark[17].y]
+            left_pinky_pip = [self.left_hand_landmark.landmark[18].x,
+                              self.left_hand_landmark.landmark[18].y]
+            left_pinky_dip = [self.left_hand_landmark.landmark[19].x,
+                              self.left_hand_landmark.landmark[19].y]
+            left_pinky_tip = [self.left_hand_landmark.landmark[20].x,
+                              self.left_hand_landmark.landmark[20].y]
             left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
             left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
             Left_X = np.array(left_X).reshape(-1, 1)
@@ -104,8 +108,8 @@ class attack_detector:
             L_model = LinearRegression()
             L_model.fit(Left_X, Left_y)
 
-            diff = (self.model.results.left_hand_landmarks.landmark[17].z -
-                    self.model.results.left_hand_landmarks.landmark[3].z)
+            diff = (self.left_hand_landmark.landmark[17].z -
+                    self.left_hand_landmark.landmark[3].z)
             if len(self.Lslope_b) < 10:
                 self.Lslope_b.append(diff)
             else:
@@ -120,14 +124,14 @@ class attack_detector:
                 return False
 
         try:
-            right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
-                               self.model.results.right_hand_landmarks.landmark[17].y]
-            right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
-                               self.model.results.right_hand_landmarks.landmark[18].y]
-            right_pinky_dip = [self.model.results.right_hand_landmarks.landmark[19].x,
-                               self.model.results.right_hand_landmarks.landmark[19].y]
-            right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
-                               self.model.results.right_hand_landmarks.landmark[20].y]
+            right_pinky_mcp = [self.right_hand_landmark.landmark[17].x,
+                               self.right_hand_landmark.landmark[17].y]
+            right_pinky_pip = [self.right_hand_landmark.landmark[18].x,
+                               self.right_hand_landmark.landmark[18].y]
+            right_pinky_dip = [self.right_hand_landmark.landmark[19].x,
+                               self.right_hand_landmark.landmark[19].y]
+            right_pinky_tip = [self.right_hand_landmark.landmark[20].x,
+                               self.right_hand_landmark.landmark[20].y]
 
             right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
             right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
@@ -138,8 +142,8 @@ class attack_detector:
             R_model = LinearRegression()
             R_model.fit(Right_X, Right_y)
 
-            diff = self.model.results.right_hand_landmarks.landmark[17].z - \
-                   self.model.results.right_hand_landmarks.landmark[3].z
+            diff = (self.right_hand_landmark.landmark[17].z -
+                    self.right_hand_landmark.landmark[3].z)
 
             if len(self.Rslope_b) < 10:
                 self.Rslope_b.append(diff)
@@ -158,8 +162,8 @@ class attack_detector:
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_) 
         """
-        # diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
-
+        # diff = self.left_hand_landmark.landmark[17].z - self.left_hand_landmark.landmark[3].z
+        # print(self.Rslope, " ", self.Lslope, " ", self.Rslope_b, " ", self.Lslope_b)
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
                 diff1 = self.Rslope_b[n]
@@ -177,7 +181,7 @@ class attack_detector:
         self.Rslope_b.pop(0)
         self.Lslope_b.pop(0)
         # # z轴小拇指与大拇指的坐标差值
-        # diff = self.model.results.left_hand_landmarks.landmark[17].z - self.model.results.left_hand_landmarks.landmark[3].z
+        # diff = self.left_hand_landmark.landmark[17].z - self.left_hand_landmark.landmark[3].z
         #
         # # 判断小拇指是否到达指定斜率(动作一左手在上大拇指在后)
         # if L_model.coef_ > -0.25 and L_model.coef_ < 0 and diff > 0:
@@ -193,14 +197,14 @@ class attack_detector:
     def action2(self):
         try:
             # 详见handlandmark.jpg
-            left_pinky_mcp = [self.model.results.left_hand_landmarks.landmark[17].x,
-                              self.model.results.left_hand_landmarks.landmark[17].y]
-            left_pinky_pip = [self.model.results.left_hand_landmarks.landmark[18].x,
-                              self.model.results.left_hand_landmarks.landmark[18].y]
-            left_pinky_dip = [self.model.results.left_hand_landmarks.landmark[19].x,
-                              self.model.results.left_hand_landmarks.landmark[19].y]
-            left_pinky_tip = [self.model.results.left_hand_landmarks.landmark[20].x,
-                              self.model.results.left_hand_landmarks.landmark[20].y]
+            left_pinky_mcp = [self.left_hand_landmark.landmark[17].x,
+                              self.left_hand_landmark.landmark[17].y]
+            left_pinky_pip = [self.left_hand_landmark.landmark[18].x,
+                              self.left_hand_landmark.landmark[18].y]
+            left_pinky_dip = [self.left_hand_landmark.landmark[19].x,
+                              self.left_hand_landmark.landmark[19].y]
+            left_pinky_tip = [self.left_hand_landmark.landmark[20].x,
+                              self.left_hand_landmark.landmark[20].y]
             left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
             left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
             Left_X = np.array(left_X).reshape(-1, 1)
@@ -208,8 +212,8 @@ class attack_detector:
             L_model = LinearRegression()
             L_model.fit(Left_X, Left_y)
 
-            diff = (self.model.results.left_hand_landmarks.landmark[17].z -
-                    self.model.results.left_hand_landmarks.landmark[3].z)
+            diff = (self.left_hand_landmark.landmark[17].z -
+                    self.left_hand_landmark.landmark[3].z)
             if len(self.Lslope_b) < 10:
                 self.Lslope_b.append(diff)
             else:
@@ -224,14 +228,14 @@ class attack_detector:
                 return False
 
         try:
-            right_pinky_mcp = [self.model.results.right_hand_landmarks.landmark[17].x,
-                               self.model.results.right_hand_landmarks.landmark[17].y]
-            right_pinky_pip = [self.model.results.right_hand_landmarks.landmark[18].x,
-                               self.model.results.right_hand_landmarks.landmark[18].y]
-            right_pinky_dip = [self.model.results.right_hand_landmarks.landmark[19].x,
-                               self.model.results.right_hand_landmarks.landmark[19].y]
-            right_pinky_tip = [self.model.results.right_hand_landmarks.landmark[20].x,
-                               self.model.results.right_hand_landmarks.landmark[20].y]
+            right_pinky_mcp = [self.right_hand_landmark.landmark[17].x,
+                               self.right_hand_landmark.landmark[17].y]
+            right_pinky_pip = [self.right_hand_landmark.landmark[18].x,
+                               self.right_hand_landmark.landmark[18].y]
+            right_pinky_dip = [self.right_hand_landmark.landmark[19].x,
+                               self.right_hand_landmark.landmark[19].y]
+            right_pinky_tip = [self.right_hand_landmark.landmark[20].x,
+                               self.right_hand_landmark.landmark[20].y]
 
             right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
             right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
@@ -242,8 +246,8 @@ class attack_detector:
             R_model = LinearRegression()
             R_model.fit(Right_X, Right_y)
 
-            diff = self.model.results.right_hand_landmarks.landmark[17].z - \
-                   self.model.results.right_hand_landmarks.landmark[3].z
+            diff = self.right_hand_landmark.landmark[17].z - \
+                   self.right_hand_landmark.landmark[3].z
 
             if len(self.Rslope_b) < 10:
                 self.Rslope_b.append(diff)
@@ -293,12 +297,12 @@ class attack_detector:
         # 1. 获得手腕,手肘,肩膀的坐标
         hand_push = False
         try:
-            left_shoulder = self.model.results.pose_landmarks.landmark[11]
-            right_shoulder = self.model.results.pose_landmarks.landmark[12]
-            left_elbow = self.model.results.pose_landmarks.landmark[13]
-            right_elbow = self.model.results.pose_landmarks.landmark[14]
-            left_wrist = self.model.results.pose_landmarks.landmark[15]
-            right_wrist = self.model.results.pose_landmarks.landmark[16]
+            left_shoulder = self.pose_landmarks.landmark[11]
+            right_shoulder = self.pose_landmarks.landmark[12]
+            left_elbow = self.pose_landmarks.landmark[13]
+            right_elbow = self.pose_landmarks.landmark[14]
+            left_wrist = self.pose_landmarks.landmark[15]
+            right_wrist = self.pose_landmarks.landmark[16]
         except:
             return False
 
@@ -306,10 +310,13 @@ class attack_detector:
         left_angle = self.calculate_angle(left_shoulder, left_elbow, left_wrist)
         right_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
 
+        if left_angle is None or right_angle is None:
+            return False
+
         # 3. 判断是否前推
         if left_angle > 130 and right_angle > 130:
             hand_push = True
-            logger.info("Action3-half: straight arm")
+            # logger.debug("Action3-half: straight arm")
         else:
             return False
         """
@@ -327,42 +334,39 @@ class attack_detector:
         # 1. 获得手掌关键点
         try:
             # 左手关键点
-            left_hand_Wrist = self.model.results.left_hand_landmarks.landmark[0]
+            left_hand_Wrist = self.left_hand_landmark.landmark[0]
             left_hand_Thump = [left_hand_Wrist,
-                               self.model.results.left_hand_landmarks.landmark[2],
-                               self.model.results.left_hand_landmarks.landmark[4]]
+                               self.left_hand_landmark.landmark[2],
+                               self.left_hand_landmark.landmark[4]]
             left_hand_Middle = [left_hand_Wrist,
-                                self.model.results.left_hand_landmarks.landmark[10],
-                                self.model.results.left_hand_landmarks.landmark[12]]
+                                self.left_hand_landmark.landmark[10],
+                                self.left_hand_landmark.landmark[12]]
             left_hand_Ring = [left_hand_Wrist,
-                              self.model.results.left_hand_landmarks.landmark[14],
-                              self.model.results.left_hand_landmarks.landmark[16]]
+                              self.left_hand_landmark.landmark[14],
+                              self.left_hand_landmark.landmark[16]]
             # 右手关键点
-            right_hand_Wrist = self.model.results.right_hand_landmarks.landmark[0]
+            right_hand_Wrist = self.right_hand_landmark.landmark[0]
             right_hand_Thump = [right_hand_Wrist,
-                                self.model.results.right_hand_landmarks.landmark[2],
-                                self.model.results.right_hand_landmarks.landmark[4]]
+                                self.right_hand_landmark.landmark[2],
+                                self.right_hand_landmark.landmark[4]]
             right_hand_Middle = [right_hand_Wrist,
-                                 self.model.results.right_hand_landmarks.landmark[10],
-                                 self.model.results.right_hand_landmarks.landmark[12]]
+                                 self.right_hand_landmark.landmark[10],
+                                 self.right_hand_landmark.landmark[12]]
             right_hand_Ring = [right_hand_Wrist,
-                               self.model.results.right_hand_landmarks.landmark[14],
-                               self.model.results.right_hand_landmarks.landmark[16]]
+                               self.right_hand_landmark.landmark[14],
+                               self.right_hand_landmark.landmark[16]]
         except:
             return False
-        # 2. 计算手指角度
-        #  左手
-        left_hand_Thump_angle = self.calculate_angle(left_hand_Thump[0], left_hand_Thump[1], left_hand_Thump[2])
-        left_hand_Middle_angle = self.calculate_angle(left_hand_Middle[0], left_hand_Middle[1], left_hand_Middle[2])
-        left_hand_Ring_angle = self.calculate_angle(left_hand_Ring[0], left_hand_Ring[1], left_hand_Ring[2])
-        #  右手
-        right_hand_Thump_angle = self.calculate_angle(right_hand_Thump[0], right_hand_Thump[1], right_hand_Thump[2])
-        right_hand_Middle_angle = self.calculate_angle(right_hand_Middle[0], right_hand_Middle[1], right_hand_Middle[2])
-        right_hand_Ring_angle = self.calculate_angle(right_hand_Ring[0], right_hand_Ring[1], right_hand_Ring[2])
 
-        # 两只中指向上
-        left_hand_Middle_direction = left_hand_Middle[2].y - left_hand_Middle[0].y
-        right_hand_Middle_direction = right_hand_Middle[2].y - right_hand_Middle[0].y
+        # 2. 计算手指方向
+        left_hand_Thump_direaction_upward = left_hand_Thump[2].y - left_hand_Thump[1].y
+        right_hand_Thump_direaction_upward = right_hand_Thump[2].y - right_hand_Thump[1].y
+
+        left_hand_Ring_direaction = left_hand_Ring[2].y - left_hand_Ring[1].y
+        right_hand_Ring_direaction = right_hand_Ring[2].y - right_hand_Ring[1].y
+
+        left_hand_Middle_direction = left_hand_Middle[2].y - left_hand_Middle[1].y
+        right_hand_Middle_direction = right_hand_Middle[2].y - right_hand_Middle[1].y
 
         # 两只大拇指向内
         left_hand_Thump_direction = left_hand_Thump[2].x - left_hand_Thump[0].x
@@ -371,34 +375,29 @@ class attack_detector:
         # 3. 判断是否张开手指
         # a. 手指向上
         hand_open = False
-        if left_hand_Middle_direction < 0 and right_hand_Middle_direction < 0:
-            hand_open = True
-            logger.info("Action3-half: hand open")
-        else:
-            hand_open = False
 
-        # b. 手指是否伸直
-        if left_hand_Thump_angle > 135 and left_hand_Middle_angle > 135 and left_hand_Ring_angle > 135:
-            if right_hand_Thump_angle > 135 and right_hand_Middle_angle > 135 and right_hand_Ring_angle > 135:
-                # c. 大拇指是否在内侧
-                if left_hand_Thump_direction < 0 and right_hand_Thump_direction > 0:
-                    logger.info("Action3 done")
-                    return hand_push and hand_open
-                else:
-                    logger.info("Action3-half: thumb not in")
+        if left_hand_Middle_direction < 0 and right_hand_Middle_direction < 0:
+            if left_hand_Thump_direaction_upward < 0 and right_hand_Thump_direaction_upward < 0:
+                if left_hand_Ring_direaction < 0 and right_hand_Ring_direaction < 0:
+                    hand_open = True
+                    # logger.info("Action3-half: hand upward")
+        if hand_open is False:
             return False
-        else:
-            return False
+
+        if left_hand_Thump_direction < 0 and right_hand_Thump_direction > 0:
+            # logger.info("Action3 done")
+            return True
+
 
     def sit_detect(self):
 
         try:
-            left_lag_1 = self.model.results.pose_landmarks.landmark[24]
-            left_lag_middle = self.model.results.pose_landmarks.landmark[26]
-            left_lag_3 = self.model.results.pose_landmarks.landmark[28]
-            right_lag_1 = self.model.results.pose_landmarks.landmark[23]
-            right_lag_middle = self.model.results.pose_landmarks.landmark[25]
-            right_lag_3 = self.model.results.pose_landmarks.landmark[27]
+            left_lag_1 = self.pose_landmarks.landmark[24]
+            left_lag_middle = self.pose_landmarks.landmark[26]
+            left_lag_3 = self.pose_landmarks.landmark[28]
+            right_lag_1 = self.pose_landmarks.landmark[23]
+            right_lag_middle = self.pose_landmarks.landmark[25]
+            right_lag_3 = self.pose_landmarks.landmark[27]
         except:
             if self.sit_down:
                 logger.info("Stand up")
@@ -407,6 +406,9 @@ class attack_detector:
 
         left_lag_angle = self.calculate_angle(left_lag_1, left_lag_middle, left_lag_3)
         right_lag_angle = self.calculate_angle(right_lag_1, right_lag_middle, right_lag_3)
+
+        if left_lag_angle is None or right_lag_angle is None:
+            return self.sit_down
 
         if left_lag_angle < 70 and right_lag_angle < 70:
             if not self.sit_down:
@@ -429,6 +431,9 @@ class attack_detector:
 
     def calculate_angle(self, landmark1, landmark2, landmark3):
         # 获取坐标
+        # 如果关键点不可见，则返回None
+        if landmark1.visibility < 0.7 and landmark2.visibility < 0.7 and landmark3.visibility < 0.7:
+            return None
         x1, y1, z1 = landmark1.x, landmark1.y, landmark1.z
         x2, y2, z2 = landmark2.x, landmark2.y, landmark2.z
         x3, y3, z3 = landmark3.x, landmark3.y, landmark3.z
@@ -471,16 +476,20 @@ class jump_detector:
 
     def jump(self):
         try:
-            # left_shoulder = self.model.results.pose_landmarks.landmark[11]
-            # right_shoulder = self.model.results.pose_landmarks.landmark[12]
-            # left_hip = self.model.results.pose_landmarks.landmark[23]
-            # right_hip = self.model.results.pose_landmarks.landmark[24]
+            # left_shoulder = self.pose_landmarks.landmark[11]
+            # right_shoulder = self.pose_landmarks.landmark[12]
+            # left_hip = self.pose_landmarks.landmark[23]
+            # right_hip = self.pose_landmarks.landmark[24]
             left_ankle = self.pose_landmarks.landmark[27]
             right_ankle = self.pose_landmarks.landmark[28]
         except:
             return False
 
         # print(left_ankle.y, right_ankle.y)
+        if left_ankle.visibility < 0.7 and right_ankle.visibility < 0.7:
+            return False
+
+
 
         # 计算6个点的重心
         # center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y + left_ankle.y + right_ankle.y) / 6

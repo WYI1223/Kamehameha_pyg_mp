@@ -4,7 +4,7 @@ from dev.Components.function.FPS_Engine import FPS_Engine
 from dev.Components.function.CV2_Engine import CV2_Engine
 from dev.Components.mediapipe.mediapipe_engine import *
 from dev.Components.function.detector_engine import *
-import cv2
+import multiprocessing
 import pygame
 
 
@@ -19,6 +19,8 @@ class control(object):
         self.model.detector = None
         self.model.jump_detector = None
         self.model.half = True
+
+        self.pool = multiprocessing.Pool(multiprocessing.cpu_count() // 2)
 
     def initialize(self):
         """
