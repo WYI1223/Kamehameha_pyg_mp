@@ -120,8 +120,6 @@ class attack_detector:
         self.Rslope = deque(maxlen=10)
         self.Rslope_b = deque(maxlen=10)
 
-        self.sit_down = False
-
         self.pose_landmarks = None
         self.left_hand_landmark = None
         self.right_hand_landmark = None
@@ -129,6 +127,9 @@ class attack_detector:
 
         self.sit_down = False
         self.previous_sit_down = False
+
+        self.jump_data = deque(maxlen=10)
+        self.jump = False
 
     def datainput(self, pose_landmark, left_hand_landmark, right_hand_landmark):
 
@@ -486,9 +487,50 @@ class attack_detector:
         if left_hand_Thump_direction < 0 and right_hand_Thump_direction > 0:
             return True
 
+    def jump_detect(self):
+
+        try:
+            left_ankle = self.pose_landmarks.landmark[27]
+            right_ankle = self.pose_landmarks.landmark[28]
+        except:
+            return False
+
+        # print(left_ankle.y, right_ankle.y)
+        if left_ankle.visibility < 0.7 and right_ankle.visibility < 0.7:
+            return self.jump
+
+        # 计算6个点的重心
+        # center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y + left_ankle.y + right_ankle.y) / 6
+        center_y = (left_ankle.y + right_ankle.y) / 2
+
+        if len(self.jump_data) == 0:
+            self.jump_data.append(center_y)
+            # self.counter += 1
+            self.jump = False
+            return False
+        # print(self.data)
+        for i in self.jump_data:
+            if (center_y - i) / center_y < -0.20:
+                self.jump_data = [center_y]
+                if not self.jump:
+                    logger.info("Jumping")
+                    self.jump = True
+                return True
+            elif (center_y - i) / center_y > 0.20:
+                self.jump_data = [center_y]
+                if self.jump:
+                    logger.info("Drop down")
+                    self.jump = False
+                return False
+            else:
+                self.jump_data.append(center_y)
+                return False
+
 
     def sit_detect(self):
 
+        if self.jump:
+            return False
         try:
             left_lag_1 = self.pose_landmarks.landmark[24]
             left_lag_middle = self.pose_landmarks.landmark[26]
@@ -574,7 +616,6 @@ class jump_detector:
 
     def __init__(self):
         self.data = deque(maxlen=10)
-        self.counter = 0
         pass
 
     def datainput(self, landmark):
@@ -598,19 +639,22 @@ class jump_detector:
         # center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y + left_ankle.y + right_ankle.y) / 6
         center_y = (left_ankle.y + right_ankle.y) / 2
 
-        if self.data == []:
+        if len(self.data) == 0:
             self.data.append(center_y)
-            self.counter += 1
+            # self.counter += 1
             return False
+        # print(self.data)
         for i in self.data:
-            if (center_y - i) / center_y < -0.30:
+            if (center_y - i) / center_y < -0.20:
                 # print(self.data)
                 self.data = [center_y]
                 logger.info("Jumping")
                 return True
+            elif (center_y - i) / center_y > 0.20:
+                # print(self.data)
+                self.data = [center_y]
+                logger.info("Drop down")
+                return False
             else:
                 self.data.append(center_y)
-                # print(self.data)
-                if len(self.data) > 10:
-                    self.data.popleft()
                 return False

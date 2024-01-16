@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78fab0d9-686f-44d3-8a68-f6cb04a31405" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dev/multiprocessing/detector/detector.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/multiprocessing/processing/multitest2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/Components/function/detector_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/Components/function/detector_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/multiprocessing/cameraIO/CV2_Engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/multiprocessing/cameraIO/CV2_Engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/multiprocessing/processing/display_subprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/multiprocessing/processing/display_subprocess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/multiprocessing/processing/mediapipe_sub.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/multiprocessing/processing/mediapipe_sub.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,29 +41,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.CV2_Engine.executor": "Run",
-    "Python.Main.executor": "Run",
-    "Python.multitest.executor": "Run",
-    "Python.multitest2.executor": "Run",
-    "Python.test.executor": "Run",
-    "Python.test2.executor": "Run",
-    "Python.test3-1.executor": "Run",
-    "Python.test3.executor": "Run",
-    "Python.test4.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Application/Anaconda3/envs/tf-cpu",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.CV2_Engine.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mediapipe_sub.executor&quot;: &quot;Run&quot;,
+    &quot;Python.multitest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.multitest2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test3-1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test4.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Application/Anaconda3/envs/tf-cpu&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Python.multitest2">
+}</component>
+  <component name="RunManager" selected="Python.mediapipe_sub">
     <configuration name="CV2_Engine" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Kamehameha_pyg_mp" />
       <option name="ENV_FILES" value="" />
@@ -100,6 +103,29 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mediapipe_sub" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Kamehameha_pyg_mp" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev/multiprocessing/processing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/multiprocessing/processing/mediapipe_sub.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -154,36 +180,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test3-1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Kamehameha_pyg_mp" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev/multiprocessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/multiprocessing/test3-1.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.mediapipe_sub" />
+        <item itemvalue="Python.CV2_Engine" />
         <item itemvalue="Python.multitest" />
         <item itemvalue="Python.multitest2" />
         <item itemvalue="Python.Main" />
-        <item itemvalue="Python.CV2_Engine" />
-        <item itemvalue="Python.test3-1" />
       </list>
     </recent_temporary>
   </component>
@@ -205,6 +208,7 @@
       <workItem from="1705173021902" duration="3772000" />
       <workItem from="1705179671465" duration="1128000" />
       <workItem from="1705218897497" duration="20054000" />
+      <workItem from="1705419809797" duration="8003000" />
     </task>
     <servers />
   </component>
@@ -212,14 +216,31 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$detector_engine.coverage" NAME="detector_engine Coverage Results" MODIFIED="1705082114389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/Components/function" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test.coverage" NAME="test Coverage Results" MODIFIED="1705220638034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1705222267531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest.coverage" NAME="multitest Coverage Results" MODIFIED="1705252837094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$CV2_Engine.coverage" NAME="CV2_Engine Coverage Results" MODIFIED="1705235419980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/cameraIO" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest2.coverage" NAME="multitest2 Coverage Results" MODIFIED="1705252733883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_sub__1_.coverage" NAME="mediapipe_sub (1) Coverage Results" MODIFIED="1705348596361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$editor.coverage" NAME="editor 覆盖结果" MODIFIED="1705396933149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_suub.coverage" NAME="mediapipe-suub Coverage Results" MODIFIED="1705344296245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705251494953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest2.coverage" NAME="multitest2 Coverage Results" MODIFIED="1705385922541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1705220924815" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game2.coverage" NAME="game2 覆盖结果" MODIFIED="1705328882950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame_engine.coverage" NAME="pygame_engine Coverage Results" MODIFIED="1705348580820" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$detector.coverage" NAME="detector Coverage Results" MODIFIED="1705308124013" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/detector" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$CV2_Engine.coverage" NAME="CV2_Engine Coverage Results" MODIFIED="1705429140655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/cameraIO" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test4.coverage" NAME="test4 Coverage Results" MODIFIED="1705233617115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$View.coverage" NAME="View 覆盖结果" MODIFIED="1705153632179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/MVC" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main Coverage Results" MODIFIED="1705350212412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$entities.coverage" NAME="entities 覆盖结果" MODIFIED="1705235908958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_sub.coverage" NAME="mediapipe_sub Coverage Results" MODIFIED="1705433827156" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test3_1.coverage" NAME="test3-1 Coverage Results" MODIFIED="1705234360042" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main Coverage Results" MODIFIED="1705241821892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest_pygame.coverage" NAME="multitest-pygame Coverage Results" MODIFIED="1705323303650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1705222267531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame_subprocessing.coverage" NAME="pygame_subprocessing Coverage Results" MODIFIED="1705326937366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Tilemap.coverage" NAME="Tilemap 覆盖结果" MODIFIED="1705241257180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$utils.coverage" NAME="utils 覆盖结果" MODIFIED="1705228572561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame.coverage" NAME="pygame 覆盖结果" MODIFIED="1705219410231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest.coverage" NAME="multitest Coverage Results" MODIFIED="1705252837094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_engine.coverage" NAME="mediapipe_engine Coverage Results" MODIFIED="1705161106705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/mediapipe" />
   </component>
 </project>

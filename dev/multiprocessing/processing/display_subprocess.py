@@ -18,7 +18,7 @@ class DisplayImageProcess(multiprocessing.Process):
         fps_engine = FPS_Engine()
 
         detector = attack_detector()
-        jumpdetector = jump_detector()
+        # jumpdetector = jump_detector()
 
         while True:
             pose_landmarks = None
@@ -43,15 +43,20 @@ class DisplayImageProcess(multiprocessing.Process):
                 fps_averge = fps_engine.get_average_fps()
                 fps_low10 = fps_engine.get_low10_fps()
                 fps_low50 = fps_engine.get_low50_fps()
-                cv2.putText(image_out, f'FPS_averge: {fps_averge}, FPS_low10: {fps_low10}, FPS_low50: {fps_low50}',
-                            (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
+                cv2.putText(image_out, f'FPS_averge: {fps_averge}',
+                            (20, 500), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
+                cv2.putText(image_out, f'FPS_low10: {fps_low10}',
+                            (20,550),cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
+                cv2.putText(image_out, f'FPS_low50: {fps_low50}',
+                            (20, 600), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
 
                 detector.datainput(pose_landmarks, left_hand_landmark=Left_Hand_Landmarks,
                                    right_hand_landmark=Right_Hnad_Landmarks)
 
                 detector.detect()
+                detector.jump_detect()
                 detector.sit_detect()
-                jumpdetector.datainput(pose_landmarks)
-                jumpdetector.jump()
+                # jumpdetector.datainput(pose_landmarks)
+                # jumpdetector.jump()
                 self.image_queue.put(image_out)
 

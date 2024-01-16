@@ -1,3 +1,5 @@
+import time
+
 from dev.Components.function.FPS_Engine import FPS_Engine
 import cv2
 import threading
@@ -16,8 +18,13 @@ class CameraCapture(threading.Thread):
 
     def run(self):
         while self.running:
+            time.sleep(1.0/60.0)
             ret, frame = self.cap.read()
             if ret:
+                start_x = (1920 - 680) // 2
+                end_x = start_x + 680
+                # 裁剪图像
+                frame = frame[:, start_x:end_x]
                 with self.lock:
                     self.frame = frame
 
