@@ -1,2 +1,0 @@
-import Editor
-Editor().run()

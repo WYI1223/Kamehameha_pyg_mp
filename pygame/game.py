@@ -1,10 +1,12 @@
 import sys
 import pygame
-from scripts.utils import load_image,load_images,Animation
-from scripts.entities import PhysicsEntity,Player
+from scripts.utils import load_image,load_images,Animation,load_pimages
+from scripts.entities import PhysicsEntity,Player,HA
 from scripts.Tilemap import Tilemap
 from scripts.clouds import Clouds
 offset = 0
+
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -14,19 +16,27 @@ class Game:
         self.display = pygame.Surface((320, 240))
 
         self.clock = pygame.time.Clock()
+        self.STATE1 = 1
+        self.STATE2 = False
+        self.HA = None
 
-        self.movement = [False,False,False,False]
+        self.movement = [False,True,False,False]
 
         self.assets = {
-            'decor' : load_images('tiles/decor'),
-            'grass': load_images('tiles/grass'),
-            'large_decor': load_images('tiles/large_decor'),
-            'stone': load_images('tiles/stone'),
-            'player': load_image('entities/player.png'),
-            'background' : load_image('background.png'),
-            'clouds':load_images('clouds'),
-            'player/idle' : Animation(load_images('entities/player/idle'),img_dur=6),
-            'player/run': Animation(load_images('entities/player/run'), img_dur=20),
+            'decor' : load_pimages('tiles/decor'),
+            'grass': load_pimages('tiles/grass'),
+            'large_decor': load_pimages('tiles/large_decor'),
+            'stone': load_pimages('tiles/stone'),
+            'player': pygame.transform.scale(load_image('entities/player_stand.png'),(17,17)),
+            'background' : pygame.transform.scale (load_image('background.png'),(1920,1080)),
+            'clouds':load_pimages('clouds'),
+            'HA/HA1' : Animation([pygame.transform.scale(load_image('entities/HA/HA1/ha0.png'),(34,34))]),
+            'HA/HA2': Animation([pygame.transform.scale(load_image('entities/HA/HA2/head.png'),(34,34))]),
+            'player/idle' : Animation(load_images('entities/player/idle2'),img_dur=6),
+            'player/attack1': Animation(load_images('entities/player/attack1'), img_dur=6),
+            'player/attack2': Animation(load_images('entities/player/attack2'), img_dur=6),
+            'player/attack3': Animation(load_images('entities/player/attack3'), img_dur=6),
+            'player/run': Animation(load_images('entities/player/run2'),img_dur=5),
             'player/jump': Animation(load_images('entities/player/jump')),
             'player/slide': Animation(load_images('entities/player/slide')),
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'))
@@ -55,7 +65,19 @@ class Game:
 
             self.tilemap.render(self.display,offset=render_scroll)
 
-            self.player.update(self.tilemap,(self.movement[1]-self.movement[0],0))
+            if self.STATE1 != 1:
+                self.STATE1 = self.player.update(self.tilemap,(0,0), self.STATE1)
+                # print("123123123")
+                if self.STATE1 ==4:
+                    if self.HA == None:
+                        self.HA = HA(self,(self.player.pos[0], self.player.pos[1]), (8, 15))
+
+                    self.STATE1 = self.HA.update(self.tilemap,3)
+                    self.HA.render(self.display,render_scroll,13)
+                    if self.STATE1 == 1:
+                        self.HA = None
+            else:
+                self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0), self.STATE1)
             self.player.render(self.display,offset=render_scroll)
 
             for event in pygame.event.get():
@@ -72,25 +94,44 @@ class Game:
                         self.player.velocity[1] = -3
                     if event.key == pygame.K_DOWN:
                         self.movement[2] = True
+                    if event.key == pygame.K_j:
+                        if self.STATE1 == 1:
+                            self.STATE1 = 2
+                            print("State1 change to 1")
+                    if event.key == pygame.K_k:
+                        if self.STATE1 == 2:
+                            self.STATE1 = 3
+                            print("State1 change to 2")
+                    if event.key == pygame.K_l:
+                        if self.STATE1 == 3:
+                            self.STATE1 = 4
+                            print("Action done")
+                        # self.STATE2 = True
+
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        self.movement[0] = False
-                    if event.key == pygame.K_RIGHT:
-                        self.movement[1] = False
+                    # if event.key == pygame.K_LEFT:
+                    #     self.movement[0] = False
+                    # if event.key == pygame.K_RIGHT:
+                    #     self.movement[1] = False
                     if event.key == pygame.K_UP:
                         self.movement[3] = False
                     if event.key == pygame.K_DOWN:
                         self.movement[2] = False
 
 
-            print((self.movement[2] - self.movement[3])*16)
 
-            self.player.update(self.tilemap,((self.movement[1] - self.movement[0])/9, (self.movement[2] - self.movement[3])*16))
+            # print((self.movement[2] - self.movement[3])*16)
+            # if self.STATE1 == 1:
+            #     self.player.update(self.tilemap,((self.movement[1] - self.movement[0])/9, (self.movement[2] - self.movement[3])*16),0)
+            # elif self.STATE1 != 1:
+            #     self.player.update(self.tilemap, (0,0), 0)
+
 
             self.screen.blit(pygame.transform.scale(self.display, (640, 480)), (0, 0))
 
             pygame.display.update()
             self.clock.tick(60)
 
-Game().run()
+if __name__ == '__main__':
+    Game().run()
