@@ -126,7 +126,7 @@ class ImageProcessor(multiprocessing.Process):
 
 # 使用示例
 if __name__ == '__main__':
-    image_queue = multiprocessing.Queue()
+    image_queue = multiprocessing.Queue(10)
 
     multitest_process = ImageProcessor(image_queue)
     game_process = GameProcess(image_queue)
