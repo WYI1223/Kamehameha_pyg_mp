@@ -1,7 +1,7 @@
 import sys
 import pygame
 from scripts.utils import load_image,load_images,Animation,load_pimages
-from scripts.entities import PhysicsEntity,Player,HA
+from scripts.entities import Player,HA
 from scripts.Tilemap import Tilemap
 from scripts.clouds import Clouds
 offset = 0

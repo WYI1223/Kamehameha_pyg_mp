@@ -13,7 +13,10 @@ def load_image(path):
 def load_images(path):
     images = []
     for img_name in os.listdir(BASE_IMG_PATH +path):
-        images.append(load_image(path+'/'+img_name))
+        img = load_image(path+'/'+img_name)
+        # img.set_colorkey((27,147,59))
+        images.append(img)
+    return images
 def load_pimages(path):
     images = []
     for img_name in os.listdir(BASE_IMG_PATH +path):

@@ -1,7 +1,6 @@
 import pygame
 OFFSET = 1
-
-
+from . import utils
 class PhysicsEntity:
     def __init__(self,game,e_type,pos,size):
         self.animation = None
@@ -11,6 +10,7 @@ class PhysicsEntity:
         self.size = size
         self.velocity = [0,0]
         self.collisions={'up':False,'down':False}
+        self.img = utils.load_image('entities/HA/HA1/ha0.png')
 
         self.action = ''
         self.anim_offset = (-3,-3)
@@ -102,15 +102,17 @@ class Player(PhysicsEntity):
 class HA(PhysicsEntity):
     def __init__(self,game,pos,size):
         super().__init__(game,'HA',pos,size)
-        self.action = ''
-        self.set_action("HA1")
+        self.action = 'HA2'
+        self.animation = self.game.assets[self.type + '/' + self.action].copy()
+
+        # self.set_action("HA1")
         # print(self.animation)
         self.counter = 0
+        self.counter2 = 0
 
 
 
     def update(self,tilemap,frame_movement):
-
         self.pos[0] += frame_movement
         entity_rect = self.rect()
         for rect in tilemap.physics_rects_around(self.pos):
@@ -123,17 +125,24 @@ class HA(PhysicsEntity):
                 self.set_action("HA2")
                 print("HA:", entity_rect.x)
                 self.counter += 1
-                
-        if entity_rect.right > self.game.player.pos[0] +100 :
+
+        if entity_rect.right > self.game.player.pos[0] + 100 :
             self.pos[0] = entity_rect.x
             self.set_action("HA2")
             print("HA:", entity_rect.x)
             self.counter += 1
         self.animation.update()
-        if self.counter == 5:
+        if self.counter > 5:
             self.counter = 0
             return 1
         return 4
     def render(self, surf, offsetx, offsety):
+        if self.counter2<100:
+            print(self.counter2)
+            for i in range(self.counter2):
+                surf.blit(self.img,((self.pos[0]-offsetx-i), self.pos[1]))
         surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
                   ((self.pos[0] - offsetx), self.pos[1]-offsety))
+        self.counter2 = self.counter2+3
+
+
