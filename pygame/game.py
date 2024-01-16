@@ -4,6 +4,7 @@ from scripts.utils import load_image,load_images,Animation
 from scripts.entities import PhysicsEntity,Player
 from scripts.Tilemap import Tilemap
 from scripts.clouds import Clouds
+
 offset = 0
 class Game:
     def __init__(self):
