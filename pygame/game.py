@@ -1,7 +1,7 @@
 import sys
 import pygame
 from scripts.utils import load_image,load_images,Animation,load_pimages
-from scripts.entities import PhysicsEntity,Player,HA
+from scripts.entities import PhysicsEntity,Player,HA,Enemy
 from scripts.Tilemap import Tilemap
 from scripts.clouds import Clouds
 offset = 0
@@ -39,7 +39,10 @@ class Game:
             'player/run': Animation(load_images('entities/player/run2'),img_dur=5),
             'player/jump': Animation(load_images('entities/player/jump')),
             'player/slide': Animation(load_images('entities/player/slide')),
-            'player/wall_slide': Animation(load_images('entities/player/wall_slide'))
+            'player/wall_slide': Animation(load_images('entities/player/wall_slide')),
+            'particle/particle': Animation(load_images('particles/leaf'), img_dur=20, loop=False),
+            'enemy/idle': Animation(load_images('entities/enemy/idle'), img_dur=6),
+            'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
 
         }
         print(self.assets)
@@ -51,6 +54,16 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
         self.tilemap.load('map.json')
         self.scroll = 0
+
+        self.enemies = []
+        matching_spawners = self.tilemap.extract([('spawners', 0),('spawners', 1)])
+
+        for spawner in matching_spawners:
+            if spawner['variant'] == 0:
+                self.player.pos = spawner['pos']
+            else:
+                self.enemies.append(Enemy(self, spawner['pos'], (8, 15)))
+
 
     def run(self):
         while True:
@@ -64,6 +77,12 @@ class Game:
 
 
             self.tilemap.render(self.display,offset=render_scroll)
+
+            for enemy in self.enemies.copy():
+                kill = enemy.update(self.tilemap,(0,0))
+                enemy.render(self.display,offset=render_scroll)
+                if kill:
+                    self.enemies.remove(enemy)
 
             if self.STATE1 != 1:
                 self.STATE1 = self.player.update(self.tilemap,(0,0), self.STATE1)
