@@ -1,3 +1,5 @@
+import random
+
 import pygame
 OFFSET = 1
 from . import utils
@@ -143,6 +145,43 @@ class HA(PhysicsEntity):
                 surf.blit(self.img,((self.pos[0]-offsetx-i), self.pos[1]))
         surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
                   ((self.pos[0] - offsetx), self.pos[1]-offsety))
+
         self.counter2 = self.counter2+3
 
 
+
+
+
+class Enemy(PhysicsEntity):
+    def __init__(self, game, pos, size):
+        super().__init__(game, 'enemy', pos, size)
+
+        self.walking = 0
+        self.dead = False
+
+    def update(self, tilemap, movement=(0, 0)):
+        if self.walking:
+            if tilemap.solid_check((self.rect().centerx + (-7 if self.flip else 7), self.pos[1] + 23)):
+                movement = (movement[0] - 0.5 if self.flip else 0.5, movement[1])
+            else:
+                self.flip = not self.flip
+            self.walking = max(0, self.walking - 1)
+        elif random.random() < 0.01:
+            self.walking = random.randint(30, 120)
+
+        super().update(tilemap, movement=movement)
+
+        if movement[0] != 0:
+            self.set_action('run')
+        else:
+            self.set_action('idle')
+
+        if self.dead:
+            # 判定是否与玩家相撞（修改self.game.player.rect()即可换成是否与气功波相撞）
+            if self.rect().colliderect(self.game.player.rect()):
+                """
+
+                some dead action
+
+                """
+                return True
