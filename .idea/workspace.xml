@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="744e759d-f226-4b11-ab60-d50df0fe88b2" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/HA/HA1/ha0.png" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/data/images/entities/HA/HA1/ha0.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pygame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pygame/scripts/entities.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/scripts/entities.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygame/scripts/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/scripts/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,20 +35,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;11&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/33774/Documents/GitHub/Kamehameha_pyg_mp/pygame/data/images/entities/player/run2&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.editor.executor": "Run",
+    "Python.game.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "11",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/33774/Documents/GitHub/Kamehameha_pyg_mp/pygame/data/images/entities/player/run2",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\pygame\data\images\entities\player\run2" />
@@ -67,6 +68,7 @@
   <component name="RunManager">
     <configuration name="game" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Kamehameha_pyg_mp" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -93,6 +95,13 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-67fca87a943a-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.259" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -109,6 +118,7 @@
       <workItem from="1705336995220" duration="4424000" />
       <workItem from="1705384429615" duration="12123000" />
       <workItem from="1705417087631" duration="5964000" />
+      <workItem from="1705424035568" duration="2312000" />
     </task>
     <servers />
   </component>
@@ -128,15 +138,15 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$detector_engine.coverage" NAME="detector_engine Coverage Results" MODIFIED="1705082114389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/Components/function" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_engine.coverage" NAME="mediapipe_engine Coverage Results" MODIFIED="1705161106705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/mediapipe" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game2.coverage" NAME="game2 覆盖结果" MODIFIED="1705328882950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$editor.coverage" NAME="editor 覆盖结果" MODIFIED="1705396933149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame.coverage" NAME="pygame 覆盖结果" MODIFIED="1705219410231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$View.coverage" NAME="View 覆盖结果" MODIFIED="1705153632179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/MVC" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$utils.coverage" NAME="utils 覆盖结果" MODIFIED="1705394885201" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main 覆盖结果" MODIFIED="1705218976808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$entities.coverage" NAME="entities 覆盖结果" MODIFIED="1705402375161" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Tilemap.coverage" NAME="Tilemap 覆盖结果" MODIFIED="1705337711147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705423103662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$utils.coverage" NAME="utils 覆盖结果" MODIFIED="1705394885201" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$entities.coverage" NAME="entities 覆盖结果" MODIFIED="1705402375161" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$View.coverage" NAME="View 覆盖结果" MODIFIED="1705153632179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/MVC" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$editor.coverage" NAME="editor 覆盖结果" MODIFIED="1705425454130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game2.coverage" NAME="game2 覆盖结果" MODIFIED="1705328882950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_engine.coverage" NAME="mediapipe_engine Coverage Results" MODIFIED="1705161106705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/mediapipe" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame.coverage" NAME="pygame 覆盖结果" MODIFIED="1705219410231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705427403646" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
   </component>
 </project>

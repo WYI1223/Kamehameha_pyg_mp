@@ -176,9 +176,9 @@ class Enemy(PhysicsEntity):
         else:
             self.set_action('idle')
 
-        if self.dead:
+        if self.game.isAttacking:
             # 判定是否与玩家相撞（修改self.game.player.rect()即可换成是否与气功波相撞）
-            if self.rect().colliderect(self.game.player.rect()):
+            if self.rect().colliderect(self.game.HA.rect()):
                 """
 
                 some dead action

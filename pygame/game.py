@@ -18,7 +18,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.STATE1 = 1
         self.STATE2 = False
-        self.HA = None
+
 
         self.movement = [False,True,False,False]
 
@@ -54,6 +54,8 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
         self.tilemap.load('map.json')
         self.scroll = 0
+
+        self.isAttacking = False
 
         self.enemies = []
         matching_spawners = self.tilemap.extract([('spawners', 0),('spawners', 1)])
@@ -114,6 +116,7 @@ class Game:
                     if event.key == pygame.K_DOWN:
                         self.movement[2] = True
                     if event.key == pygame.K_j:
+                        self.isAttacking = True
                         if self.STATE1 == 1:
                             self.STATE1 = 2
                             print("State1 change to 1")
@@ -137,6 +140,8 @@ class Game:
                         self.movement[3] = False
                     if event.key == pygame.K_DOWN:
                         self.movement[2] = False
+                    if event.key == pygame.K_l:
+                        self.isAttacking = False
 
 
 
