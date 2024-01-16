@@ -8,11 +8,12 @@ import time
 
 # 继承 multiprocessing.Process 类来创建一个子进程类
 class GameProcess(multiprocessing.Process):
-    def __init__(self, image_queue: multiprocessing.Queue):
+    def __init__(self, image_queue: multiprocessing.Queue, state_machine: multiprocessing.Value):
         # 初始化父类 Process
         super(GameProcess, self).__init__()
         # 将图像队列存储为类属性
         self.image_queue = image_queue
+        self.statemachine = state_machine
 
     # run 方法包含原来 run_game 函数的主要逻辑
     def run(self):
@@ -58,6 +59,8 @@ class GameProcess(multiprocessing.Process):
             # 处理 Pygame 事件
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    with self.statemachine.get_lock():
+                        self.statemachine.value = 0
                     running = False
 
             # 更新显示
