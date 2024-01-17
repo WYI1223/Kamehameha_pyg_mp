@@ -446,7 +446,10 @@ class attack_detector:
             return True
 
     def jump_detect(self):
-
+        if self.jump:
+            if time.time() - self.jump_last_time > 0.5:
+                logger.info("Drop down")
+                self.jump = False
         try:
             left_ankle = self.pose_landmarks.landmark[27]
             right_ankle = self.pose_landmarks.landmark[28]
@@ -487,10 +490,7 @@ class attack_detector:
                 self.jump_data.append(center_y)
                 return self.jump
         self.jump_data.popleft()
-        if self.jump:
-            if time.time() - self.jump_last_time > 1:
-                logger.info("Drop down")
-                self.jump = False
+
 
 
 
@@ -516,9 +516,9 @@ class attack_detector:
             # logger.debug("--------------------------------point not exist")
             return self.previous_sit_down
 
-        if left_lag_angle < 70 and right_lag_angle < 70:
+        if left_lag_angle < 50 and right_lag_angle < 50:
             self.sit_down = True
-        elif left_lag_angle > 100 and right_lag_angle > 100:
+        elif left_lag_angle > 70 and right_lag_angle > 70:
             # logger.debug("---------------sit down detect false------------------")
             self.sit_down = False
         else:
