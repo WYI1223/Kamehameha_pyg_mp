@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((1920,1080))
 
-        self.display = pygame.Surface(((1920-680)//2, 540))
+        self.display = pygame.Surface((1920, 1080))
 
         self.clock = pygame.time.Clock()
 
@@ -23,6 +23,7 @@ class Game:
             'player': pygame.transform.scale(load_image('entities/player_stand.png'),(17,17)),
             'background' : pygame.transform.scale (load_image('background.png'),(1920,1080)),
             'clouds':load_pimages('clouds'),
+            'pixels': load_images('tiles/pixel'),
             'HA/HA1' : Animation([pygame.transform.scale(load_image('entities/HA/HA1/ha0.png'),(34,34))]),
             'HA/HA2': Animation([pygame.transform.scale(load_image('entities/HA/HA2/head.png'),(34,34))]),
             'player/idle' : Animation(load_images('entities/player/idle2'),img_dur=6),
@@ -52,7 +53,7 @@ class Game:
         self.player = Player(self, (50, 50),(8, 15))
 
         self.tilemap = Tilemap(self, tile_size=16)
-        self.tilemap.load('map.json')
+        self.tilemap.load('map2.json')
         self.scroll = 0
 
         self.isAttacking = False
@@ -176,7 +177,7 @@ class Game:
             self.display.blit(text_surface, text_rect)
 
 
-            self.screen.blit(pygame.transform.scale(self.display, (1960-680, 1080)), (0, 0))
+            self.screen.blit(pygame.transform.scale(self.display, (1960, 1080)), (0, 0))
 
             pygame.display.update()
             self.clock.tick(60)
