@@ -38,7 +38,7 @@ class Editor:
         self.click = False
         self.shift = False
         self.ongrid = True
-        self.tilemap.load('map_start.json')
+        self.tilemap.load('map2_complete.json')
     def run(self):
         while True:
             self.display.fill((0,0,0))

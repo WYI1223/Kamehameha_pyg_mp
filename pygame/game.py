@@ -122,9 +122,10 @@ class Game:
                     continue
 
             self.player.render(self.display,offset=render_scroll)
-            if self.endpoint.update() == -1:
-                return -1
-            self.endpoint.render(self.display,offset=render_scroll)
+            if self.endpoint is not None:
+                if self.endpoint.update() == -1:
+                    return -1
+                self.endpoint.render(self.display,offset=render_scroll)
             for enemy in self.enemies.copy():
                 enemy.update(self.tilemap,(0,0))
 
