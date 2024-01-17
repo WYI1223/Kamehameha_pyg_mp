@@ -9,11 +9,9 @@ offset = 0
 
 class Game:
     def __init__(self):
-        pygame.init()
+        self.screen = pygame.display.set_mode((1920,1080))
 
-        pygame.display.set_caption('Dragon ball')
-        self.screen = pygame.display.set_mode((640,480))
-        self.display = pygame.Surface((320, 240))
+        self.display = pygame.Surface(((1920-680)//2, 540))
 
         self.clock = pygame.time.Clock()
 
@@ -40,7 +38,6 @@ class Game:
             'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
 
         }
-        self.initialize()
 
     def initialize(self):
         self.score_kill = 0
@@ -71,7 +68,10 @@ class Game:
 
 
     def run(self):
+        self.initialize()
         while True:
+            if  self.player.pos[1]>540:
+                self.initialize()
 
             self.display.blit(self.assets['background'],(0,0))
 
@@ -122,7 +122,8 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+                    # sys.exit()
+                    return -1
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
@@ -168,12 +169,14 @@ class Game:
 
             # 获取文本的矩形区域
             text_rect = text_surface.get_rect()
-            text_rect.topleft = (10,10)
+            text_rect.topleft = (100,50)
 
             # 将文本绘制到屏幕上
+
             self.display.blit(text_surface, text_rect)
 
-            self.screen.blit(pygame.transform.scale(self.display, (640, 480)), (0, 0))
+
+            self.screen.blit(pygame.transform.scale(self.display, (1960-680, 1080)), (0, 0))
 
             pygame.display.update()
             self.clock.tick(60)
