@@ -43,11 +43,11 @@ class OrderProcessor(multiprocessing.Process):
                 fps_low10 = fps_engine.get_low10_fps()
                 fps_low50 = fps_engine.get_low50_fps()
                 cv2.putText(image_out, f'FPS_averge: {fps_averge}',
-                            (20, 500), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
+                            (20, 800), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 3)
                 cv2.putText(image_out, f'FPS_low10: {fps_low10}',
-                            (20,550),cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
+                            (20,900),cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 3)
                 cv2.putText(image_out, f'FPS_low50: {fps_low50}',
-                            (20, 600), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 3)
+                            (20, 1000), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 3)
 
                 detector.datainput(pose_landmarks, left_hand_landmark=Left_Hand_Landmarks,
                                    right_hand_landmark=Right_Hnad_Landmarks)

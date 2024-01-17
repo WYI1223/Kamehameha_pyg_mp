@@ -24,21 +24,21 @@ class mediapipe_holistic_engine():
             self.Pose_World_Landmark = self.results.pose_world_landmarks.landmark
         else:
             self.pose_detected = False
-            cv2.putText(img, "No pose detected", (10, 110), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
+            cv2.putText(img, "No pose detected", (10, 110), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 3)
 
         if self.results.left_hand_landmarks:
             self.left_hand_detected = True
             self.Left_Hand_Pixel_Landmark = self.results.left_hand_landmarks.landmark
         else:
             self.left_hand_detected = False
-            cv2.putText(img, "No left hand detected", (10, 250), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
+            cv2.putText(img, "No left hand detected", (10, 250), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 3)
 
         if self.results.right_hand_landmarks:
             self.right_hand_detected = True
             self.Right_Hand_Pixel_Landmark = self.results.right_hand_landmarks.landmark
         else:
             self.right_hand_detected = False
-            cv2.putText(img, "No right hand detected", (10, 320), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
+            cv2.putText(img, "No right hand detected", (10, 320), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 3)
 
     def draw_all_landmark_drawing_utils(self, img):
 

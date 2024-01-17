@@ -26,24 +26,25 @@ class FPS_Engine:
         self.fps_list.append(self.fps)
         self.total_fps += self.fps
 
-        return self.fps
+        return round(self.fps)
 
     def get_average_fps(self):
         if len(self.fps_list) == 0:
             return 0
-        return self.total_fps / len(self.fps_list)
+        return round(self.total_fps / len(self.fps_list))
 
     def get_low10_fps(self):
         smallest_10 = heapq.nsmallest(10, self.fps_list)
-        return sum(smallest_10) / len(smallest_10)
+        return round(sum(smallest_10) / len(smallest_10))
 
     def get_low50_fps(self):
         if len(self.fps_list) < 50:
-            return sum(self.fps_list) / len(self.fps_list) if self.fps_list else 0
-        return sum(heapq.nsmallest(50, self.fps_list)) / 50
+            return round(sum(self.fps_list) / len(self.fps_list)) if self.fps_list else 0
+        return round(sum(heapq.nsmallest(50, self.fps_list)) / 50)
 
-    def display_FPS(self,img):
-        cv2.putText(img, str(int(self.fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
-                    (255, 0, 255), 3)
+    def display_FPS(self, img):
+        fps_rounded = round(self.fps)
+        cv2.putText(img, str(fps_rounded), (10, 80), cv2.FONT_HERSHEY_PLAIN, 0, (255, 0, 255), 1)
         return img
+
 

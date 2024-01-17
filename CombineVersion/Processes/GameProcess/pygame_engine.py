@@ -54,7 +54,8 @@ class GameProcess(multiprocessing.Process):
                 image = self.image_queue.get()
                 image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
-                screen.blit(image_out, (0, 0))
+                screen.blit(image_out, (screen.get_width() - image_out.get_width(), 0))
+
 
             # 处理 Pygame 事件
             for event in pygame.event.get():
