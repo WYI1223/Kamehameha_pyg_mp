@@ -49,6 +49,20 @@ class control(object):
             """
             Handle all Business Logic
             """
+
+
+            if self.model.STATE_MACHINE.value == 0:
+                self.graphics.quit_pygame()
+                self.evManager.Post(QuitEvent())
+                if self.model.ImageProcess.is_alive():
+                    print("ImageProcess is alive")
+                    self.model.ImageProcess.terminate()
+                if self.model.GameProcess.is_alive():
+                    print("GameProcess is alive")
+                    self.model.GameProcess.terminate()
+                # print("STATE_MACHINE: ", self.model.STATE_MACHINE.value)
+
+
             # Get camera image from CV2
             # self.model.success, self.model.img = self.model.CV2_class.read_camera()  # read camera
 

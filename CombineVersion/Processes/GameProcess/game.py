@@ -1,7 +1,7 @@
 import cv2
 import pygame
 from CombineVersion.Processes.GameProcess.scripts.utils import load_image,load_images,Animation,load_pimages
-from CombineVersion.Processes.GameProcess.scripts.entities import Player,HA,Enemy
+from CombineVersion.Processes.GameProcess.scripts.entities import Player,HA,Enemy,Endpoint
 from CombineVersion.Processes.GameProcess.scripts.Tilemap import Tilemap
 from CombineVersion.Processes.GameProcess.scripts.clouds import Clouds
 offset = 0
@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((1920,1080))
 
-        self.display = pygame.Surface((1920, 1080))
+        self.display = pygame.Surface(((1920-680)//2, 1080//2))
 
         self.clock = pygame.time.Clock()
 
@@ -48,7 +48,7 @@ class Game:
 
         self.HA = None
         self.font = pygame.font.Font(None, 36)
-        self.movement = [False,False,False,False]
+        self.movement = [False,True,False,False]
 
         self.clouds = Clouds(self.assets['clouds'],count=16)
 
@@ -61,7 +61,10 @@ class Game:
         self.tilemap.load('map2.json')
         self.scroll = 0
 
+        self.Jump = False
         self.isAttacking = False
+
+        self.pause = True
 
         self.enemies = []
         matching_spawners = self.tilemap.extract([('spawners', 0),('spawners', 1)])
@@ -79,12 +82,14 @@ class Game:
             self.endpoint.update()
 
 
-    def run(self,image_queue):
+    def run(self,image_queue, state_machine):
         self.initialize()
         self.image_queue = image_queue
+        self.statemachine = state_machine
+
         while True:
 
-            if  self.player.pos[1]>540:
+            if self.player.pos[1]>540:
                 self.initialize()
 
             self.display.blit(self.assets['background'],(0,0))
@@ -120,13 +125,13 @@ class Game:
                     if self.STATE1 == 1:
                         self.HA = None
             else:
-                if self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0), self.STATE1) == 0:
+                if self.player.update(self.tilemap, ((self.movement[1] - self.movement[0])*0.5, 0), self.STATE1) == 0:
                     continue
-
+            if self.endpoint is not None:
+                if self.endpoint.update() == -1:
+                    return -1
+                self.endpoint.render(self.display, offset=render_scroll)
             self.player.render(self.display,offset=render_scroll)
-            if self.endpoint.update() == -1:
-                return -1
-            self.endpoint.render(self.display,offset=render_scroll)
             for enemy in self.enemies.copy():
                 enemy.update(self.tilemap,(0,0))
 
@@ -136,6 +141,41 @@ class Game:
                         self.score_kill += 100
                         self.enemies.remove(enemy)
 
+
+
+            """
+            状态判断
+            """
+            state = self.statemachine.value
+            if state == 1:
+                self.Jump = False
+
+            if state == 1 and self.STATE1 != 1:
+                self.isAttacking = False
+                self.STATE1 = 1
+            if state == 2:
+                self.isAttacking = True
+                if self.STATE1 == 1:
+                    self.STATE1 = 2
+                    print("State1 change to 1")
+            if state == 3:
+                if self.STATE1 == 2:
+                    self.STATE1 = 3
+                    print("State1 change to 2")
+            if state == 4:
+                if self.STATE1 == 3:
+                    self.STATE1 = 4
+                    print("Action done")
+                    with self.statemachine.get_lock():
+                        self.statemachine.value = 1
+            if state == 5:
+                # if not self.Jump:
+                self.player.velocity[1] = -3
+                # self.Jump = True
+                # self.movement[3] = True
+
+            if state == 8:
+                self.pause = True
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -152,6 +192,7 @@ class Game:
                         self.movement[1] = True
                     if event.key == pygame.K_UP:
                         self.player.velocity[1] = -3
+                        # self.movement[3] = True
                     if event.key == pygame.K_DOWN:
                         self.movement[3] = True
                     if event.key == pygame.K_j:
@@ -189,7 +230,7 @@ class Game:
 
             # 获取文本的矩形区域
             text_rect = text_surface.get_rect()
-            text_rect.topleft = (100,50)
+            text_rect.topleft = (50,50)
 
             # 将文本绘制到屏幕上
 
@@ -205,6 +246,34 @@ class Game:
                 image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
                 self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
+
+            while self.pause:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        return -1
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            self.pause = False
+                if not self.image_queue.empty():
+                    image = self.image_queue.get()
+                    image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
+                    self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
+                if self.statemachine.value == 6:
+                    self.pause = False
+
+
+                text_pause_font = pygame.font.Font(None, 200)
+                text_pause_surface = text_pause_font.render("Game Pause", True, (255, 255, 255))  # 文本颜色为白色
+                # 获取文本的矩形区域
+                text_puase_rect = text_surface.get_rect()
+                text_puase_rect.center = (self.screen.get_width() // 2, self.screen.get_height() // 2)
+                # 将文本绘制到屏幕上
+                self.screen.blit(text_pause_surface, text_puase_rect)
+
+                pygame.display.update()
+
 
             self.clock.tick(60)
 

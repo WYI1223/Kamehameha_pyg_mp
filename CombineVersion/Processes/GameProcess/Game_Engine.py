@@ -29,7 +29,7 @@ class Game_Engine(multiprocessing.Process):
                 self.state_ui = ui.Mt().main()
 
             if self.state_ui == 1:
-                self.state_ui = Game().run(self.image_queue)
+                self.state_ui = Game().run(self.image_queue, self.statemachine)
         print("Game_Engine stop")
 
     def stop(self):

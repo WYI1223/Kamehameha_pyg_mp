@@ -15,13 +15,12 @@ class ModelEngine(object):
         self.evManager = evManager
         evManager.RegisterListener(self)
         self.state = StateMachine_level_1()
-        self.STATE_MACHINE = multiprocessing.Value('i',1)
+        self.STATE_MACHINE = multiprocessing.Value('i', 8)
 
         self.first_state = STATE_CV
 
         self.load_settings_and_data()
 
-        self.input_order = multiprocessing.Value('i', 0)
         self.image_queue = multiprocessing.Queue()
 
         self.GameProcess = None
@@ -36,6 +35,7 @@ class ModelEngine(object):
         """
 
         if isinstance(event, QuitEvent):
+            print("QuitEvent")
             self.running = False
 
         if isinstance(event, StateChangeEvent):

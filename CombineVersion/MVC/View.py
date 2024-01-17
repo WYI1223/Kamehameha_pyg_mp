@@ -1,5 +1,6 @@
 import time
 
+from CombineVersion.MVC.EventManager import QuitEvent
 from CombineVersion.Processes.GameProcess.Game_Engine import Game_Engine
 
 
@@ -24,7 +25,5 @@ class UI_View(object):
 
 
     def render(self):
-
-
         pass
 

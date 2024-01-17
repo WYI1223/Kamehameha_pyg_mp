@@ -35,6 +35,8 @@ class ImageProcessor(multiprocessing.Process):
             if self.statemachine.value == 0:
                 self.running = False
                 self.close()
+                self.display_image_process.stop()
+                # print("ImageProcess is stop")
 
     def handle_image(self):
         num = 2
@@ -45,6 +47,7 @@ class ImageProcessor(multiprocessing.Process):
 
     def close(self):
         for process in self.processes:
+            self.process_queue.close()
             process.stop()
             process.join()
 
@@ -54,7 +57,7 @@ class ImageProcessor(multiprocessing.Process):
         self.process_queue = multiprocessing.Queue(8)
         # self.display_image_thread = threading.Thread(target=self.display_image,
         #                                              args=(self.result_images, self.image_queue), daemon=True)
-        self.display_image_process = OrderProcessor(self.result_images, self.image_queue)
+        self.display_image_process = OrderProcessor(self.result_images, self.image_queue,self.statemachine)
         self.cameraCapture.start()
         logger.info("CameraCapture is start")
 
@@ -62,13 +65,13 @@ class ImageProcessor(multiprocessing.Process):
         self.display_image_process.start()
         self.handle_image()
         self.get_photos()
-
+        print("ImageProcess is stop")
     # 其余的方法保持不变
 
 
 # 使用示例
 if __name__ == '__main__':
-    from dev.multiprocessing.processing.pygame_engine import GameProcess
+    from CombineVersion.Processes.GameProcess.pygame_engine import GameProcess
     image_queue = multiprocessing.Queue(20)
 
     statemachine = multiprocessing.Value('i', 1)

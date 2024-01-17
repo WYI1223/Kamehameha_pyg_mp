@@ -8,90 +8,6 @@ import cv2
 import numpy as np
 
 
-class TposeDetector:
-    def __init__(self, model):
-        self.model = model
-        self.initilize()
-
-    def initilize(self):
-        try:
-            self.pose_landmarks = self.model.results.pose_landmarks
-        except:
-            self.pose_landmarks = None
-            pass
-        pass
-
-    def calculate_angle(self, point1, point2, point3):
-        # Calculate the angle formed by three points
-        a = math.sqrt((point2.x - point3.x) ** 2 + (point2.y - point3.y) ** 2)
-        b = math.sqrt((point1.x - point3.x) ** 2 + (point1.y - point3.y) ** 2)
-        c = math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2)
-        angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))
-        return math.degrees(angle)
-
-    def is_t_pose(self, landmarks):
-        # Using the provided landmarks diagram to identify the correct indices
-        left_shoulder = landmarks[11]
-        right_shoulder = landmarks[12]
-        left_elbow = landmarks[13]
-        right_elbow = landmarks[14]
-        left_wrist = landmarks[15]
-        right_wrist = landmarks[16]
-        left_hip = landmarks[23]
-        right_hip = landmarks[24]
-        left_ankle = landmarks[27]
-        right_ankle = landmarks[28]
-
-        # Check if arms are parallel to the ground
-        left_arm_angle = self.calculate_angle(left_shoulder, left_elbow, left_wrist)
-        right_arm_angle = self.calculate_angle(right_shoulder, right_elbow, right_wrist)
-        arms_parallel = abs(left_arm_angle - 180) < 10 and abs(right_arm_angle - 180) < 10
-
-        # Check if feet are together by measuring the distance between the ankles
-        feet_distance = math.sqrt((left_ankle.x - right_ankle.x) ** 2 + (left_ankle.y - right_ankle.y) ** 2)
-        # The threshold for feet_distance can be adjusted based on the model's scale
-        feet_together = feet_distance < 0.1
-
-        return arms_parallel and feet_together
-
-    def draw_box(self, image):
-        # 获取图像的宽度和高度
-        image_height, image_width, _ = image.shape
-
-        # 计算矩形的左上角和右下角坐标，使其位于图像中央并更长而窄
-        center_x = image_width // 2
-        center_y = image_height // 2
-        half_width = 300  # 矩形的一半宽度
-        half_height = 520  # 矩形的一半高度
-
-        # 计算矩形的坐标
-        top_left = (center_x - half_width, center_y - half_height)
-        bottom_right = (center_x + half_width, center_y + half_height)
-
-        # 初始化所有关键点是否在矩形内的标志
-        all_landmarks_inside = True
-        landmark = None
-        try:
-            self.pose_landmarks = self.model.results.pose_landmarks
-            landmark = self.pose_landmarks.landmark
-        except:
-            return False
-
-        # 检查所有关键点是否在矩形内
-        for landmark in landmark:
-            x, y = int(landmark.x * image_width), int(landmark.y * image_height)
-            # 如果关键点在矩形外
-            if not (top_left[0] <= x <= bottom_right[0] and top_left[1] <= y <= bottom_right[1]):
-                all_landmarks_inside = False
-                break  # 一旦找到不在矩形内的关键点，退出循环
-
-        # 根据所有关键点是否在矩形内来决定矩形的颜色
-        if all_landmarks_inside:
-            cv2.rectangle(image, top_left, bottom_right, (0, 255, 0), 2)  # 绿色矩形
-        else:
-            cv2.rectangle(image, top_left, bottom_right, (0, 0, 255), 2)  # 红色矩形
-
-
 class attack_detector:
     """
         该类用于检测游戏所需动作是否完成
@@ -130,6 +46,7 @@ class attack_detector:
 
         self.jump_data = deque(maxlen=10)
         self.jump = False
+        self.jump_last_time = time.time()
 
     def datainput(self, pose_landmark, left_hand_landmark, right_hand_landmark):
 
@@ -152,8 +69,8 @@ class attack_detector:
             self.state_machine = next_state
             self.last_time = time.time()
             logger.debug(f"Action{action_number} done -- {time.time()}")
-            return action_number
-        return False
+            return action_number +1
+        return self.state_machine + 1
 
     def detect(self):
 
@@ -174,6 +91,47 @@ class attack_detector:
             return self.perform_action(action, next_state, action_number)
 
         return False
+
+    def draw_box(self,image):
+        # 获取图像的宽度和高度
+        image_height, image_width, _ = image.shape
+        # image_height = 1080
+        # image_width = 680
+
+        # 计算矩形的左上角和右下角坐标，使其位于图像中央并更长而窄
+        center_x = image_width // 2
+        center_y = image_height // 2
+        half_width = 340  # 矩形的一半宽度
+        half_height = 540  # 矩形的一半高度
+
+        # 计算矩形的坐标
+        top_left = (center_x - half_width, center_y - half_height)
+        bottom_right = (center_x + half_width, center_y + half_height)
+
+        # 初始化所有关键点是否在矩形内的标志
+        all_landmarks_inside = True
+        landmark = None
+        try:
+            landmark = self.pose_landmarks.landmark
+        except:
+            return False
+
+        # 检查所有关键点是否在矩形内
+        for landmark in landmark:
+            x, y = int(landmark.x * image_width), int(landmark.y * image_height)
+            # 如果关键点在矩形外
+            if not (top_left[0] <= x <= bottom_right[0] and top_left[1] <= y <= bottom_right[1]):
+                all_landmarks_inside = False
+                break  # 一旦找到不在矩形内的关键点，退出循环
+
+        # 根据所有关键点是否在矩形内来决定矩形的颜色
+        if all_landmarks_inside:
+            cv2.rectangle(image, top_left, bottom_right, (0, 255, 0), 2)  # 绿色矩形
+            return True
+        else:
+            cv2.rectangle(image, top_left, bottom_right, (0, 0, 255), 2)  # 红色矩形
+
+
 
     """
         动作1：龟派气功动作1检测
@@ -511,20 +469,29 @@ class attack_detector:
         # print(self.data)
         for i in self.jump_data:
             if (center_y - i) / center_y < -0.20:
-                self.jump_data = [center_y]
+                self.jump_data.clear()
+                self.jump_data.append(center_y)
                 if not self.jump:
                     logger.info("Jumping")
                     self.jump = True
+                    self.jump_last_time = time.time()
                 return True
             elif (center_y - i) / center_y > 0.20:
-                self.jump_data = [center_y]
+                self.jump_data.clear()
+                self.jump_data.append(center_y)
                 if self.jump:
                     logger.info("Drop down")
                     self.jump = False
                 return False
             else:
                 self.jump_data.append(center_y)
-                return False
+                return self.jump
+        self.jump_data.popleft()
+        if self.jump:
+            if time.time() - self.jump_last_time > 1:
+                logger.info("Drop down")
+                self.jump = False
+
 
 
     def sit_detect(self):
@@ -606,55 +573,3 @@ class attack_detector:
         angle = math.degrees(angle)
 
         return angle
-
-        # 示例：计算肩膀、肘部和手腕之间的角度
-        # 你需要从MediaPipe的输出中提供这些关键点的坐标
-        # angle = calculate_angle(shoulder_landmark, elbow_landmark, wrist_landmark)
-
-
-class jump_detector:
-
-    def __init__(self):
-        self.data = deque(maxlen=10)
-        pass
-
-    def datainput(self, landmark):
-        self.pose_landmarks = landmark
-
-        pass
-
-    def jump(self):
-        try:
-
-            left_ankle = self.pose_landmarks.landmark[27]
-            right_ankle = self.pose_landmarks.landmark[28]
-        except:
-            return False
-
-        # print(left_ankle.y, right_ankle.y)
-        if left_ankle.visibility < 0.7 and right_ankle.visibility < 0.7:
-            return False
-
-        # 计算6个点的重心
-        # center_y = (left_shoulder.y + right_shoulder.y + left_hip.y + right_hip.y + left_ankle.y + right_ankle.y) / 6
-        center_y = (left_ankle.y + right_ankle.y) / 2
-
-        if len(self.data) == 0:
-            self.data.append(center_y)
-            # self.counter += 1
-            return False
-        # print(self.data)
-        for i in self.data:
-            if (center_y - i) / center_y < -0.20:
-                # print(self.data)
-                self.data = [center_y]
-                logger.info("Jumping")
-                return True
-            elif (center_y - i) / center_y > 0.20:
-                # print(self.data)
-                self.data = [center_y]
-                logger.info("Drop down")
-                return False
-            else:
-                self.data.append(center_y)
-                return False
