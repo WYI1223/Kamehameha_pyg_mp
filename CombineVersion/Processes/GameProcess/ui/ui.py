@@ -8,9 +8,10 @@ class Mt():
         self.a1 = None
         self.a2 = None
         self.state = False
-        self.log_in_button_rect = pygame.Rect(1353, 679, 371, 104)  # Define log_in_button_rect here
-        self.strat_button_rect = pygame.Rect(795, 679,371,104)
-            # self.log_in_hovered = False
+        self.log_in_button_rect = pygame.Rect(1678, 789, 371, 104)  # Define log_in_button_rect here
+        self.strat_button_rect = pygame.Rect(1678, 977, 371, 104)
+
+        # self.log_in_hovered = False
         self.user_input = ''
         self.password_input = ''
         self.active_input = None
@@ -26,17 +27,16 @@ class Mt():
         log_in_text = font.render('Log in', True, (255, 255, 255))
         text_height = user_text.get_height()
         # Assign log_in_button_rect here
-        self.log_in_button_rect = log_in_text.get_rect(topleft=(1353, 379 + 2 * (text_height + 150)))
+        self.log_in_button_rect = log_in_text.get_rect(topleft=(1678, 789))
 
-        user_text_rect = user_text.get_rect(topleft=(1353, 379))
-        password_text_rect = password_text.get_rect(topleft=(1353, 379 + text_height + 150))  # 加一些垂直间距
-        log_in_text_rect = log_in_text.get_rect(topleft=(1353, 379 + 2 * (text_height + 150)))  # 加一些垂直间距
+        user_text_rect = user_text.get_rect(topleft=(1630, 314))
+        password_text_rect = password_text.get_rect(topleft=(1630, 525))  # 加一些垂直间距
+        log_in_text_rect = log_in_text.get_rect(topleft=(1678, 789))  # 加一些垂直间距
         # Define input box rectangles
-        self.user_input_rect = pygame.Rect(1453, 379 + user_text.get_height() + 33, 200, 30)
-        self.password_input_rect = pygame.Rect(1453, 379 + user_text.get_height() + 173 + password_text.get_height() + 10,
-                                          200, 30)
-
-
+        self.user_input_rect = pygame.Rect(1630, 379 + user_text.get_height() + 33, 200, 30)
+        self.password_input_rect = pygame.Rect(1630,
+                                               379 + user_text.get_height() + 173 + password_text.get_height() + 10,
+                                               200, 30)
         # Render the text the user has entered
         user_input_text = font.render(self.user_input, True, (255, 255, 255))
         password_input_text = font.render(self.password_input, True, (255, 255, 255))
@@ -44,18 +44,18 @@ class Mt():
 
         # Use different images and display "Start" inside the button when hovered
         if self.state and self.log_in_hovered:
-            root.blit(self.a2, (695,679 ))
-            root.blit(font.render('Start', True, (255, 255, 255)), (873, 369 + 2 * (text_height + 150)))
-        else:
-            root.blit(self.a1, (1353, 379))
+            # root.blit(self.a2, (695,679 ))
+            root.blit(font.render('Start', True, (255, 255, 255)), (1678, 977))
+        # else:
+        #     root.blit(self.a1, (1353, 379))
 
-            root.blit(self.a1, (1353, 379 + text_height + 150))
-            root.blit(user_text, user_text_rect.topleft)
-            root.blit(password_text, password_text_rect.topleft)
-            root.blit(log_in_text, log_in_text_rect.topleft)
+        root.blit(self.a1, (1353, 379 + text_height + 150))
+        root.blit(user_text, user_text_rect.topleft)
+        root.blit(password_text, password_text_rect.topleft)
+        root.blit(log_in_text, log_in_text_rect.topleft)
             # Draw input boxes
-            pygame.draw.rect(root, (255, 255, 255), self.user_input_rect, 2)
-            pygame.draw.rect(root, (255, 255, 255), self.password_input_rect, 2)
+        pygame.draw.rect(root, (255, 255, 255), self.user_input_rect, 2)
+        pygame.draw.rect(root, (255, 255, 255), self.password_input_rect, 2)
         root.blit(user_input_text, (self.user_input_rect.x + 5, self.user_input_rect.y + 5))
         root.blit(password_input_text, (self.password_input_rect.x + 5, self.password_input_rect.y + 5))
 
