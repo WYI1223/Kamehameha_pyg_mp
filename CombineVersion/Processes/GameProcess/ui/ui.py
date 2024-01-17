@@ -71,7 +71,7 @@ class Mt():
 
         display = pygame.display.set_mode((1920, 1080))
         clock = pygame.time.Clock()
-        root = pygame.display.set_mode((1920, 1080))
+        root = pygame.display.set_mode((1920, 1080),pygame.FULLSCREEN)
         font = pygame.font.Font(None, 36)
 
         self.load_images()
