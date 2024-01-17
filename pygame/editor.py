@@ -9,8 +9,8 @@ class Editor:
         pygame.init()
 
         pygame.display.set_caption('editor')
-        self.screen = pygame.display.set_mode((640,480))
-        self.display = pygame.Surface((320, 240))
+        self.screen = pygame.display.set_mode((1960,1080))
+        self.display = pygame.Surface((980, 540))
 
         self.clock = pygame.time.Clock()
 
@@ -121,7 +121,7 @@ class Editor:
                     if event.key == pygame.K_g:
                         self.ongrid = not self.ongrid
                     if event.key == pygame.K_o:
-                        self.tilemap.save('map.json')
+                        self.tilemap.save('map2.json')
                     if event.key == pygame.K_t:
                         self.tilemap.autotile()
                     if event.key == pygame.K_LSHIFT:
