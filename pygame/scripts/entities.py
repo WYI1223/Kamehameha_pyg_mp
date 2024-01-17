@@ -38,7 +38,7 @@ class PhysicsEntity:
                 if frame_movement[0] < 0:
                     entity_rect.left = rect.right
                 self.pos[0] = entity_rect.x
-                # print("player:", entity_rect.x)
+                print("player:", entity_rect.x)
 
 
         self.pos[1] += frame_movement[1]
@@ -205,6 +205,20 @@ class Enemy(PhysicsEntity):
                 else:
                     self.dead = False
 
+class Endpoint(PhysicsEntity):
+    def __init__(self,game,pos,size):
+        super().__init__(game,'endpoint',pos,size)
+        self.action = ''
+        self.set_action('1')
+
+    def end(self):
+        if self.game.player.pos[0] > self.pos[0]:
+            return True
+
+    def update(self):
+        if self.end():
+            return -1
+        super().update(self.game.tilemap,movement=(0,0))
 
 import pygame
 import os
