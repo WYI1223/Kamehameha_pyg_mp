@@ -71,7 +71,7 @@ class Mt():
 
         display = pygame.display.set_mode((1920, 1080))
         clock = pygame.time.Clock()
-        root = pygame.display.set_mode((1920, 1080),pygame.FULLSCREEN)
+        root = pygame.display.set_mode((1920, 1080))
         font = pygame.font.Font(None, 36)
 
         self.load_images()
@@ -81,7 +81,6 @@ class Mt():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
                     return -1
 
                 if event.type == pygame.KEYDOWN:

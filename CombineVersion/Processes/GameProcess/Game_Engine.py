@@ -24,6 +24,7 @@ class Game_Engine(multiprocessing.Process):
         while True:
             if self.state_ui == -1:
                 pygame.mixer.music.stop()
+                pygame.quit()
                 with self.statemachine.get_lock():
                     self.statemachine.value = 0
                 break

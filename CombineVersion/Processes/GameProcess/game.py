@@ -175,7 +175,6 @@ class Game:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
                     # sys.exit()
                     return -1
 
@@ -252,7 +251,6 @@ class Game:
         while self.pause:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
                     return -1
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
