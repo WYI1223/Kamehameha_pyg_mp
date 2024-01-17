@@ -226,7 +226,7 @@ class Endpoint(PhysicsEntity):
 import pygame
 import os
 
-BASE_IMG_PATH = 'Data/GameData/images/'
+BASE_IMG_PATH = 'CombineVersion/Data/GameData/images/'
 
 
 def load_image(path):

@@ -33,7 +33,7 @@ class Game_Engine(multiprocessing.Process):
                 pygame.mixer.music.stop()
 
                 # 加载并播放state.mp3
-                pygame.mixer.music.load('Data/GameData/BGM/start.mp3')
+                pygame.mixer.music.load('CombineVersion/Data/GameData/BGM/start.mp3')
                 pygame.mixer.music.play(-1)
 
                 self.state_ui = ui.Mt().main()
@@ -43,7 +43,7 @@ class Game_Engine(multiprocessing.Process):
                 pygame.mixer.music.stop()
 
                 # 加载并播放gaming.mp3
-                pygame.mixer.music.load('Data/GameData/BGM/gaming.mp3')
+                pygame.mixer.music.load('CombineVersion/Data/GameData/BGM/gaming.mp3')
                 pygame.mixer.music.play(-1)
 
                 self.state_ui = Game().run(self.image_queue, self.statemachine)

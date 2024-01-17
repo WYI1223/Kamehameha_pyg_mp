@@ -17,9 +17,9 @@ class Mt():
         self.active_input = None
 
     def load_images(self):
-        self.dragon = pygame.image.load('Data/GameData/images/Dargon/dragon.png').convert_alpha()
-        self.a1 = pygame.image.load('Data/GameData/images/Dargon/1.png').convert_alpha()
-        self.a2 = pygame.image.load('Data/GameData/images/Dargon/2.png').convert_alpha()
+        self.dragon = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/dragon.png').convert_alpha()
+        self.a1 = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/1.png').convert_alpha()
+        self.a2 = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/2.png').convert_alpha()
 
     def UIrender(self, root, font):
         user_text = font.render('User', True, (255, 255, 255))

@@ -67,7 +67,7 @@ class Tilemap:
                 return self.tilemap[tile_loc]
 
     def load(self, path):
-        f = open("Data/map.json", 'r')
+        f = open("CombineVersion/Data/map.json", 'r')
         map_data = json.load(f)
         f.close()
 
