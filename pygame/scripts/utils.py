@@ -1,20 +1,32 @@
 import pygame
 import os
 
-BASE_IMG_PATH = 'data/images/'
 
+BASE_IMG_PATH = 'data/images/'
 new = (12,15)
 def load_image(path):
     img = pygame.image.load(BASE_IMG_PATH+path).convert_alpha()
-    img.set_colorkey((0,0,0))
+    # img.set_colorkey((0,0,0))
+    img.set_colorkey((27,147,59))
     # img = pygame.transform.scale(img,new)
     return img
 
 def load_images(path):
     images = []
     for img_name in os.listdir(BASE_IMG_PATH +path):
-        images.append(load_image(path+'/'+img_name))
+        img = load_image(path+'/'+img_name)
+        # img.set_colorkey((27,147,59))
+        images.append(img)
     return images
+def load_pimages(path):
+    images = []
+    for img_name in os.listdir(BASE_IMG_PATH +path):
+        img = load_image(path+'/'+img_name)
+        img.set_colorkey((0,0,0))
+        images.append(img)
+    return images
+
+
 
 class Animation:
     def __init__(self,images, img_dur=5,loop=True):
@@ -25,6 +37,7 @@ class Animation:
         self.frame = 0
 
     def copy(self):
+        # print()
         return Animation(self.images,self.img_duration,self.loop)
 
     def update(self):
