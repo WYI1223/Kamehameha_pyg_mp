@@ -1,6 +1,6 @@
 import time
 
-from CombineVersion.Processes.GameProcess.pygame_engine import GameProcess
+from CombineVersion.Processes.GameProcess.Game_Engine import Game_Engine
 
 
 class UI_View(object):
@@ -12,7 +12,7 @@ class UI_View(object):
         """
         Initialize the UI.
         """
-        self.model.GameProcess = GameProcess(self.model.image_queue, self.model.STATE_MACHINE)
+        self.model.GameProcess = Game_Engine(self.model.image_queue, self.model.STATE_MACHINE)
         self.model.GameProcess.start()
 
     def quit_pygame(self):

@@ -5,11 +5,157 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78fab0d9-686f-44d3-8a68-f6cb04a31405" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pygame/log_in.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/Game_Engine.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/editor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygame/editor.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/editor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygame/map.json" beforeDir="false" afterPath="$PROJECT_DIR$/pygame/map.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CombineVersion/MVC/View.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/MVC/View.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/Game_Engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/ui/ui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/Dargon/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Data/GameData/images/Dargon/1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/Dargon/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Data/GameData/images/Dargon/2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/Dargon/dragon.png" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Data/GameData/images/Dargon/dragon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/clouds/cloud_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/clouds/cloud_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/HA/HA1/ha0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/HA/HA2/head.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/idle/15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/enemy/run/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/attack1/attack1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/attack2/attack2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/attack3/attack3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle/21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/idle2/player_stand.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/jump/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run2/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run2/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run2/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run2/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/run2/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/slide/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player/wall_slide/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/entities/player_stand.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/gun.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/leaf/17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/particle/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/particle/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/particle/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/particles/particle/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/projectile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/decor/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/decor/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/decor/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/decor/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/grass/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/large_decor/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/large_decor/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/large_decor/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/spawners/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/spawners/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/images/tiles/stone/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/maps/0.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/maps/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/maps/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/music.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/sfx/ambience.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/sfx/dash.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/sfx/hit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/sfx/jump.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/data/sfx/shoot.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/editor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/game.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/log_in.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/log_in.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/map.json" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Data/map.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/Tilemap.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/scripts/Tilemap.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/clouds.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/scripts/clouds.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/entities.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/scripts/entities.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/scripts/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/scripts/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygame/ui/ui.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,8 +202,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "ready2combine",
-    "last_opened_file_path": "D:/Application/Anaconda3/envs/tf-cpu",
+    "git-widget-placeholder": "ready2combineImageProcessing",
+    "last_opened_file_path": "C:/Users/33774/Documents/GitHub/Kamehameha_pyg_mp/CombineVersion/Data/GameData/images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -67,13 +213,19 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\CombineVersion\Data\GameData\images" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\CombineVersion\Data" />
+      <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\CombineVersion\Processes\GameProcess\ui" />
+      <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\CombineVersion\Processes\GameProcess" />
       <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\pygame\data\images" />
       <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\pygame" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="CV2_Engine" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.Main">
+    <configuration name="Game_Engine" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Kamehameha_pyg_mp" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -81,12 +233,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev/multiprocessing/cameraIO" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/multiprocessing/cameraIO/CV2_Engine.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/Game_Engine.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -103,12 +255,34 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CombineVersion" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/Main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CombineVersion/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="game" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Kamehameha_pyg_mp" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/game.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,7 +313,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="multitest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="ui" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Kamehameha_pyg_mp" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -147,34 +321,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev/multiprocessing/processing" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/multiprocessing/processing/multitest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="multitest2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Kamehameha_pyg_mp" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev/multiprocessing/processing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/multiprocessing/processing/multitest2.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\CombineVersion\Processes\GameProcess\ui\ui.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -185,11 +337,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.mediapipe_sub" />
-        <item itemvalue="Python.CV2_Engine" />
-        <item itemvalue="Python.multitest" />
-        <item itemvalue="Python.multitest2" />
         <item itemvalue="Python.Main" />
+        <item itemvalue="Python.Game_Engine" />
+        <item itemvalue="Python.ui" />
+        <item itemvalue="Python.game" />
+        <item itemvalue="Python.mediapipe_sub" />
       </list>
     </recent_temporary>
   </component>
@@ -224,23 +376,25 @@
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test.coverage" NAME="test Coverage Results" MODIFIED="1705220638034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_suub.coverage" NAME="mediapipe-suub Coverage Results" MODIFIED="1705344296245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$utils.coverage" NAME="utils 覆盖结果" MODIFIED="1705228572561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main Coverage Results" MODIFIED="1705350212412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main 覆盖结果" MODIFIED="1705503513803" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CombineVersion" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest2.coverage" NAME="multitest2 Coverage Results" MODIFIED="1705385922541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Tilemap.coverage" NAME="Tilemap 覆盖结果" MODIFIED="1705241257180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_engine.coverage" NAME="mediapipe_engine Coverage Results" MODIFIED="1705161106705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/mediapipe" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$ui.coverage" NAME="ui 覆盖结果" MODIFIED="1705499937334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$mediapipe_sub__1_.coverage" NAME="mediapipe_sub (1) Coverage Results" MODIFIED="1705348596361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame_subprocessing.coverage" NAME="pygame_subprocessing Coverage Results" MODIFIED="1705326937366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame.coverage" NAME="pygame 覆盖结果" MODIFIED="1705219410231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$multitest.coverage" NAME="multitest Coverage Results" MODIFIED="1705252837094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$entities.coverage" NAME="entities 覆盖结果" MODIFIED="1705235908958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705493977499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game.coverage" NAME="game 覆盖结果" MODIFIED="1705499777010" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$detector_engine.coverage" NAME="detector_engine Coverage Results" MODIFIED="1705082114389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/Components/function" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test3_1.coverage" NAME="test3-1 Coverage Results" MODIFIED="1705234360042" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$detector.coverage" NAME="detector Coverage Results" MODIFIED="1705308124013" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/detector" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$editor.coverage" NAME="editor 覆盖结果" MODIFIED="1705494027295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$editor.coverage" NAME="editor 覆盖结果" MODIFIED="1705500643631" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$CV2_Engine.coverage" NAME="CV2_Engine Coverage Results" MODIFIED="1705429140655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/cameraIO" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$View.coverage" NAME="View 覆盖结果" MODIFIED="1705153632179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/MVC" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1705222267531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Game_Engine.coverage" NAME="Game_Engine 覆盖结果" MODIFIED="1705502913038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CombineVersion/Processes/GameProcess" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$game2.coverage" NAME="game2 覆盖结果" MODIFIED="1705328882950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1705220924815" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$pygame_engine.coverage" NAME="pygame_engine Coverage Results" MODIFIED="1705348580820" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/processing" />
