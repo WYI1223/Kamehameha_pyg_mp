@@ -40,7 +40,6 @@ class PhysicsEntity:
                 if frame_movement[0] < 0:
                     entity_rect.left = rect.right
                 self.pos[0] = entity_rect.x
-                print("player:", entity_rect.x)
 
 
         self.pos[1] += frame_movement[1]
@@ -111,7 +110,7 @@ class Player(PhysicsEntity):
                 return state
         except Exception as e:
             print(e)
-            return 0
+            return state
 
 class HA(PhysicsEntity):
     def __init__(self,game,pos,size):
@@ -153,6 +152,8 @@ class HA(PhysicsEntity):
         if self.counter > 5:
             self.counter = 0
             self.game.isAttacking = False
+            with self.game.statemachine.get_lock():
+                self.game.statemachine.value = 1
             return 1
         return 4
     def render(self, surf, offsetx, offsety):
@@ -261,7 +262,6 @@ class Animation:
         self.frame = 0
 
     def copy(self):
-        # print()
         return Animation(self.images,self.img_duration,self.loop)
 
     def update(self):

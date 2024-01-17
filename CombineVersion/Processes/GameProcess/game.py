@@ -75,9 +75,7 @@ class Game:
                 self.enemies.append(Enemy(self, spawner['pos'], (8, 15)))
 
         matching_endpoint = self.tilemap.extract([('endpoint', 0)])
-        print(matching_endpoint)
         for endpoint in matching_endpoint:
-            print("13123123")
             self.endpoint = Endpoint(self, endpoint['pos'], (8, 15))
             self.endpoint.update()
 
@@ -166,8 +164,6 @@ class Game:
                 if self.STATE1 == 3:
                     self.STATE1 = 4
                     print("Action done")
-                    with self.statemachine.get_lock():
-                        self.statemachine.value = 1
             if state == 5:
                 # if not self.Jump:
                 self.player.velocity[1] = -3
@@ -239,7 +235,6 @@ class Game:
 
             self.screen.blit(pygame.transform.scale(self.display, (1920-680, 1080)), (0, 0))
 
-            pygame.display.update()
 
             if not self.image_queue.empty():
                 image = self.image_queue.get()
@@ -247,35 +242,59 @@ class Game:
                 image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
                 self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
 
-            while self.pause:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        return -1
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_SPACE:
-                            self.pause = False
-                if not self.image_queue.empty():
-                    image = self.image_queue.get()
-                    image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                    image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
-                    self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
-                if self.statemachine.value == 6:
-                    self.pause = False
-
-
-                text_pause_font = pygame.font.Font(None, 200)
-                text_pause_surface = text_pause_font.render("Game Pause", True, (255, 255, 255))  # 文本颜色为白色
-                # 获取文本的矩形区域
-                text_puase_rect = text_surface.get_rect()
-                text_puase_rect.center = (self.screen.get_width() // 2, self.screen.get_height() // 2)
-                # 将文本绘制到屏幕上
-                self.screen.blit(text_pause_surface, text_puase_rect)
-
-                pygame.display.update()
-
+            if self.pauseM() == -1:
+                return -1
+            self.renderText ()
+            pygame.display.update()
 
             self.clock.tick(60)
+    def pauseM(self):
+        while self.pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return -1
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.pause = False
+            if not self.image_queue.empty():
+                image = self.image_queue.get()
+                image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
+                self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
+            if self.statemachine.value == 6:
+                self.pause = False
+
+            text_pause_font = pygame.font.Font(None, 200)
+            text_pause_surface = text_pause_font.render("Game Pause", True, (255, 255, 255))  # 文本颜色为白色
+            # 获取文本的矩形区域
+            text_puase_rect = text_pause_surface.get_rect()
+            text_puase_rect.center = (self.screen.get_width() // 2, self.screen.get_height() // 2)
+            # 将文本绘制到屏幕上
+            self.screen.blit(text_pause_surface, text_puase_rect)
+
+            pygame.display.update()
+
+    def renderText(self):
+        text = None
+        state = self.statemachine.value
+        if state == 2:
+            text = "Attack1"
+        elif state == 3:
+            text = "Attack2"
+        elif state == 4:
+            text = "Attack3"
+        elif state == 5:
+            text = "Jump"
+        elif state == 6:
+            text = "Sit and Game Start"
+        else:
+            return
+        text_action_font = pygame.font.Font(None, 100)
+        text_action_surface = text_action_font.render(text, True, (255, 255, 255))
+        text_action_rect = text_action_surface.get_rect()
+        text_action_rect.midbottom = self.screen.get_rect().midbottom
+        self.screen.blit(text_action_surface, text_action_rect)
 
 if __name__ == '__main__':
     Game().run()
