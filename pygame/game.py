@@ -9,9 +9,6 @@ offset = 0
 
 class Game:
     def __init__(self):
-        pygame.init()
-
-        pygame.display.set_caption('Dragon ball')
         self.screen = pygame.display.set_mode((1920,1080))
 
         self.display = pygame.Surface(((1920-680)//2, 540))
@@ -41,7 +38,6 @@ class Game:
             'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
 
         }
-        self.initialize()
 
     def initialize(self):
         self.score_kill = 0
@@ -72,6 +68,7 @@ class Game:
 
 
     def run(self):
+        self.initialize()
         while True:
             if  self.player.pos[1]>540:
                 self.initialize()
@@ -125,7 +122,8 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+                    # sys.exit()
+                    return -1
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
