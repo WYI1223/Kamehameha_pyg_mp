@@ -22,6 +22,7 @@ class Editor:
             'stone': load_images('tiles/stone'),
             'spawners': load_images('tiles/spawners'),
             'pixels': load_images('tiles/pixel'),
+            'endpoint': load_images('tiles/endpoint')
         }
         print(self.assets)
 

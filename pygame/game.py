@@ -1,7 +1,7 @@
 import sys
 import pygame
 from scripts.utils import load_image,load_images,Animation,load_pimages
-from scripts.entities import Player,HA,Enemy
+from scripts.entities import Player,HA,Enemy,Endpoint
 from scripts.Tilemap import Tilemap
 from scripts.clouds import Clouds
 offset = 0
@@ -20,6 +20,7 @@ class Game:
             'grass': load_pimages('tiles/grass'),
             'large_decor': load_pimages('tiles/large_decor'),
             'stone': load_pimages('tiles/stone'),
+            'endpoint/1': Animation(load_pimages('tiles/endpoint')),
             'player': pygame.transform.scale(load_image('entities/player_stand.png'),(17,17)),
             'background' : pygame.transform.scale (load_image('background.png'),(1920,1080)),
             'clouds':load_pimages('clouds'),
@@ -37,6 +38,7 @@ class Game:
             'enemy/idle': Animation(load_images('entities/enemy/idle'), img_dur=6),
             'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
 
+
         }
 
     def initialize(self):
@@ -51,20 +53,29 @@ class Game:
 
         self.player = Player(self, (50, 50),(8, 15))
 
+        self.endpoint = None
+
+
         self.tilemap = Tilemap(self, tile_size=16)
-        self.tilemap.load('map.json')
+        self.tilemap.load('map2.json')
         self.scroll = 0
 
         self.isAttacking = False
 
         self.enemies = []
         matching_spawners = self.tilemap.extract([('spawners', 0),('spawners', 1)])
-
         for spawner in matching_spawners:
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
             else:
                 self.enemies.append(Enemy(self, spawner['pos'], (8, 15)))
+
+        matching_endpoint = self.tilemap.extract([('endpoint', 0)])
+        print(matching_endpoint)
+        for endpoint in matching_endpoint:
+            print("13123123")
+            self.endpoint = Endpoint(self, endpoint['pos'], (8, 15))
+            self.endpoint.update()
 
 
     def run(self):
@@ -74,6 +85,8 @@ class Game:
                 self.initialize()
 
             self.display.blit(self.assets['background'],(0,0))
+
+
 
 
             self.scroll += (self.player.rect().centerx - self.display.get_width()/5 - self.scroll)/2
@@ -108,8 +121,9 @@ class Game:
                     continue
 
             self.player.render(self.display,offset=render_scroll)
-
-
+            if self.endpoint.update() == -1:
+                return -1
+            self.endpoint.render(self.display,offset=render_scroll)
             for enemy in self.enemies.copy():
                 enemy.update(self.tilemap,(0,0))
 
@@ -119,11 +133,14 @@ class Game:
                         self.score_kill += 100
                         self.enemies.remove(enemy)
 
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     # sys.exit()
                     return -1
+
+
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
@@ -133,7 +150,7 @@ class Game:
                     if event.key == pygame.K_UP:
                         self.player.velocity[1] = -3
                     if event.key == pygame.K_DOWN:
-                        self.movement[2] = True
+                        self.movement[3] = True
                     if event.key == pygame.K_j:
                         self.isAttacking = True
                         if self.STATE1 == 1:
@@ -159,9 +176,9 @@ class Game:
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
                     if event.key == pygame.K_UP:
-                        self.movement[3] = False
-                    if event.key == pygame.K_DOWN:
                         self.movement[2] = False
+                    if event.key == pygame.K_DOWN:
+                        self.movement[3] = False
                         pass
 
             # 渲染文本
