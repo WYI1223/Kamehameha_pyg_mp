@@ -11,7 +11,7 @@ offset = 0
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((1920,1080))
-        self.display = pygame.Surface(((1920-680)//2, 1080//2))
+        self.display = pygame.Surface(((1920-680)//3, 1080//3))
         self.clock = pygame.time.Clock()
         self.assets = {
             'decor' : load_pimages('tiles/decor'),
@@ -157,9 +157,9 @@ class Game:
                     self.STATE1 = 3
                     print("State1 change to 2")
             if state == 4:
-                if self.STATE1 == 3:
-                    self.STATE1 = 4
-                    print("Action done")
+                # if self.STATE1 == 3:
+                self.STATE1 = 4
+                print("Action done")
             if state == 5:
                 self.player.velocity[1] = -3
             if state == 8:

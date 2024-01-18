@@ -67,7 +67,7 @@ class Mt():
 
 
 
-        root = pygame.display.set_mode((1920, 1080),pygame.FULLSCREEN)
+        root = pygame.display.set_mode((1920, 1080))
         font = pygame.font.Font(None, 36)
 
         self.load_images()
