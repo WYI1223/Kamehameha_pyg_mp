@@ -59,7 +59,7 @@ class Game:
 
 
         self.tilemap = Tilemap(self, tile_size=16)
-        self.tilemap.load('map2.json')
+        self.tilemap.load('mapWithEndpoint.json')
         self.scroll = 0
 
         self.Jump = False
