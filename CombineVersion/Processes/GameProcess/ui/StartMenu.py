@@ -18,8 +18,6 @@ class Mt():
 
     def load_images(self):
         self.dragon = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/dragon.png').convert_alpha()
-        self.a1 = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/1.png').convert_alpha()
-        self.a2 = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/2.png').convert_alpha()
 
     def UIrender(self, root, font):
         user_text = font.render('User', True, (255, 255, 255))
@@ -49,7 +47,6 @@ class Mt():
         # else:
         #     root.blit(self.a1, (1353, 379))
 
-        root.blit(self.a1, (1353, 379 + text_height + 150))
         root.blit(user_text, user_text_rect.topleft)
         root.blit(password_text, password_text_rect.topleft)
         root.blit(log_in_text, log_in_text_rect.topleft)
