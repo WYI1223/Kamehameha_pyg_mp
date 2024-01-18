@@ -1,6 +1,6 @@
 import time
 
-import psutil
+# import psutil
 
 from CombineVersion.MVC.EventManager import *
 import CombineVersion.MVC.View as view
@@ -60,14 +60,14 @@ class control(object):
 
 
                 time.sleep(1)
-                def is_process_alive(pid):
-                    return psutil.pid_exists(pid)
+                # def is_process_alive(pid):
+                    # return psutil.pid_exists(pid)
 
-                for i in range(5):
-                    info, process_pid = self.model.processes_pid.get()
-                    status = "仍在运行" if is_process_alive(process_pid) else "已经结束"
-                    print(f"进程 {process_pid} ({info}) {status}")
-                    self.model.processes_pid.put((info, process_pid))
+                # for i in range(5):
+                #     info, process_pid = self.model.processes_pid.get()
+                #     status = "仍在运行" if is_process_alive(process_pid) else "已经结束"
+                #     print(f"进程 {process_pid} ({info}) {status}")
+                #     self.model.processes_pid.put((info, process_pid))
 
 
                 self.model.ImageProcess.join()
