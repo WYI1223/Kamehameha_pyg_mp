@@ -1,6 +1,8 @@
 NEIGHBOR_OFFSET = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(0,0),(-1,1),(0,1),(1,1),]
+
 PHYSICS_TILES = {'grass', 'stone'}
 AUTOTILE_TYPES={'grass','stone'}
+
 AUTOTILE_MAP={
     tuple(sorted([(1,0),(0,1)])): 0,
     tuple(sorted([(1, 0), (0, 1),(-1,0)])): 1,
@@ -18,6 +20,12 @@ AUTOTILE_MAP={
 import  pygame
 import json
 class Tilemap:
+
+    def __init__(self,game, tile_size):
+        self.game = game
+        self.tile_size = tile_size
+        self.tilemap ={}
+        self.offgrid_tiles = []
 
     def extract(self, id_pairs, keep=False):
         matches = []
@@ -38,12 +46,6 @@ class Tilemap:
                 if not keep:
                     del self.tilemap[loc]
         return matches
-    def __init__(self,game, tile_size):
-        self.game = game
-        self.tile_size = tile_size
-        self.tilemap ={}
-        self.offgrid_tiles = []
-
     def tiles_around(self, pos):
         tiles = []
         tile_loc = (int(pos[0] // self.tile_size),int(pos[1] // self.tile_size))
@@ -96,19 +98,8 @@ class Tilemap:
                 tile['variant'] = AUTOTILE_MAP[neighbors]
 
     def render(self, surf,offset):
-
-        # for x in range(offset // self.tile_size,(offset + surf.get_width())//self.tile_size +1):
-        #     for y in  range(self.tile_size,(surf.get_height())//self.tile_size +1):
-        #         loc = str(x) + ';'+str(y)
-        #         for loc in self.tilemap:
-        #             if loc in self.tilemap:
-        #                 tile = self.tilemap[loc]
-        #                 surf.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0] * self.tile_size - offset, tile['pos'][1] * self.tile_size))
-
-
         for tile in self.offgrid_tiles:
             surf.blit(self.game.assets[tile['tile']][tile['variant']],(tile['pos'][0]-offset,tile['pos'][1]))
-
         for loc in self.tilemap:
             tile = self.tilemap[loc]
             surf.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0]*self.tile_size-offset,tile['pos'][1]*self.tile_size))

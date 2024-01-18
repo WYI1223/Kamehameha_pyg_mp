@@ -1,8 +1,7 @@
+
 import random
 import pygame
-
 from CombineVersion.Processes.GameProcess.scripts.utils import load_image
-
 OFFSET = 1
 
 class PhysicsEntity:
@@ -72,12 +71,8 @@ class Player(PhysicsEntity):
         super().__init__(game,'player',pos,size)
         self.set_action('idle')
         self.air_time = 0
-
-
     def update(self,tilemap, movement,state):
-
         super().update(tilemap,movement)
-
         for enemy in self.game.enemies:
             # 判定是否与玩家相撞（修改self.game.player.rect()即可换成是否与气功波相撞）
             if self.rect().colliderect(enemy.rect()):
@@ -118,8 +113,6 @@ class HA(PhysicsEntity):
         super().__init__(game,'HA',pos,size)
         self.action = 'HA2'
         self.animation = self.game.assets[self.type + '/' + self.action].copy()
-
-
         # self.set_action("HA1")
         # print(self.animation)
         self.counter = 0
@@ -141,7 +134,6 @@ class HA(PhysicsEntity):
                 #         entity_rect.right = enemy.rect().left
                 self.pos[0] = entity_rect.x
                 self.set_action("HA2")
-                # print("HA:", entity_rect.x)
                 self.counter += 1
 
         if entity_rect.right > self.game.player.pos[0] + 100 :
@@ -164,7 +156,6 @@ class HA(PhysicsEntity):
                 surf.blit(self.img,((self.pos[0]-offsetx-i), self.pos[1]))
         surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
                   ((self.pos[0] - offsetx), self.pos[1]-offsety))
-
         self.counter2 = self.counter2+3
 
 
@@ -209,6 +200,8 @@ class Enemy(PhysicsEntity):
                 else:
                     self.dead = False
 
+
+
 class Endpoint(PhysicsEntity):
     def __init__(self,game,pos,size):
         super().__init__(game,'endpoint',pos,size)
@@ -223,54 +216,3 @@ class Endpoint(PhysicsEntity):
         if self.end():
             return -1
         super().update(self.game.tilemap,movement=(0,0))
-
-import pygame
-import os
-
-BASE_IMG_PATH = 'CombineVersion/Data/GameData/images/'
-
-
-def load_image(path):
-    img = pygame.image.load(BASE_IMG_PATH+path).convert_alpha()
-    # img.set_colorkey((0,0,0))
-    img.set_colorkey((27,147,59))
-    # img = pygame.transform.scale(img,new)
-    return img
-
-def load_images(path):
-    images = []
-    for img_name in os.listdir(BASE_IMG_PATH +path):
-        img = load_image(path+'/'+img_name)
-        # img.set_colorkey((27,147,59))
-        images.append(img)
-    return images
-def load_pimages(path):
-    images = []
-    for img_name in os.listdir(BASE_IMG_PATH +path):
-        img = load_image(path+'/'+img_name)
-        img.set_colorkey((0,0,0))
-        images.append(img)
-    return images
-
-
-
-class Animation:
-    def __init__(self,images, img_dur=5,loop=True):
-        self.images = images
-        self.loop = loop
-        self.img_duration = img_dur
-        self.done = False
-        self.frame = 0
-
-    def copy(self):
-        return Animation(self.images,self.img_duration,self.loop)
-
-    def update(self):
-        if self.loop:
-            self.frame = (self.frame + 1)%(self.img_duration*len(self.images))
-        else:
-            self.frame = min(self.frame+1, self.img_duration*len(self.images) - 1)
-            if self.frame >= self.img_duration*len(self.images)-1:
-                self.done =True
-    def img(self):
-        return self.images[int(self.frame / self.img_duration)]

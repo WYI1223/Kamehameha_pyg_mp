@@ -17,7 +17,7 @@ class Mt():
         self.active_input = None
 
     def load_images(self):
-        self.dragon = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/dragon.png').convert_alpha()
+        self.dragon = pygame.image.load('CombineVersion/Data/GameData/images/Dargon/map2_complete.png').convert_alpha()
 
     def UIrender(self, root, font):
         user_text = font.render('User', True, (255, 255, 255))
@@ -25,7 +25,7 @@ class Mt():
         log_in_text = font.render('Log in', True, (255, 255, 255))
         text_height = user_text.get_height()
         # Assign log_in_button_rect here
-        self.log_in_button_rect = log_in_text.get_rect(topleft=(1678, 789))
+        # self.log_in_button_rect = log_in_text.get_rect(topleft=(1678, 789))
 
         user_text_rect = user_text.get_rect(topleft=(1630, 314))
         password_text_rect = password_text.get_rect(topleft=(1630, 525))  # 加一些垂直间距
@@ -66,9 +66,8 @@ class Mt():
     def main(self):
 
 
-        display = pygame.display.set_mode((1920, 1080))
-        clock = pygame.time.Clock()
-        root = pygame.display.set_mode((1920, 1080))
+
+        root = pygame.display.set_mode((1920, 1080),pygame.FULLSCREEN)
         font = pygame.font.Font(None, 36)
 
         self.load_images()
