@@ -24,9 +24,9 @@ class Editor:
             'pixels': load_images('tiles/pixel'),
             'endpoint': load_images('tiles/endpoint')
         }
-        print(self.assets)
 
         self.movement = [False,False,False,False]
+
         self.tilemap = Tilemap(self, tile_size=16)
         self.scroll = 0
 
@@ -91,6 +91,8 @@ class Editor:
                             self.tilemap.offgrid_tiles.append({'type':self.tile_list[self.tile_group],'variant':self.tile_variant,'pos':(mpos[0]+self.scroll,mpos[1])})
                     if event.button == 3:
                         self.right_clicking = True
+
+
                     if self.shift:
                         if event.button == 4:
                             self.tile_variant = (self.tile_group -1)%len(self.assets[self.tile_list[self.tile_group]])
