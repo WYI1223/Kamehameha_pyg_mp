@@ -1,7 +1,7 @@
 import multiprocessing
 import pygame
 from CombineVersion.Processes.GameProcess.game import Game
-from CombineVersion.Processes.GameProcess.ui import ui
+from CombineVersion.Processes.GameProcess.ui import StartMenu
 
 
 class Game_Engine(multiprocessing.Process):
@@ -37,7 +37,7 @@ class Game_Engine(multiprocessing.Process):
                 pygame.mixer.music.load('CombineVersion/Data/GameData/BGM/start.mp3')
                 pygame.mixer.music.play(-1)
 
-                self.state_ui = ui.Mt().main()
+                self.state_ui = StartMenu.Mt().main()
 
             if self.state_ui == 1:
                 # 停止当前音乐

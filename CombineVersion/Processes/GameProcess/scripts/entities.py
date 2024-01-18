@@ -81,7 +81,8 @@ class Player(PhysicsEntity):
         for enemy in self.game.enemies:
             # 判定是否与玩家相撞（修改self.game.player.rect()即可换成是否与气功波相撞）
             if self.rect().colliderect(enemy.rect()):
-                self.game.initialize()
+                # self.game.initialize()
+                self.game.gameover = True
                 return 0
 
 

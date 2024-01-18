@@ -4,6 +4,7 @@ from CombineVersion.Processes.GameProcess.scripts.utils import load_image,load_i
 from CombineVersion.Processes.GameProcess.scripts.entities import Player,HA,Enemy,Endpoint
 from CombineVersion.Processes.GameProcess.scripts.Tilemap import Tilemap
 from CombineVersion.Processes.GameProcess.scripts.clouds import Clouds
+from CombineVersion.Processes.GameProcess.ui.ScoreBoard import ScoreBoard
 offset = 0
 
 
@@ -65,6 +66,9 @@ class Game:
         self.isAttacking = False
 
         self.pause = True
+        self.gameover = False
+
+        self.scoreboard = ScoreBoard()
 
         self.enemies = []
         matching_spawners = self.tilemap.extract([('spawners', 0),('spawners', 1)])
@@ -87,11 +91,18 @@ class Game:
 
         while True:
 
+            self.renderImage()
+
+            if self.gameover:
+                if self.scoreboard.run(self.statemachine) == 0:
+                    self.initialize()
+                continue
+
+
             if self.player.pos[1]>540:
-                self.initialize()
+                self.gameover = True
 
             self.display.blit(self.assets['background'],(0,0))
-
 
 
 
@@ -113,7 +124,6 @@ class Game:
                 # 死亡回城
                 if self.STATE1 == 0:
                     continue
-                # print("123123123")
                 if self.STATE1 ==4:
                     if self.HA == None:
                         self.HA = HA(self,(self.player.pos[0], self.player.pos[1]), (8, 15))
@@ -129,9 +139,9 @@ class Game:
                 if self.endpoint.update() == -1:
                     return -1
                 self.endpoint.render(self.display, offset=render_scroll)
-            self.player.render(self.display,offset=render_scroll)
+            self.player.render(self.display, offset=render_scroll)
             for enemy in self.enemies.copy():
-                enemy.update(self.tilemap,(0,0))
+                enemy.update(self.tilemap, (0,0))
 
                 enemy.render(self.display,offset=render_scroll)
                 if enemy.dead == True:
@@ -235,15 +245,10 @@ class Game:
             self.screen.blit(pygame.transform.scale(self.display, (1920-680, 1080)), (0, 0))
 
 
-            if not self.image_queue.empty():
-                image = self.image_queue.get()
-                image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
-                self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
 
-            if self.pauseM() == -1:
-                return -1
-            self.renderText ()
+            # if self.pauseM() == -1:
+            #     return -1
+            self.renderText()
             pygame.display.update()
 
             self.clock.tick(60)
@@ -255,11 +260,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.pause = False
-            if not self.image_queue.empty():
-                image = self.image_queue.get()
-                image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
-                self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
+            self.renderImage()
             if self.statemachine.value == 6:
                 self.pause = False
 
@@ -293,6 +294,13 @@ class Game:
         text_action_rect = text_action_surface.get_rect()
         text_action_rect.midbottom = self.screen.get_rect().midbottom
         self.screen.blit(text_action_surface, text_action_rect)
+    def renderImage(self):
+
+        if not self.image_queue.empty():
+            image = self.image_queue.get()
+            image_out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image_out = pygame.image.frombuffer(image_out.tostring(), image_out.shape[1::-1], "RGB")
+            self.screen.blit(image_out, (self.screen.get_width() - image_out.get_width(), 0))
 
 if __name__ == '__main__':
     Game().run()
