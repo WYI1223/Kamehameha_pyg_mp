@@ -14,6 +14,7 @@ class Game_Engine(multiprocessing.Process):
         self.processes_pid = processes_pid
 
         self.state_ui = 0
+        self.player_name = ''
 
     def run(self):
         self.processes_pid.put(("Game_Engine", self.pid))
@@ -39,7 +40,7 @@ class Game_Engine(multiprocessing.Process):
                 pygame.mixer.music.load('CombineVersion/Data/GameData/BGM/start.mp3')
                 pygame.mixer.music.play(-1)
 
-                self.state_ui = StartMenu.Mt().main()
+                self.state_ui, self.player_name = StartMenu.Mt().main()
 
             if self.state_ui == 1:
                 # 停止当前音乐
@@ -48,8 +49,9 @@ class Game_Engine(multiprocessing.Process):
                 # 加载并播放gaming.mp3
                 pygame.mixer.music.load('CombineVersion/Data/GameData/BGM/gaming.mp3')
                 pygame.mixer.music.play(-1)
-
-                self.state_ui = Game().run(self.image_queue, self.statemachine)
+                if self.player_name == '':
+                    self.player_name = 'Player'
+                self.state_ui = Game().run(self.image_queue, self.statemachine,self.player_name)
 
         print("Game_Engine stop")
 

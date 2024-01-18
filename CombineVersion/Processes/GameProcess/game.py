@@ -54,6 +54,7 @@ class Game:
         self.isAttacking = False
         self.pause = True
         self.gameover = False
+        self.player_name = "Player"
         self.scoreboard = ScoreBoard()
 
         self.enemies = []
@@ -69,17 +70,18 @@ class Game:
         for endpoint in matching_endpoint:
             self.endpoint = Endpoint(self, endpoint['pos'], (8, 15))
             self.endpoint.update()
-    def run(self,image_queue, state_machine):
+    def run(self,image_queue, state_machine,player_name):
         self.initialize()
         self.image_queue = image_queue
         self.statemachine = state_machine
+        self.player_name = player_name
 
         while True:
 
             self.blitImage()
 
             if self.gameover or self.player.pos[1]>540:
-                scoreboard = self.scoreboard.run(self.statemachine,"sb",self.score_kill)
+                scoreboard = self.scoreboard.run(self.statemachine,self.player_name,self.score_kill)
                 if scoreboard == 0:
                     self.initialize()
                 elif scoreboard == -1:

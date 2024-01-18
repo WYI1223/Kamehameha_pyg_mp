@@ -48,13 +48,13 @@ class Mt():
         #     root.blit(self.a1, (1353, 379))
 
         root.blit(user_text, user_text_rect.topleft)
-        root.blit(password_text, password_text_rect.topleft)
+        # root.blit(password_text, password_text_rect.topleft)
         root.blit(log_in_text, log_in_text_rect.topleft)
             # Draw input boxes
         pygame.draw.rect(root, (255, 255, 255), self.user_input_rect, 2)
-        pygame.draw.rect(root, (255, 255, 255), self.password_input_rect, 2)
+        # pygame.draw.rect(root, (255, 255, 255), self.password_input_rect, 2)
         root.blit(user_input_text, (self.user_input_rect.x + 5, self.user_input_rect.y + 5))
-        root.blit(password_input_text, (self.password_input_rect.x + 5, self.password_input_rect.y + 5))
+        # root.blit(password_input_text, (self.password_input_rect.x + 5, self.password_input_rect.y + 5))
 
 
 
@@ -103,12 +103,13 @@ class Mt():
 
 
                     if event.type == pygame.MOUSEBUTTONDOWN and self.log_in_hovered :
-                        self.user_input = ''
-                        self.password_input = ''
+                        self.player_name = self.user_input
+                        # self.user_input = '',
+                        # self.password_input = ''
                         self.state = True
 
                     elif event.type == pygame.MOUSEBUTTONDOWN and self.state == True and self.Sstate2:
-                        return 1
+                        return 1, self.player_name
 
 
 

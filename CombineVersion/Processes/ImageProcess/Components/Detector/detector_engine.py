@@ -367,7 +367,7 @@ class attack_detector:
                          body: 11-left_shoulder, 12-right_shoulder, 13-left_elbow, 14-right_elbow, 15-left_wrist, 16-right_wrist
         Output: 1-前推, 0-其他
 
-        logic: 计算手腕和肩膀的深度差，如果手腕在肩膀前面的一定数值，则认为是前推动作
+        logic: 计算手肘角度，大于130度则认为手臂伸直，再判断手掌是否张开，张开则认为前推
     """
 
     def action3(self):

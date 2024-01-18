@@ -6,15 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="78fab0d9-686f-44d3-8a68-f6cb04a31405" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/MVC/Controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/MVC/Controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/MVC/Model.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/MVC/Model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/MVC/View.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/MVC/View.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/Game_Engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/Game_Engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/ui/ScoreBoard.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/ui/ScoreBoard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/ImageProcessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/ImageProcessor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/MediapipeProcessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/MediapipeProcessor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/OrderProcessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/OrderProcessor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/ui/StartMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/ui/StartMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/Components/Detector/detector_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/CombineVersion/Processes/ImageProcess/Components/Detector/detector_engine.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,31 +41,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.CV2_Engine.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mediapipe_sub.executor&quot;: &quot;Run&quot;,
-    &quot;Python.multitest.executor&quot;: &quot;Run&quot;,
-    &quot;Python.multitest2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test3-1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test4.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;ready2combine&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Application/Anaconda3/envs/tf-cpu&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.CV2_Engine.executor": "Run",
+    "Python.Main.executor": "Run",
+    "Python.mediapipe_sub.executor": "Run",
+    "Python.multitest.executor": "Run",
+    "Python.multitest2.executor": "Run",
+    "Python.test.executor": "Run",
+    "Python.test2.executor": "Run",
+    "Python.test3-1.executor": "Run",
+    "Python.test3.executor": "Run",
+    "Python.test4.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "ready2combine",
+    "last_opened_file_path": "D:/Application/Anaconda3/envs/tf-cpu",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\33774\Documents\GitHub\Kamehameha_pyg_mp\pygame\data\images" />
@@ -245,7 +241,7 @@
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$CV2_Engine.coverage" NAME="CV2_Engine 覆盖结果" MODIFIED="1705505082703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing/cameraIO" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$test4.coverage" NAME="test4 Coverage Results" MODIFIED="1705233617115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/multiprocessing" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$View.coverage" NAME="View 覆盖结果" MODIFIED="1705153632179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev/MVC" />
-    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main Coverage Results" MODIFIED="1705591963542" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$Main.coverage" NAME="Main Coverage Results" MODIFIED="1705606560885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$log_in.coverage" NAME="log_in 覆盖结果" MODIFIED="1705484780045" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$ScoreBoard.coverage" NAME="ScoreBoard Coverage Results" MODIFIED="1705560152708" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CombineVersion/Processes/GameProcess/ui" />
     <SUITE FILE_PATH="coverage/Kamehameha_pyg_mp$entities.coverage" NAME="entities 覆盖结果" MODIFIED="1705235908958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pygame/scripts" />
