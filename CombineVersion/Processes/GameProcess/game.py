@@ -64,9 +64,9 @@ class Game:
                 self.player.pos = spawner['pos']
             else:
                 self.enemies.append(Enemy(self, spawner['pos'], (8, 15)))
+
+
         matching_endpoint = self.tilemap.extract([('endpoint', 0)])
-
-
         for endpoint in matching_endpoint:
             self.endpoint = Endpoint(self, endpoint['pos'], (8, 15))
             self.endpoint.update()
