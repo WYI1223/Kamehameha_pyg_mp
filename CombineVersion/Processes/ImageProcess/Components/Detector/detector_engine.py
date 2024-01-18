@@ -36,6 +36,15 @@ class attack_detector:
         self.Rslope = deque(maxlen=10)
         self.Rslope_b = deque(maxlen=10)
 
+        self.arm_last_time = 0
+
+        self.LAslope = None
+        self.RAslope = None
+
+        self.diff_from_left2right = None
+
+
+
         self.pose_landmarks = None
         self.left_hand_landmark = None
         self.right_hand_landmark = None
@@ -144,12 +153,56 @@ class attack_detector:
                如果左右手任一手的斜率超过0.25，或者左右手的Z轴深度差异满足特定条件（左手深度小于右手深度），
                则认为检测到了特定动作。在数据不足（如未捕捉到手的关键点）时返回False。
     """
-    def action1(self):
+
+    def calculate_slope(self):
+
 
         L_exception = False
         R_exception = False
+        LA_exception = False
+        RA_exception = False
         left_pinky_mcp, left_pinky_pip, left_pinky_dip, left_pinky_tip = None, None, None, None
         right_pinky_mcp, right_pinky_pip, right_pinky_dip, right_pinky_tip = None, None, None, None
+        left_arm_elbow, right_arm_elbow, left_arm_wrist, right_arm_wrist = None, None, None, None
+
+        try:
+            left_arm_elbow = [self.pose_landmarks.landmark[13].x,
+                               self.pose_landmarks.landmark[13].y]
+            right_arm_elbow = [self.pose_landmarks.landmark[14].x,
+                               self.pose_landmarks.landmark[14].y]
+            left_arm_wrist = [self.pose_landmarks.landmark[15].x,
+                               self.pose_landmarks.landmark[15].y]
+            right_arm_wrist = [self.pose_landmarks.landmark[16].x,
+                               self.pose_landmarks.landmark[16].y]
+        except:
+            return False
+
+
+        #比较左右手高低
+        self.diff_from_left2right = left_arm_wrist[1] - right_arm_wrist[1]
+
+        LA_X = [left_arm_elbow[0], left_arm_wrist[0]]
+        LA_y = [left_arm_elbow[1], left_arm_wrist[1]]
+
+        LA_X = np.array(LA_X).reshape(-1, 1)
+        LA_y = np.array(LA_y).reshape(-1, 1)
+
+        LA_model = LinearRegression()
+        LA_model.fit(LA_X, LA_y)
+
+        self.LAslope = np.abs(LA_model.coef_)
+
+
+        RA_X = [right_arm_elbow[0], right_arm_wrist[0]]
+        RA_y = [right_arm_elbow[1], right_arm_wrist[1]]
+
+        RA_X = np.array(RA_X).reshape(-1, 1)
+        RA_y = np.array(RA_y).reshape(-1, 1)
+
+        RA_model = LinearRegression()
+        RA_model.fit(RA_X, RA_y)
+
+        self.RAslope = np.abs(RA_model.coef_)
 
         try:
             # 详见handlandmark.jpg
@@ -212,29 +265,46 @@ class attack_detector:
             self.Rslope.append(np.abs(R_model.coef_))
 
 
+
+    def action1(self):
+        self.calculate_slope()
+        if self.LAslope < 0.25 and self.RAslope < 0.25:
+
+            # 如果计时尚未开始，开始计时
+            if self.arm_last_time is None:
+                self.arm_last_time = time.time()
+            # 如果已经计时，并且计时超过4秒，将success_action设置为True并退出循环
+            elif time.time() - self.arm_last_time >= 4:
+                self.arm_last_time = None
+                print("action1手臂已达到标准")
+                return True
+        else:
+            # 如果条件不满足，重置计时器
+            self.arm_last_time = None
         """
         # 左右手小拇指点拟合直线斜率
         print("the slope of L:", L_model.coef_)
         print("the slope of R:", R_model.coef_) 
         """
-
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
                 if self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25:
                     continue
                 diff1 = self.Rslope_b[n]
                 diff2 = self.Lslope_b[i]
-                if diff1 > 0 and diff2 < 0:
+                if diff1 > 0 and diff2 < 0 and self.diff_from_left2right > 0:
                     self.Rslope.clear()
                     self.Lslope.clear()
                     self.Rslope_b.clear()
                     self.Lslope_b.clear()
                     return True
-        self.Rslope.popleft()
-        self.Lslope.popleft()
-
-        self.Rslope_b.popleft()
-        self.Lslope_b.popleft()
+        if self.calculate_slope():
+            self.Rslope.popleft()
+            self.Lslope.popleft()
+            self.Rslope_b.popleft()
+            self.Lslope_b.popleft()
+        else:
+            return False
         # # z轴小拇指与大拇指的坐标差值
         # diff = self.left_hand_landmark.landmark[17].z - self.left_hand_landmark.landmark[3].z
         #
@@ -251,81 +321,25 @@ class attack_detector:
 
     def action2(self):
         
-        L_exception = False
-        R_exception = False
-        left_pinky_mcp, left_pinky_pip, left_pinky_dip, left_pinky_tip = None, None, None, None
-        right_pinky_mcp, right_pinky_pip, right_pinky_dip, right_pinky_tip = None, None, None, None
-        
-        try:
-            # 详见handlandmark.jpg
-            left_pinky_mcp = [self.left_hand_landmark.landmark[17].x,
-                              self.left_hand_landmark.landmark[17].y]
-            left_pinky_pip = [self.left_hand_landmark.landmark[18].x,
-                              self.left_hand_landmark.landmark[18].y]
-            left_pinky_dip = [self.left_hand_landmark.landmark[19].x,
-                              self.left_hand_landmark.landmark[19].y]
-            left_pinky_tip = [self.left_hand_landmark.landmark[20].x,
-                              self.left_hand_landmark.landmark[20].y]
-        except:
-            if len(self.Lslope) == 0:
-                return False
-            L_exception = True
-        
-        if not L_exception:    
-            left_X = [left_pinky_mcp[0], left_pinky_pip[0], left_pinky_dip[0], left_pinky_tip[0]]
-            left_y = [left_pinky_mcp[1], left_pinky_pip[1], left_pinky_dip[1], left_pinky_tip[1]]
-            Left_X = np.array(left_X).reshape(-1, 1)
-            Left_y = np.array(left_y).reshape(-1, 1)
-            L_model = LinearRegression()
-            L_model.fit(Left_X, Left_y)
-    
-            diff = (self.left_hand_landmark.landmark[17].z -
-                    self.left_hand_landmark.landmark[3].z)
-    
-            self.Lslope_b.append(diff)
-            self.Lslope.append(np.abs(L_model.coef_))
+        self.calculate_slope()
 
+        if self.LAslope < 0.25 and self.RAslope < 0.25:
 
-        try:
-            right_pinky_mcp = [self.right_hand_landmark.landmark[17].x,
-                               self.right_hand_landmark.landmark[17].y]
-            right_pinky_pip = [self.right_hand_landmark.landmark[18].x,
-                               self.right_hand_landmark.landmark[18].y]
-            right_pinky_dip = [self.right_hand_landmark.landmark[19].x,
-                               self.right_hand_landmark.landmark[19].y]
-            right_pinky_tip = [self.right_hand_landmark.landmark[20].x,
-                               self.right_hand_landmark.landmark[20].y]
-
-        except:
-            if len(self.Rslope) == 0:
-                return False
-            R_exception = True
-            
-        if not R_exception:
-            right_X = [right_pinky_mcp[0], right_pinky_pip[0], right_pinky_dip[0], right_pinky_tip[0]]
-            right_y = [right_pinky_mcp[1], right_pinky_pip[1], right_pinky_dip[1], right_pinky_tip[1]]
-    
-            Right_X = np.array(right_X).reshape(-1, 1)
-            Right_y = np.array(right_y).reshape(-1, 1)
-    
-            R_model = LinearRegression()
-            R_model.fit(Right_X, Right_y)
-    
-            diff = self.right_hand_landmark.landmark[17].z - \
-                   self.right_hand_landmark.landmark[3].z
-    
-            self.Rslope_b.append(diff)
-            self.Rslope.append(np.abs(R_model.coef_))
-
-        """
-        # 左右手小拇指点拟合直线斜率
-        print("the slope of L:", L_model.coef_)
-        print("the slope of R:", R_model.coef_)
-        """
+            # 如果计时尚未开始，开始计时
+            if self.arm_last_time is None:
+                self.arm_last_time = time.time()
+            # 如果已经计时，并且计时超过4秒，将success_action设置为True并退出循环
+            elif time.time() - self.arm_last_time >= 4:
+                self.arm_last_time = None
+                print("action2手臂已达到标准")
+                return True
+        else:
+            # 如果条件不满足，重置计时器
+            self.arm_last_time = None
 
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
-                if self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25:
+                if self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25 and self.diff_from_left2right < 0:
                     return False
                 diff1 = self.Rslope_b[n]
                 diff2 = self.Lslope_b[i]
@@ -335,11 +349,13 @@ class attack_detector:
                     self.Rslope_b.clear()
                     self.Lslope_b.clear()
                     return True
-
-        self.Lslope.popleft()
-        self.Rslope.popleft()
-        self.Rslope_b.popleft()
-        self.Lslope_b.popleft()
+        if self.calculate_slope():
+            self.Lslope.popleft()
+            self.Rslope.popleft()
+            self.Rslope_b.popleft()
+            self.Lslope_b.popleft()
+        else:
+            return False
 
     """
         动作3：前推检测
@@ -573,3 +589,5 @@ class attack_detector:
         angle = math.degrees(angle)
 
         return angle
+
+
