@@ -292,7 +292,9 @@ class attack_detector:
                     continue
                 diff1 = self.Rslope_b[n]
                 diff2 = self.Lslope_b[i]
-                if diff1 > 0 and diff2 < 0 and self.diff_from_left2right > 0:
+                if (diff1 > 0 and diff2 < 0
+                        and self.diff_from_left2right > 0
+                        and self.LAslope < 0.25 and self.RAslope < 0.25):
                     self.Rslope.clear()
                     self.Lslope.clear()
                     self.Rslope_b.clear()
@@ -339,7 +341,9 @@ class attack_detector:
 
         for i in range(len(self.Lslope)):
             for n in range(len(self.Rslope)):
-                if self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25 and self.diff_from_left2right < 0:
+                if (self.Rslope[n] > 0.25 and self.Lslope[i] > 0.25
+                        and self.diff_from_left2right < 0
+                        and self.LAslope < 0.25 and self.RAslope < 0.25):
                     return False
                 diff1 = self.Rslope_b[n]
                 diff2 = self.Lslope_b[i]
