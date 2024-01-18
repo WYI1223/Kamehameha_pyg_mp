@@ -23,6 +23,8 @@ class ModelEngine(object):
 
         self.image_queue = multiprocessing.Queue()
 
+        self.processes_pid = multiprocessing.Queue()
+
         self.GameProcess = None
         self.ImageProcess = None
 

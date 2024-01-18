@@ -1,4 +1,6 @@
 import multiprocessing
+import queue
+
 from CombineVersion.Processes.ImageProcess.OrderProcessor import OrderProcessor
 from CombineVersion.Processes.ImageProcess.MediapipeProcessor import mediapipe_subprocess
 from CombineVersion.Processes.ImageProcess.Components.CameraIO.CV2_Engine import CameraCapture
@@ -7,8 +9,9 @@ from loguru import logger
 
 
 class ImageProcessor(multiprocessing.Process):
-    def __init__(self, image_queue: multiprocessing.Queue, state_machine: multiprocessing.Value):
+    def __init__(self, image_queue: multiprocessing.Queue, state_machine: multiprocessing.Value, processes_pid: multiprocessing.Queue):
         super().__init__()
+
         self.cameraCapture = None
         self.result_images = None
         self.display_image_process = None
@@ -19,10 +22,18 @@ class ImageProcessor(multiprocessing.Process):
         self.running = True
         self.processes = []
         self.statemachine = state_machine
+        self.processes_pid = processes_pid
+
+        self.isRunning_subprocess = None
+        self.isRunning_OrderProcessor = None
 
     def get_photos(self):
         while self.running:
-            self.process_queue.put((self.input_order, self.cameraCapture.get_frame()))
+            try:
+                self.process_queue.put((self.input_order, self.cameraCapture.get_frame()))
+            except queue.Full:
+                time.sleep(1.0 / 60.0)
+                continue
             self.input_order += 1
             time.sleep(1.0 / 60.0)
             if self.process_queue.full():
@@ -33,39 +44,58 @@ class ImageProcessor(multiprocessing.Process):
                 logger.warning("image Queue is full!")
 
             if self.statemachine.value == 0:
-                self.running = False
+                # print(self.statemachine.value)
+                logger.debug("ImageProcess stoping 1")
+                self.cameraCapture.stop()
+                logger.debug("ImageProcess stoping 2")
                 self.close()
+                logger.debug("ImageProcess stoping 3")
+                self.isRunning_OrderProcessor.clear()
                 self.display_image_process.stop()
-                # print("ImageProcess is stop")
+                logger.debug("ImageProcess stoping 4")
+                self.display_image_process.join()
+                logger.debug("ImageProcess stoping 5")
+                self.running = False
+                logger.debug("ImageProcess stoping 6")
+
+
 
     def handle_image(self):
         num = 2
         for _ in range(num):
-            process = mediapipe_subprocess(self.process_queue, self.result_images)
+            process = mediapipe_subprocess(self.process_queue, self.result_images, self.isRunning_subprocess)
             process.start()
+            self.processes_pid.put(("Image_subProcesee", process.pid))
             self.processes.append(process)
 
     def close(self):
+        # self.isRunning_subprocess.clear()
         for process in self.processes:
-            self.process_queue.close()
             process.stop()
             process.join()
 
     def run(self):
+        self.isRunning_subprocess = multiprocessing.Event()
+        self.isRunning_subprocess.set()
+
         self.cameraCapture = CameraCapture()
         self.result_images = multiprocessing.Queue(8)
         self.process_queue = multiprocessing.Queue(8)
-        # self.display_image_thread = threading.Thread(target=self.display_image,
-        #                                              args=(self.result_images, self.image_queue), daemon=True)
-        self.display_image_process = OrderProcessor(self.result_images, self.image_queue,self.statemachine)
+
+
+        self.isRunning_OrderProcessor = multiprocessing.Event()
+        self.isRunning_OrderProcessor.set()
+
+        self.display_image_process = OrderProcessor(self.result_images, self.image_queue,self.statemachine,self.isRunning_OrderProcessor)
+
         self.cameraCapture.start()
         logger.info("CameraCapture is start")
-
+        self.processes_pid.put(("Image Process",self.pid))
         time.sleep(1)
         self.display_image_process.start()
+        self.processes_pid.put(("orderProcessor",self.pid))
         self.handle_image()
         self.get_photos()
-        print("ImageProcess is stop")
     # 其余的方法保持不变
 
 

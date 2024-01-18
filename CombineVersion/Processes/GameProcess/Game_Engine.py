@@ -6,16 +6,17 @@ from CombineVersion.Processes.GameProcess.ui import StartMenu
 
 class Game_Engine(multiprocessing.Process):
 
-    def __init__(self, image_queue: multiprocessing.Queue, statemachine: multiprocessing.Value):
+    def __init__(self, image_queue: multiprocessing.Queue, statemachine: multiprocessing.Value, processes_pid: multiprocessing.Queue):
         super().__init__()
 
         self.image_queue = image_queue
         self.statemachine = statemachine
-
+        self.processes_pid = processes_pid
 
         self.state_ui = 0
 
     def run(self):
+        self.processes_pid.put(("Game_Engine", self.pid))
         pygame.init()
         pygame.display.set_caption('Dragon ball')
         # 初始化音频
@@ -23,10 +24,11 @@ class Game_Engine(multiprocessing.Process):
 
         while True:
             if self.state_ui == -1:
-                pygame.mixer.music.stop()
-                pygame.quit()
                 with self.statemachine.get_lock():
                     self.statemachine.value = 0
+                    print("Game_Engine_Statemachine:", self.statemachine.value)
+                pygame.mixer.music.stop()
+                pygame.quit()
                 break
 
             if self.state_ui == 0:

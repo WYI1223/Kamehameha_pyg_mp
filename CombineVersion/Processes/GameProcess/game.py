@@ -75,15 +75,18 @@ class Game:
         self.statemachine = state_machine
 
         while True:
-            #玩家实时现实镜头填充
+
             self.blitImage()
-            #游戏重启设置
+
             if self.gameover or self.player.pos[1]>540:
-                if self.scoreboard.run(self.statemachine) == 0:
+                scoreboard = self.scoreboard.run(self.statemachine,"sb",self.score_kill)
+                if scoreboard == 0:
                     self.initialize()
+                elif scoreboard == -1:
+                    return -1
+
                 continue
-            # if self.player.pos[1]>540:
-            #     self.gameover = True
+
             #背景填充
             self.display.blit(self.assets['background'],(0,0))
             #镜头偏移量渲染
@@ -164,7 +167,6 @@ class Game:
             """
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    # sys.exit()
                     return -1
             """
             游戏字幕渲染

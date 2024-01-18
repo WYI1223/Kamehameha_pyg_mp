@@ -1,3 +1,7 @@
+import time
+
+import psutil
+
 from CombineVersion.MVC.EventManager import *
 import CombineVersion.MVC.View as view
 from CombineVersion.Processes.ImageProcess.ImageProcessor import *
@@ -39,7 +43,7 @@ class control(object):
                 """
                 Initialize new page
                 """
-                self.model.ImageProcess = ImageProcessor(self.model.image_queue, self.model.STATE_MACHINE)
+                self.model.ImageProcess = ImageProcessor(self.model.image_queue, self.model.STATE_MACHINE, self.model.processes_pid)
                 self.model.ImageProcess.start()
 
                 print("New page initialized")
@@ -52,14 +56,23 @@ class control(object):
 
 
             if self.model.STATE_MACHINE.value == 0:
+                print("STATE_MACHINE: ", self.model.STATE_MACHINE.value)
+
+
+                time.sleep(1)
+                def is_process_alive(pid):
+                    return psutil.pid_exists(pid)
+
+                for i in range(5):
+                    info, process_pid = self.model.processes_pid.get()
+                    status = "仍在运行" if is_process_alive(process_pid) else "已经结束"
+                    print(f"进程 {process_pid} ({info}) {status}")
+                    self.model.processes_pid.put((info, process_pid))
+
+
+                self.model.ImageProcess.join()
                 self.graphics.quit_pygame()
                 self.evManager.Post(QuitEvent())
-                if self.model.ImageProcess.is_alive():
-                    print("ImageProcess is alive")
-                    self.model.ImageProcess.terminate()
-                if self.model.GameProcess.is_alive():
-                    print("GameProcess is alive")
-                    self.model.GameProcess.terminate()
                 # print("STATE_MACHINE: ", self.model.STATE_MACHINE.value)
 
 

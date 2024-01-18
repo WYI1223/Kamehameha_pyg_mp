@@ -13,14 +13,15 @@ class UI_View(object):
         """
         Initialize the UI.
         """
-        self.model.GameProcess = Game_Engine(self.model.image_queue, self.model.STATE_MACHINE)
+        self.model.GameProcess = Game_Engine(self.model.image_queue,
+                                             self.model.STATE_MACHINE,
+                                             self.model.processes_pid)
         self.model.GameProcess.start()
 
     def quit_pygame(self):
         # shut down the pygame graphics
-        self.model.STATE_MACHINE = 0
-        self.isinitialized = False
-
+        # self.isinitialized = False
+        self.model.GameProcess.join()
 
 
 
