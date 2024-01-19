@@ -17,7 +17,7 @@ class Cloud:
 
 
 class Clouds:
-    def __init__(self, cloud_image,count=16):
+    def __init__(self, cloud_image,count=40):
         self.clouds = []
 
         for i in  range(count):

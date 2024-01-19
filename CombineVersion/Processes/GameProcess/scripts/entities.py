@@ -113,8 +113,6 @@ class HA(PhysicsEntity):
         super().__init__(game,'HA',pos,size)
         self.action = 'HA2'
         self.animation = self.game.assets[self.type + '/' + self.action].copy()
-        # self.set_action("HA1")
-        # print(self.animation)
         self.counter = 0
         self.counter2 = 0
 
@@ -129,9 +127,7 @@ class HA(PhysicsEntity):
                     entity_rect.right = rect.left
                 if frame_movement < 0:
                     entity_rect.left = rect.right
-                # for enemy in self.game.enemies:
-                #     if entity_rect.right == enemy.rect().left:
-                #         entity_rect.right = enemy.rect().left
+
                 self.pos[0] = entity_rect.x
                 self.set_action("HA2")
                 self.counter += 1
@@ -139,7 +135,6 @@ class HA(PhysicsEntity):
         if entity_rect.right > self.game.player.pos[0] + 100 :
             self.pos[0] = entity_rect.x
             self.set_action("HA2")
-            # print("HA:", entity_rect.x)
             self.counter += 1
         self.animation.update()
         if self.counter > 5:
@@ -151,15 +146,11 @@ class HA(PhysicsEntity):
         return 4
     def render(self, surf, offsetx, offsety):
         if self.counter2<100:
-            print(self.counter2)
             for i in range(self.counter2):
                 surf.blit(self.img,((self.pos[0]-offsetx-i), self.pos[1]))
         surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
                   ((self.pos[0] - offsetx), self.pos[1]-offsety))
         self.counter2 = self.counter2+3
-
-
-
 
 
 class Enemy(PhysicsEntity):
