@@ -48,7 +48,7 @@ class Game:
         self.player = Player(self, (50, 50),(8, 15))
         self.endpoint = None
         self.tilemap = Tilemap(self, tile_size=16)
-        self.tilemap.load('map.json')
+        self.tilemap.load('mapWithEndpoint.json')
         self.scroll = 0
         self.Jump = False
         self.isAttacking = False

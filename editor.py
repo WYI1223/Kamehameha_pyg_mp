@@ -28,6 +28,7 @@ class Editor:
 
         self.movement = [False,False,False,False]
         self.tilemap = Tilemap(self, tile_size=16)
+        self.tilemap.load('map.json')
         self.scroll = 0
 
         self.tile_list = list(self.assets)
